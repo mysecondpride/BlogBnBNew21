@@ -1,6 +1,7 @@
 //connectdengan env
 require("dotenv").config();
 
+const { Readable } = require("stream");
 //router penghubung ke database
 const express = require("express");
 const router = express.Router();
@@ -24,28 +25,24 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 
 //melakukan stream (lalulintas) file (streaming)
-const Grid = require("gridfs-stream");
 
 // melakukan edit, yang di HTML tersedia POST
 const methodOverride = require("method-override");
 
 router.use(methodOverride("_method"));
 const uploads = require("../../utils/gridFs"); // Import GridFS upload
-const { GridFsStorage } = require("multer-gridfs-storage");
+
 const PostProducts = require("../models/PostProducts");
 
 //how to connect by connection string
-const conn = mongoose.createConnection(process.env.MONGODB_URI);
-
-// let bucket;
-let gfs;
-
-conn.once("open", function () {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection("uploads");
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
-/* GET */
-/* admin-loginpage */
+
+mongoose.connection.once("open", () => {
+  console.log("MongoDB connected");
+});
 
 router.get("/admin", async (req, res) => {
   try {
@@ -158,42 +155,61 @@ router.get("/post-article/:id", authMiddleware, async (req, res) => {
   }
 });
 
-router.post("/add-post", uploads.array("utama", 10), async (req, res) => {
-  const { title, body } = req.body;
-
+router.post("/add-post", uploads.array("utama", 5), async (req, res) => {
   try {
-    if (!title || !body) {
-      return res.status(400).json({
-        message: "pesan saya isi dulu ya field title dan content",
+    const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: "uploads",
+    });
+    const { body, title } = req.body;
+
+    const files = req.files; // This is an array
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded." });
+    }
+
+    const results = [];
+
+    for (const file of files) {
+      const { originalname, mimetype, buffer } = file;
+
+      const readableStream = new Readable();
+      readableStream.push(buffer);
+      readableStream.push(null);
+
+      const uploadStream = bucket.openUploadStream(originalname, {
+        contentType: mimetype,
+      });
+
+      await new Promise((resolve, reject) => {
+        readableStream
+          .pipe(uploadStream)
+          .on("error", reject)
+          .on("finish", () => {
+            results.push({
+              fileId: uploadStream.id,
+              filename: uploadStream.filename,
+              contentType: mimetype,
+            });
+            resolve();
+          });
       });
     }
 
-    // Process uploaded files into fileSchema format
-    const files = req.files?.map((file) => ({
-      fileId: new mongoose.Types.ObjectId(file.id), // ← This is the GridFS _id
-      filename: file.filename,
-      fileType: file.mimetype,
-      url: `/files/${file.filename}`, // or custom download route
-      uploadedAt: new Date(),
-    }));
-
-    // Save new Post with file metadata
-    const ost = new Post({
+    const newPost = new Post({
       title,
       body,
-      files, // your schema expects an array of file objects
+      files: results,
     });
 
-    console.log(files);
+    await newPost.save();
 
-    await ost.save();
-
-    res.status(201).json({ message: "Blog created!", ost });
+    res.status(201).json({
+      message: "Files uploaded successfully",
+      newPost,
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Something went wrong while creating the blog post.",
-    });
+    console.error("Uploads error:", err);
+    res.status(500).json({ error: "Upload failed" });
   }
 });
 
@@ -325,92 +341,89 @@ router.get("/post-display-products", authMiddleware, async (req, res) => {
 router.post(
   "/post-display-products",
   authMiddleware,
-  uploads.single("image1"),
+  uploads.fields([
+    { name: "Produk1Files", maxCount: 3 },
+    { name: "Produk2Files", maxCount: 3 },
+    { name: "Produk3Files", maxCount: 3 },
+  ]),
   async (req, res) => {
     try {
-      const {
-        NamaProduk1,
-        Harga1,
-        Stok1,
-        Keterangan1,
-        NamaProduk2,
-        Harga2,
-        Stok2,
-        Keterangan2,
-        NamaProduk3,
-        Harga3,
-        Stok3,
-        Keterangan3,
-      } = req.body;
+      const db = mongoose.connection.db;
+      const bucket = new mongoose.mongo.GridFSBucket(db, {
+        bucketName: "uploads",
+      });
+      const saveFiles = async (files) => {
+        if (!files || files.length === 0) return null;
 
-      const brankas = [
-        NamaProduk1,
-        Harga1,
-        Stok1,
-        Keterangan1,
-        NamaProduk2,
-        Harga2,
-        Stok2,
-        Keterangan2,
-        NamaProduk3,
-        Harga3,
-        Stok3,
-        Keterangan3,
-      ];
+        const savedFiles = [];
 
-      if (!brankas) {
-        return res.status(400).json({
-          message: "Semua field product diisi dulu ya",
-        });
-      }
+        for (const file of files) {
+          const stream = bucket.openUploadStream(file.originalname, {
+            contentType: file.mimetype,
+          });
 
-      const fileSingle = {
-        fileId: file.id,
-        filename: file.filename,
-        url: `/files/${file.filename}`,
-        fileType: file.mimetype,
-        uploadedAt: new Date(),
+          const fileId = stream.id; // ✅ THIS is the correct ID
+
+          stream.end(file.buffer);
+
+          await new Promise((resolve, reject) => {
+            stream.on("finish", resolve);
+            stream.on("error", reject);
+          });
+
+          savedFiles.push({
+            fileId: fileId,
+            filename: file.originalname,
+            fileType: file.mimetype,
+            url: `/files/${fileId}`,
+            uploadedAt: new Date(),
+          });
+        }
+
+        return savedFiles;
       };
+      // Upload files
+      const produk1Images = await saveFiles(req.files["Produk1Files"]);
+      const produk2Image = await saveFiles(req.files["Produk2Files"]);
+      const produk3Image = await saveFiles(req.files["Produk3Files"]);
 
-      console.log("FILES RECEIVED:", req.file);
-      const ost = new PostProducts({
+      // Build document
+      const post = new PostProducts({
         Produk1: [
           {
-            NamaProduk1,
-            Harga1,
-            Stok1,
-            Keterangan1,
-            fileImages: fileSingle.image1,
+            NamaProduk1: req.body.NamaProduk1,
+            Harga1: req.body.Harga1,
+            Stok1: req.body.Stok1,
+            Keterangan1: req.body.Keterangan1,
+            fileImages: produk1Images, // this is an array
           },
         ],
         Produk2: [
           {
-            NamaProduk2,
-            Harga2,
-            Stok2,
-            Keterangan2,
-            // fileImages: fileSingle.Produk2Files,
+            NamaProduk2: req.body.NamaProduk2,
+            Harga2: req.body.Harga2,
+            Stok2: req.body.Stok2,
+            Keterangan2: req.body.Keterangan2,
+            fileImages: produk2Image ? produk2Image[0] : null, // this is a single object
           },
         ],
         Produk3: [
           {
-            NamaProduk3,
-            Harga3,
-            Stok3,
-            Keterangan3,
-            // fileImages: fileSingle.Produk3Files,
+            NamaProduk3: req.body.NamaProduk3,
+            Harga3: req.body.Harga3,
+            Stok3: req.body.Stok3,
+            Keterangan3: req.body.Keterangan3,
+            fileImages: produk3Image ? produk3Image[0] : null, // this is a single object
           },
         ],
       });
-      await ost.save();
-      res.status(201).json({ message: "PostProducts created!", ost });
 
-      // res.redirect("admin/display-products");
+      await post.save();
+      // res.status(201).json({ message: "Post created", post });
+      res.redirect("/display-products");
     } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        error: "Something went wrong while creating the blog post.",
-      });
+      console.error("Upload failed:", err);
+      res.status(500).json({ error: "Upload failed", details: err.message });
     }
   }
 );
@@ -461,69 +474,44 @@ router.post(
 //   }
 // );
 
-router.get(
-  "/imagesofproducts/:postId/:itemId",
+router.get("/imagesofproducts/:postId/:fileId", async (req, res) => {
+  const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "uploads",
+  });
+
+  try {
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+    const stream = bucket.openDownloadStream(fileId);
+    stream.pipe(res);
+  } catch (err) {
+    res.status(404).send("Image not found");
+  }
+});
+
+router.delete(
+  "/delete-item1/:postId/:itemId",
   authMiddleware,
   async (req, res) => {
     const { postId, itemId } = req.params;
 
     try {
-      // First, verify the file belongs to the post
-      const post = await PostProducts.findOne({
-        _id: postId,
-        "files._id": itemId,
-      });
+      const updatedPost = await PostProducts.findByIdAndUpdate(
+        postId,
+        { $pull: { Produk1: { _id: itemId } } },
+        { new: true }
+      );
 
-      if (!post) {
-        return res.status(404).json({ message: "Post or file not found" });
+      if (!updatedPost) {
+        return res.status(404).json({ message: "Post not found" });
       }
 
-      const fileId = new mongoose.Types.ObjectId(itemId);
-      const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-        bucketName: "uploads", // same bucket name used when uploading
-      });
-
-      const stream = bucket.openDownloadStream(fileId);
-
-      stream.on("file", (file) => {
-        res.set("Content-Type", file.contentType || "application/octet-stream");
-      });
-
-      stream.on("error", (err) => {
-        console.error("Stream error:", err);
-        if (!res.headersSent) {
-          res.status(404).json({ message: "File not found in GridFS" });
-        }
-      });
-
-      stream.pipe(res);
+      res.redirect("/display-products");
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "Server error" });
+      res.status(400).json({ message: "Error deleting nested item" });
     }
   }
 );
-
-router.delete("/delete-item1/:postId/:itemId", async (req, res) => {
-  const { postId, itemId } = req.params;
-
-  try {
-    const updatedPost = await PostProducts.findByIdAndUpdate(
-      postId,
-      { $pull: { Produk1: { _id: itemId } } },
-      { new: true }
-    );
-
-    if (!updatedPost) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-    res.redirect("/display-products");
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: "Error deleting nested item" });
-  }
-});
 router.delete("/delete-item2/:postId/:itemId", async (req, res) => {
   const { postId, itemId } = req.params;
 
@@ -562,6 +550,149 @@ router.delete("/delete-item3/:postId/:itemId", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).json({ message: "Error deleting nested item" });
+  }
+});
+
+// router.get("/edit-item-input/:itemId/:elementId", async (req, res) => {
+//   const groupId = req.params.itemId;
+//   const elementId = req.params.elementId;
+
+//   try {
+//     const data = await PostProducts.findOne({
+//       groupId: groupId,
+//       elementId: elementId,
+//     });
+
+//     res.render("admin/edit-postdisplay", { data, layout: layoutAdmin });
+//   } catch (err) {
+//     console.error("Error fetching post:", err);
+//     res.status(500).send("Server error");
+//   }
+// });
+
+// router.get("/edit-item-input/:groupId/:elementId", async (req, res) => {
+//   const { groupId, elementId } = req.params;
+
+//   try {
+//     const post = await PostProducts.findById(groupId);
+//     if (!post) {
+//       return res.status(404).json({ message: "Post not found" });
+//     }
+
+//     const item = post.Produk1.id(elementId);
+//     if (!item) {
+//       return res.status(404).json({ message: "Item not found in Produk2" });
+//     }
+
+//     res.render("admin/edit-postdisplay", { data: item, layout: layoutAdmin });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(400).json({ message: "Error fetching nested item" });
+//   }
+// });
+
+router.get(
+  "/edit-item-input/:groupId/:elementId",
+  authMiddleware,
+  async (req, res) => {
+    const { groupId, elementId } = req.params;
+
+    try {
+      const post = await PostProducts.findById(groupId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      // Try to find in each array
+      let item =
+        post.Produk1.id(elementId) ||
+        post.Produk2.id(elementId) ||
+        post.Produk3.id(elementId);
+
+      if (!item) {
+        return res
+          .status(404)
+          .json({ message: "Item not found in any Produk array" });
+      }
+
+      let productName =
+        item.NamaProduk1 || item.NamaProduk2 || item.NamaProduk3;
+
+      res.render("admin/edit-postdisplay", {
+        data: item,
+        productName,
+        layout: layoutAdmin,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ message: "Error fetching nested item" });
+    }
+  }
+);
+
+//how to post the edit-product-display
+router.put("/edit-postdisplay/:groupId", authMiddleware, async (req, res) => {
+  const { groupId } = req.params;
+  const { ProductName, Price, Stock } = req.body;
+
+  try {
+    const dataEdit = await PostProducts.findOne({
+      $or: [
+        { "Produk1._id": groupId },
+        { "Produk2._id": groupId },
+        { "Produk3._id": groupId },
+      ],
+    });
+
+    if (!dataEdit) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    let updated = false;
+
+    // Check Produk1
+    const produk1Item = dataEdit.Produk1.find(
+      (p) => p._id.toString() === groupId
+    );
+    if (produk1Item) {
+      produk1Item.NamaProduk1 = ProductName;
+      produk1Item.Harga1 = Price;
+      produk1Item.Stok1 = Stock;
+      updated = true;
+    }
+
+    // Check Produk2
+    const produk2Item = dataEdit.Produk2.find(
+      (p) => p._id.toString() === groupId
+    );
+    if (produk2Item) {
+      produk2Item.NamaProduk2 = ProductName;
+      produk2Item.Harga2 = Price;
+      produk2Item.Stok2 = Stock;
+      updated = true;
+    }
+
+    // Check Produk3
+    const produk3Item = dataEdit.Produk3.find(
+      (p) => p._id.toString() === groupId
+    );
+    if (produk3Item) {
+      produk3Item.NamaProduk3 = ProductName;
+      produk3Item.Harga3 = Price;
+      produk3Item.Stok3 = Stock;
+      updated = true;
+    }
+
+    if (!updated) {
+      return res.status(404).json({ message: "No matching product found" });
+    }
+
+    await dataEdit.save();
+
+    res.status(200).json({ dataEdit });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

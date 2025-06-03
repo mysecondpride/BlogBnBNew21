@@ -8,15 +8,17 @@ const PostProducts = new Schema({
       Harga1: { type: Number },
       Stok1: { type: Number },
       Keterangan1: { type: String },
-      fileImages: {
-        fileId: {
-          type: mongoose.Schema.Types.ObjectId,
+      fileImages: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
         },
-        filename: { type: String },
-        fileType: { type: String },
-        url: { type: String }, // e.g., local path or cloud URL
-        uploadedAt: { type: Date, default: Date.now },
-      },
+      ],
     },
   ],
   Produk2: [
@@ -25,15 +27,17 @@ const PostProducts = new Schema({
       Harga2: { type: Number },
       Stok2: { type: Number },
       Keterangan2: { type: String },
-      fileImages: {
-        fileId: {
-          type: mongoose.Schema.Types.ObjectId,
+      fileImages: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
         },
-        filename: { type: String },
-        fileType: { type: String },
-        url: { type: String }, // e.g., local path or cloud URL
-        uploadedAt: { type: Date, default: Date.now },
-      },
+      ],
     },
   ],
   Produk3: [
@@ -42,15 +46,17 @@ const PostProducts = new Schema({
       Harga3: { type: Number },
       Stok3: { type: Number },
       Keterangan3: { type: String },
-      fileImages: {
-        fileId: {
-          type: mongoose.Schema.Types.ObjectId,
+      fileImages: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
         },
-        filename: { type: String },
-        fileType: { type: String },
-        url: { type: String }, // e.g., local path or cloud URL
-        uploadedAt: { type: Date, default: Date.now },
-      },
+      ],
     },
   ],
 

@@ -3,9 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>WalikDamenNesia Toko Tanaman produktif, Sayuran lokal, Umbi-umbian lokal </title>
   </head>
   <body>
-    <h1>ini adalah display untuk tokonya ya.. semangat mas budi</h1>
+     <h1>Pemesanan orderan </h1>
+   <p>Senin-Kamis :10.00 s.d 12.00</p>
+   <p>Jum'at: 09:00-11.00</p>
+   <p>Sabtu-Minggu: Libur</p>
+    <h2>Pemesanan melebihi jam di atas, akan mengikuti pengiriman berikutnya dengan harga terupdate, Jum'at Tidak menerima pesanan</h2>
+    <br>
+    <h1>Produk Tersedia</h1>
+<% data.forEach(item => { %>
+    <% const produk1 = item.Produk1 || [] %>
+    <% if (produk1.length > 0) { 
+         const first = produk1[0] %>
+    
+      <p>produk: <%= first.NamaProduk1 %></p>
+      <p>harga: <%= first.Harga1 %></p>
+      <p>stok: <%= first.Stok1 %></p>
+      <p>keterangan: <%= first.Keterangan1 %></p>
+    
+    <% } %>
+
+    <% produk1.forEach(element1 => { 
+         const images = element1.fileImages || []; 
+            const id=element1._id||[]
+         
+         %>
+      
+
+      <% if (images.length > 0) { 
+           images.forEach(img => { %>
+        <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
+      <% }); } %>
+
+    <% }); %>
+  <% }); %>
+</div>
+    <div>
+      <% data.forEach(item => { %> <% const produk2 = item.Produk2; %> <% if
+      (produk2.length > 0) { %>
+      <p>produk:<%= produk2[0].NamaProduk2 %></p>
+      <p>harga: <%= produk2[0].Harga2 %></p>
+      <p>stok: <%= produk2[0].Stok2 %></p>
+      <p>Keterangan: <%= produk2[0].Keterangan2 %></p>
+
+      <% } %> <% produk2.forEach(element2 => { %>
+
+     <% const images=element2.fileImages||[] %>;<% if (images.length>0 ) { %>
+      <% images.forEach(img => { %>
+       <img src="imagesofproducts/<%=item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
+      <% }) %>
+     <% } %>
+
+      
+      <% }) %> <% }) %>
+    </div>
+    <div>
+      <% data.forEach(item => { %> <% const produk3 = item.Produk3; %> <% if
+      (produk3.length > 0) { %>
+      <p>produk:<%= produk3[0].NamaProduk3 %></p>
+      <p>harga: <%= produk3[0].Harga3 %></p>
+      <p>stok: <%= produk3[0].Stok3 %></p>
+      <p>Keterangan: <%= produk3[0].Keterangan3 %></p>
+      <% } %> <% produk3.forEach(element3 => { %>
+
+      <% const images=element3.fileImages||[] %>;<% if (images.length) { %>
+       <% images.forEach(img => { %>
+        <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
+        
+       <% }) %>
+      <% } %>
+      <% }) %> <% }) %>
+    </div>
   </body>
 </html>

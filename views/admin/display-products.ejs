@@ -9,24 +9,42 @@
   </head>
   <body>
     <div>
-      <% data.forEach(item => { %> <% const produk1 = item.Produk1; %> <% if
-      (produk1.length > 0) { %>
+  <% data.forEach(item => { %>
+    <% const produk1 = item.Produk1 || [] %>
+    
+    <% if (produk1.length > 0) { 
+         const first = produk1[0] %>
+    
+      <p>produk: <%= first.NamaProduk1 %></p>
+      <p>harga: <%= first.Harga1 %></p>
+      <p>stok: <%= first.Stok1 %></p>
+      <p>keterangan: <%= first.Keterangan1 %></p>
+    
+    <% } %>
 
-      <p>produk:<%= produk1[0].NamaProduk1 %></p>
-      <p>harga: <%= produk1[0].Harga1 %></p>
-      <p>stok: <%= produk1[0].Stok1 %></p>
-      <p>Keterangan: <%= produk1[0].Keterangan1 %></p>
+    <% produk1.forEach(element1 => { 
+         const images = element1.fileImages || []; 
+            const id=element1._id||[]
+         
+         %>
+      
 
-      <% } %> <% produk1.forEach(element1 => { %>
-      <form
-        action="/delete-item1/<%= item._id %>/<%= element1._id %>?_method=DELETE"
-        method="POST"
-      >
+      <% if (images.length > 0) { 
+           images.forEach(img => { %>
+        <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
+      <% }); } %>
+
+      <form action="/delete-item1/<%= item._id %>/<%= element1._id %>?_method=DELETE" method="POST">
         <input type="submit" value="delete" />
       </form>
 
-      <% }) %> <% }) %>
-    </div>
+      <form action="/edit-item-input/<%= item._id %>/<%=element1._id %>" method="get">
+        <input type="submit" value="edit" />
+      </form>
+
+    <% }); %>
+  <% }); %>
+</div>
     <div>
       <% data.forEach(item => { %> <% const produk2 = item.Produk2; %> <% if
       (produk2.length > 0) { %>
@@ -36,11 +54,23 @@
       <p>Keterangan: <%= produk2[0].Keterangan2 %></p>
 
       <% } %> <% produk2.forEach(element2 => { %>
+
+     <% const images=element2.fileImages||[] %>;<% if (images.length>0 ) { %>
+      <% images.forEach(img => { %>
+       <img src="imagesofproducts/<%=item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
+      <% }) %>
+     <% } %>
+
       <form
         action="/delete-item2/<%= item._id %>/<%= element2._id %>?_method=DELETE"
         method="POST"
       >
         <input type="submit" value="delete" />
+      </form>
+
+      
+      <form action="/edit-item-input/<%= item._id %>/<%= element2._id %>" method="get">
+        <input type="submit" value="edit" />
       </form>
       <% }) %> <% }) %>
     </div>
@@ -52,11 +82,23 @@
       <p>stok: <%= produk3[0].Stok3 %></p>
       <p>Keterangan: <%= produk3[0].Keterangan3 %></p>
       <% } %> <% produk3.forEach(element3 => { %>
+
+      <% const images=element3.fileImages||[] %>;<% if (images.length) { %>
+       <% images.forEach(img => { %>
+        <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
+        
+       <% }) %>
+      <% } %>
+
       <form
         action="/delete-item3/<%= item._id %>/<%= element3._id %>?_method=DELETE"
         method="POST"
       >
         <input type="submit" value="delete" />
+      </form>
+
+          <form action="/edit-item-input/<%= item._id %>/<%= element3._id %>" method="get">
+        <input type="submit" value="edit" />
       </form>
       <% }) %> <% }) %>
     </div>

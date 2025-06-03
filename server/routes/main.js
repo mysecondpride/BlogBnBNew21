@@ -13,6 +13,7 @@ const mongoose = require("mongoose");
 //schema yang diperlukan:
 //Schema post
 const Post = require("../models/Post");
+const PostProducts = require("../models/PostProducts");
 
 // const Grid = require("gridfs-stream");
 
@@ -35,15 +36,23 @@ conn.once("open", function () {
 
 router.get("/", async (req, res) => {
   const locals = {
-    title: "Jual Media Tanam Berkualitas",
-    description: "Arang Sekam | Cocopeat | Kompost | Compost | Compost Tea ",
+    title: "Jual Media Sayuran, Buah dan Tanaman Berkualitas",
+    description:
+      "Umbi-umbian | Sayuran | Buah-buahan | Tanaman Produktif | Tanaman Toga ",
   };
-  res.render("index", { locals });
+
+  try {
+    const data = await PostProducts.find({});
+    res.render("index", { data, locals });
+  } catch (err) {
+    console.error(err);
+  }
 });
 router.get("/blog", async (req, res) => {
   const locals = {
-    title: "Jual Media Tanam Berkualitas",
-    description: "Arang Sekam | Cocopeat | Kompost | Compost | Compost Tea ",
+    title: "Jual Media Tanam Berkualitas dan Sayuran Lokal",
+    description:
+      "Arang Sekam | Cocopeat | Kompost | Compost | Compost Tea |Jagung Ungu | Paprika | Dan lain-lain ",
   };
   // router ini untuk melempar data yang sudah kita post
   let perPage = 10;
@@ -78,31 +87,6 @@ router.get("/post/:id", async (req, res) => {
   res.render("post", { locals, data });
 });
 
-//Post
-//Post:searchTerm
-router.post("/search", async (req, res) => {
-  try {
-    const locals = {
-      title: "Search",
-      description: "Menjual Media Tanam Berkualitas",
-    };
-    const searchTerm = req.body.searchTerm;
-    const noSpecialChar = searchTerm.replace(/[^a-zA-Z0-9]/g, "");
-    const data = await Post.find({
-      $or: [
-        { title: { $regex: new RegExp(noSpecialChar, "i") } },
-        { body: { $regex: new RegExp(noSpecialChar, "i") } },
-      ],
-    });
-
-    res.render("search", {
-      data,
-      locals,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
 
 // bagaimana cara mengecek mesin pencari bekerja atau tidak dari yang kita tuliskan, masuk ke browser
 // router.post("/search", async (req, res) => {

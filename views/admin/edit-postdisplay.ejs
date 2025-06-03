@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="/edit-postdisplay/<%= data._id%>?_method=PUT" method="POST">
+      <label for="NamaProduk">Nama Produk</label>
+      <input
+        type="text"
+        name="ProductName"
+        value="<%= data.NamaProduk1 || data.NamaProduk2 || data.NamaProduk3 %>"
+      />
+      <label for="Harga">Harga</label>
+      <input
+        type="text"
+        name="Price"
+        value="<%= data.Harga1 || data.Harga2 || data.Harga3  %>"
+      />
+      <label for="Stock">Stok</label>
+      <input
+        type="text"
+        name="Stock"
+        value="<%= data.Stok1 ||data.Stok2 ||data.Stok3 %>"
+      />
+
+      <button type="submit" class="submit-post">Edit Info Produk</button>
+    </form>
+  </body>
+</html>
