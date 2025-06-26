@@ -1,29 +1,47 @@
 <div class="admin-title">
-  <h2>ini dashboardmu ya brey--as an admin</h2>
+  <h2>WalikDameNesia</h2>
   <a href="/add-post" class="button">add new post brey</a>
 </div>
 
-<ul class="admin-post">
+<ul  class="admin-post">
   <li>
     TokoKu
-    <a href="/display-products">Klik disini untuk melihat display etalase</a>
+    <a href="/display-products" >Klik disini untuk melihat display etalase</a>
   </li>
    <li>
     TokoKu
     <a href="/post-display-products">Klik disini untuk mempost product baru</a>
   </li>
-
-  <% data.forEach((post) => { %>
-  <li>
-    <a href="/post-article/<%= post._id %>"><%= post.title %></a>
-    <div>
-      <form action="/edit-post/<%= post._id %>" method="get">
-        <input type="submit" value="edit" />
-      </form>
-      <form action="/delete-post/<%= post._id %>?_method=DELETE" method="POST">
-        <input type="submit" value="delete" />
-      </form>
-    </div>
+   <li>
+    Mentan
+    <a href="/post-mentan">Klik disini untuk mempost managementanam</a>
   </li>
-  <% }) %>
+     <li>
+    ManagemenHidroPonik
+    <a href="/post-hidro">Klik disini untuk mempost ManagementHidroPonik</a>
+  </li>
+
+<a href="/display-mentan" class="buttonBuatan">Hasil Management Tanam</a>
+
+<a href="/display-hidro" class="buttonBuatan">Hasil Management HidroPonik</a>
+<% data.forEach((item) => { %>
+  <% if (item && item._id) { %>
+    <ul>
+      <% const tableOfContent = item.daftarIsi || []; %>
+      <% if (tableOfContent.length > 0) { %>
+        <% const first = tableOfContent[0]; %>
+        <a href="/post-article/<%= item._id %>">
+          <p><%= first.judul %></p>
+        </a>
+      <% } %>
+
+      <form action="/delete-post/<%= item._id %>?_method=DELETE" method="POST">
+        <input type="submit" value="delete blog" />
+      </form>
+    </ul>
+  <% } else { %>
+    <!-- Optional: you can skip this else block entirely to avoid extra space -->
+    <!-- <p>Data has been deleted or _id missing</p> -->
+  <% } %>
+<% }); %>
 </ul>

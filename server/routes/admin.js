@@ -13,6 +13,7 @@ var mongoose = require("mongoose");
 const Post = require("../models/Post");
 //Schema login
 const User = require("../models/User");
+const MenTan = require("../models/ManagementTanam");
 
 //Layout yang dilempar ke target
 const layoutAdmin = "../views/layouts/admin";
@@ -58,6 +59,10 @@ router.get("/admin", async (req, res) => {
 
 /* POST */
 /* Check-Login */
+
+router.get("/robots.txt", (req, res) => {
+  res.sendFile(path.join(__dirname, "robots.txt"));
+});
 
 router.post("/admin", async (req, res) => {
   try {
@@ -117,7 +122,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-//dashboard
+// dashboard
 router.get("/dashboard", authMiddleware, async (req, res) => {
   //fungsi authMiddleware melindungi ketika sesion habis, token tidak permanen
   try {
@@ -141,162 +146,139 @@ router.get("/add-post", authMiddleware, async (req, res) => {
   }
 });
 
+router.post(
+  "/add-post",
+  authMiddleware,
+  uploads.fields([
+    { name: "BlogImg1", maxCount: 3 },
+    { name: "BlogImg2", maxCount: 3 },
+    { name: "BlogImg3", maxCount: 3 },
+    { name: "BlogImg4", maxCount: 3 },
+  ]),
+  async (req, res) => {
+    try {
+      const db = mongoose.connection.db;
+      const bucket = new mongoose.mongo.GridFSBucket(db, {
+        bucketName: "uploads",
+      });
+
+      const saveFiles = async (files) => {
+        if (!files || files.length === 0) return null;
+
+        const savedFiles = [];
+
+        for (const file of files) {
+          const stream = bucket.openUploadStream(file.originalname, {
+            contentType: file.mimetype,
+          });
+
+          const fileId = stream.id; // ✅ THIS is the correct ID
+
+          stream.end(file.buffer);
+
+          await new Promise((resolve, reject) => {
+            stream.on("finish", resolve);
+            stream.on("error", reject);
+          });
+
+          savedFiles.push({
+            fileId: fileId,
+            filename: file.originalname,
+            fileType: file.mimetype,
+            url: `/files/${fileId}`,
+            uploadedAt: new Date(),
+          });
+        }
+
+        return savedFiles;
+      };
+      // Upload files
+      const blogImg1File = await saveFiles(req.files["BlogImg1"]);
+      const blogImg2File = await saveFiles(req.files["BlogImg2"]);
+      const blogImg3File = await saveFiles(req.files["BlogImg3"]);
+      const blogImg4File = await saveFiles(req.files["BlogImg4"]);
+
+      // Build document
+      const post = new Post({
+        daftarIsi: [
+          {
+            judul: req.body.title,
+            pengantar: req.body.preface,
+            sistematika: req.body.structure,
+          },
+        ],
+        element1: [
+          {
+            H1: req.body.H1Judul,
+            body1: req.body.body1,
+            url: req.body.url,
+            files: blogImg1File ? blogImg1File : null, // this is a single object
+          },
+        ],
+        element2: [
+          {
+            body2: req.body.body2,
+            files: blogImg2File ? blogImg2File : null, // this is a single object
+          },
+        ],
+        element3: [
+          {
+            body3: req.body.body3,
+            url: req.body.url,
+            files: blogImg3File ? blogImg3File : null, // this is a single object
+          },
+        ],
+
+        element4: [
+          {
+            body4: req.body.body4,
+            files: blogImg4File ? blogImg4File : null, // this is a single object
+          },
+        ],
+        penutup: [
+          {
+            penutup: req.body.closing,
+          },
+        ],
+      });
+
+      await post.save();
+      res.status(201).json({ message: "Post created", post });
+      // res.redirect("/dashboard");
+    } catch (err) {
+      console.error("Upload failed:", err);
+      res.status(500).json({ error: "Upload failed", details: err.message });
+    }
+  }
+);
+const { Types } = require("mongoose");
+const ManagementHidro = require("../models/ManagementHidro");
+
 router.get("/post-article/:id", authMiddleware, async (req, res) => {
   try {
-    const articleId = req.params.id;
-    const data = await Post.findById(articleId);
-    if (!data) {
-      res.status(404).json({ message: "data was not foound" });
-    }
+    const { id } = req.params;
+    const data = await Post.findById(id); // 🟢 This uses the _id
+    console.log(data, " ini adalah data");
 
-    res.render("admin/post-article", { layout: layoutAdmin, data });
+    res.render("admin/post-article", { data, layout: layoutAdmin });
   } catch (error) {
     console.log("error", error);
   }
 });
 
-router.post("/add-post", uploads.array("utama", 5), async (req, res) => {
+router.get("/imageOfElement1/:fileId", async (req, res) => {
+  const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "uploads",
+  });
+
   try {
-    const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-      bucketName: "uploads",
-    });
-    const { body, title } = req.body;
-
-    const files = req.files; // This is an array
-    if (!files || files.length === 0) {
-      return res.status(400).json({ error: "No files uploaded." });
-    }
-
-    const results = [];
-
-    for (const file of files) {
-      const { originalname, mimetype, buffer } = file;
-
-      const readableStream = new Readable();
-      readableStream.push(buffer);
-      readableStream.push(null);
-
-      const uploadStream = bucket.openUploadStream(originalname, {
-        contentType: mimetype,
-      });
-
-      await new Promise((resolve, reject) => {
-        readableStream
-          .pipe(uploadStream)
-          .on("error", reject)
-          .on("finish", () => {
-            results.push({
-              fileId: uploadStream.id,
-              filename: uploadStream.filename,
-              contentType: mimetype,
-            });
-            resolve();
-          });
-      });
-    }
-
-    const newPost = new Post({
-      title,
-      body,
-      files: results,
-    });
-
-    await newPost.save();
-
-    res.status(201).json({
-      message: "Files uploaded successfully",
-      newPost,
-    });
-  } catch (err) {
-    console.error("Uploads error:", err);
-    res.status(500).json({ error: "Upload failed" });
-  }
-});
-
-router.get("/image/:id", (req, res) => {
-  try {
-    const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-      bucketName: "uploads",
-    });
-    const { id } = req.params;
-    const fileId = new mongoose.Types.ObjectId(id);
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
     const stream = bucket.openDownloadStream(fileId);
-
-    stream.on("file", (file) => {
-      // Set correct content type
-      res.set("Content-Type", file.contentType || "image/jpg");
-    });
-
-    stream.on("error", (err) => {
-      console.error("Stream error:", err.message);
-      res.status(404).json({ message: "File not found" });
-    });
-
     stream.pipe(res);
   } catch (err) {
-    console.error("Route error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(404).send("Image not found");
   }
 });
-
-router.get("/edit-post/:id", authMiddleware, async (req, res) => {
-  try {
-    const locals = {
-      title: "edit-post",
-      description: "edit post of article",
-    };
-    const data = await Post.findOne({ _id: req.params.id });
-
-    // if (!data) return res.status(404).send("updated article is not found");
-
-    res.render("admin/edit-post", { locals, data, layout: layoutAdmin });
-  } catch (error) {
-    res.status(500).send("Error updating post");
-  }
-});
-
-//ini masih belum fix ya......
-router.put(
-  "/edit-post/:id",
-  uploads.single("utama"),
-  authMiddleware,
-  async (req, res) => {
-    const { title, body } = req.body;
-
-    try {
-      // 1. Find the post by ID
-      const post = await Post.findById(req.params.id);
-      if (!post) return res.status(404).send("Post not found");
-
-      // 2. Delete the old image from GridFS (if a new image is uploaded)
-      if (req.file && post.filename) {
-        const db = mongoose.connection.db;
-        const bucket = new mongoose.mongo.GridFSBucket(db, {
-          bucketName: "uploads", // use your bucket name
-        });
-
-        await bucket.delete(post.filename); // remove old image by ID
-      }
-
-      // 3. Update the fields
-      post.title = title;
-      post.body = body;
-
-      // 4. Update the image if new file is uploaded
-      if (req.file && req.file.id) {
-        post.filename = req.file.filename;
-      }
-
-      // 5. Save updated post
-      await post.save();
-
-      res.redirect("/dashboard");
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error updating post");
-    }
-  }
-);
 
 router.delete("/delete-post/:id", async (req, res) => {
   try {
@@ -304,7 +286,8 @@ router.delete("/delete-post/:id", async (req, res) => {
     if (!deletedPost) {
       return res.status(404).json({ message: "Post not found" });
     }
-    res.status(200).json({ message: "Post deleted successfully" });
+    res.redirect("/admin/dashboard"); // 🔁 reloads fresh data
+    // res.status(200).json({ message: "Post deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -428,52 +411,6 @@ router.post(
   }
 );
 
-//images untuk produk pada post-display-product
-
-// router.get(
-//   "/imagesofproducts/:postId/:itemId",
-//   authMiddleware,
-//   async (req, res) => {
-//     const { postId, itemId } = req.params;
-
-//     // disini harus ada pull nya..
-//     try {
-//       const updatedPost = await PostProducts.findByIdAndUpdate(
-//         postId,
-//         { $pull: { files: { _id: itemId } } },
-//         { new: true }
-//       );
-
-//       if (!updatedPost) {
-//         return res.status(404).json({ message: "Post not found" });
-//       }
-
-//       // Convert string to MongoDB ObjectId
-//       const fileId = new mongoose.Types.ObjectId(itemId);
-//       const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-//         bucketName: "uploads", // important: must match the bucket used when uploading
-//       });
-
-//       const stream = bucket.openDownloadStream(fileId);
-
-//       stream.on("file", (file) => {
-//         res.set("Content-Type", file.contentType || "application/octet-stream");
-//       });
-
-//       stream.on("error", (err) => {
-//         console.error("Download stream error:", err.message);
-//         if (!res.headersSent) {
-//           res.status(404).json({ message: "File not found" });
-//         }
-//       });
-
-//       stream.pipe(res);
-//     } catch (err) {
-//       return res.status(400).json({ message: "Invalid file ID" });
-//     }
-//   }
-// );
-
 router.get("/imagesofproducts/:postId/:fileId", async (req, res) => {
   const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
     bucketName: "uploads",
@@ -552,44 +489,6 @@ router.delete("/delete-item3/:postId/:itemId", async (req, res) => {
     res.status(400).json({ message: "Error deleting nested item" });
   }
 });
-
-// router.get("/edit-item-input/:itemId/:elementId", async (req, res) => {
-//   const groupId = req.params.itemId;
-//   const elementId = req.params.elementId;
-
-//   try {
-//     const data = await PostProducts.findOne({
-//       groupId: groupId,
-//       elementId: elementId,
-//     });
-
-//     res.render("admin/edit-postdisplay", { data, layout: layoutAdmin });
-//   } catch (err) {
-//     console.error("Error fetching post:", err);
-//     res.status(500).send("Server error");
-//   }
-// });
-
-// router.get("/edit-item-input/:groupId/:elementId", async (req, res) => {
-//   const { groupId, elementId } = req.params;
-
-//   try {
-//     const post = await PostProducts.findById(groupId);
-//     if (!post) {
-//       return res.status(404).json({ message: "Post not found" });
-//     }
-
-//     const item = post.Produk1.id(elementId);
-//     if (!item) {
-//       return res.status(404).json({ message: "Item not found in Produk2" });
-//     }
-
-//     res.render("admin/edit-postdisplay", { data: item, layout: layoutAdmin });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(400).json({ message: "Error fetching nested item" });
-//   }
-// });
 
 router.get(
   "/edit-item-input/:groupId/:elementId",
@@ -705,4 +604,925 @@ router.get("/logout", (req, res) => {
     res.redirect("/admin"); // or wherever you want
   });
 });
+
+router.get("/post-mentan", authMiddleware, async (req, res) => {
+  try {
+    const data = await MenTan.find({});
+    console.log(data, "ini data produk");
+
+    res.render("admin/formMentan", { layout: layoutAdmin, data });
+  } catch (err) {
+    console.error(err);
+    // res.redirect("admin/displayMentan", { data, layout: layoutAdmin });
+  }
+});
+
+router.get("/display-mentan", authMiddleware, async (req, res) => {
+  //fungsi authMiddleware melindungi ketika sesion habis, token tidak permanen
+  try {
+    const data = await MenTan.find({});
+    console.log(data);
+
+    res.render("admin/displayMentan", { data, layout: layoutAdmin });
+  } catch (error) {
+    console.log("error", error);
+  }
+});
+
+router.get("/imagesofpetak1/:postId/:fileId", async (req, res) => {
+  const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "uploads",
+  });
+
+  try {
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+    const stream = bucket.openDownloadStream(fileId);
+    stream.pipe(res);
+  } catch (err) {
+    res.status(404).send("Image not found");
+  }
+});
+
+router.get("/imagesofpetak2/:postId/:fileId", async (req, res) => {
+  const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "uploads",
+  });
+
+  try {
+    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+    const stream = bucket.openDownloadStream(fileId);
+    stream.pipe(res);
+  } catch (err) {
+    res.status(404).send("Image not found");
+  }
+});
+
+router.post(
+  "/post-mentan",
+  authMiddleware,
+  uploads.fields([
+    { name: "Progress1", maxCount: 3 },
+    { name: "Progress2", maxCount: 3 },
+  ]),
+  async (req, res) => {
+    try {
+      const db = mongoose.connection.db;
+      const bucket = new mongoose.mongo.GridFSBucket(db, {
+        bucketName: "uploads",
+      });
+      const saveFiles = async (files) => {
+        if (!files || files.length === 0) return null;
+
+        const savedFiles = [];
+
+        for (const file of files) {
+          const stream = bucket.openUploadStream(file.originalname, {
+            contentType: file.mimetype,
+          });
+
+          const fileId = stream.id; // ✅ THIS is the correct ID
+
+          stream.end(file.buffer);
+
+          await new Promise((resolve, reject) => {
+            stream.on("finish", resolve);
+            stream.on("error", reject);
+          });
+
+          savedFiles.push({
+            fileId: fileId,
+            filename: file.originalname,
+            fileType: file.mimetype,
+            url: `/files/${fileId}`,
+            uploadedAt: new Date(),
+          });
+        }
+
+        return savedFiles;
+      };
+      // Upload files
+      const DokProg1 = await saveFiles(req.files["Progress1"]);
+      const DokProg2 = await saveFiles(req.files["Progress2"]);
+
+      // Build document
+      const post = new MenTan({
+        Petak1: [
+          {
+            ObatSuketAwal1: req.body.OSukAwal1,
+            PengolahanLahanPetak1: req.body.PengLaTak1,
+            DolomitPetak1: req.body.DolomitPetak1,
+            KetersediaanCompostTea_Jadam1: req.body.CTAvailable1,
+            KetersediaanCompostdanBio1: req.body.KompostdanBio1,
+            JenisBibitPetak1: req.body.TypeSeeds1,
+            MasukMediaBioChar1: req.body.EnterBiochar1,
+            TanggalTanamPetak1: req.body.DatePlant1,
+            ObatSuket10Hari1: req.body.Osukten1,
+            KocorCompostTea1: req.body.kocorCT1,
+            JadamSulfur1: req.body.Jasur1,
+            ControlSuket1_1: req.body.grass1_1,
+            PenyiramanTahap1_1: req.body.Watering1_1,
+            TglPemupukan1_1: req.body.DateFertilizerVeg1,
+            PupukVegetatifMakro1: req.body.VegMakro1,
+            ControlSuket2_1: req.body.grass2_1,
+            PenyiramanTahap2_1: req.body.Watering2_1,
+            TglPemupukanGen1: req.body.DateFerGen1,
+            PupukGeneratifMakro1: req.body.GenMakro1,
+            ObatUlat1: req.body.CaterPiler1,
+            UsiaPanendanKendala1: req.body.HarvestAge1,
+            Rata_rataBb1: req.body.averageBB1,
+            DokProgress1: DokProg1,
+          },
+        ],
+        Petak2: [
+          {
+            ObatSuketAwal2: req.body.OSukAwal2,
+            PengolahanLahanPetak2: req.body.PengLaTak2,
+            DolomitPetak2: req.body.DolomitPetak2,
+            KetersediaanCompostTea_Jadam2: req.body.CTAvailable2,
+            KetersediaanCompostdanBio2: req.body.KompostdanBio2,
+            JenisBibitPetak2: req.body.TypeSeeds2,
+            MasukMediaBioChar2: req.body.EnterBiochar2,
+            TanggalTanamPetak2: req.body.DatePlant2,
+            ObatSuket10Hari2: req.body.Osukten2,
+            KocorCompostTea2: req.body.kocorCT2,
+            JadamSulfur2: req.body.Jasur2,
+            ControlSuket1_2: req.body.grass1_2,
+            PenyiramanTahap1_2: req.body.Watering1_2,
+            TglPemupukan1_2: req.body.DateFertilizerVeg2,
+            PupukVegetatifMakro2: req.body.VegMakro2,
+            ControlSuket2_2: req.body.grass2_2,
+            PenyiramanTahap2_2: req.body.Watering2_2,
+            TglPemupukanGen2: req.body.DateFerGen2,
+            PupukGeneratifMakro2: req.body.GenMakro2,
+            ObatUlat2: req.body.CaterPiler2,
+            UsiaPanendanKendala2: req.body.HarvestAge2,
+            Rata_rataBb2: req.body.averageBB2,
+            DokProgress2: DokProg2,
+          },
+        ],
+        Petak3: [
+          {
+            ObatSuketAwal3: req.body.OSukAwal3,
+            JenisBibitPetak3: req.body.TypeSeeds3,
+            TanggalTanamPetak3: req.body.DatePlant3,
+            ObatSuket10Hari3: req.body.Osukten3,
+            JadamSulfur3: req.body.Jasur3,
+            TglPemupukan1_3: req.body.DateFertilizerVeg3,
+            PupukVegetatifMakro3: req.body.VegMakro3,
+            TglPemupukanGen3: req.body.DateFerGen3,
+            PupukGeneratifMakro3: req.body.GenMakro3,
+            ObatUlat3: req.body.CaterPiler3,
+            UsiaPanenPetak3: req.body.HarvestAge3,
+            Rata_rataBb3: req.body.averageBB3,
+          },
+        ],
+      });
+      await post.save();
+      res.status(201).json({ message: "Post created", post });
+    } catch (err) {
+      console.error("Upload failed:", err);
+      res.status(500).json({ error: "Upload failed", details: err.message });
+    }
+  }
+);
+
+router.get(
+  "/imagesofpetak1/:postId/:fileId",
+  authMiddleware,
+  async (req, res) => {
+    const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: "uploads",
+    });
+
+    try {
+      const fileId = new mongoose.Types.ObjectId(req.params.fileId);
+      const stream = bucket.openDownloadStream(fileId);
+      stream.pipe(res);
+    } catch (err) {
+      res.status(404).send("Image not found");
+    }
+  }
+);
+router.delete(
+  "/delete-item1-petak1/:postId/:itemId",
+  authMiddleware,
+  async (req, res) => {
+    const { postId, itemId } = req.params;
+
+    try {
+      const updatedPost = await MenTan.findByIdAndUpdate(
+        postId,
+        { $pull: { Petak1: { _id: itemId } } },
+        { new: true }
+      );
+
+      if (!updatedPost) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      res.redirect("/display-mentan");
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ message: "Error deleting nested item" });
+    }
+  }
+);
+
+router.delete("/delete-item1-petak2/:postId/:itemId", async (req, res) => {
+  const { postId, itemId } = req.params;
+
+  try {
+    const updatedPost = await MenTan.findByIdAndUpdate(
+      postId,
+      { $pull: { Petak2: { _id: itemId } } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.redirect("/display-mentan");
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Error deleting nested item" });
+  }
+});
+
+router.delete("/delete-item1-petak3/:postId/:itemId", async (req, res) => {
+  const { postId, itemId } = req.params;
+  console.log("DELETE PETAK1 HIT", postId, itemId);
+
+  try {
+    const updatedPost = await MenTan.findByIdAndUpdate(
+      postId,
+      { $pull: { Petak3: { _id: itemId } } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.redirect("/display-mentan");
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Error deleting nested item" });
+  }
+});
+
+router.put("/edit-item-petak/:groupId", authMiddleware, async (req, res) => {
+  const { groupId } = req.params;
+  const {
+    OSukAwal,
+    PengLaTak,
+    DolomitPetak,
+    CTAvailable,
+    KompostdanBio,
+    TypeSeeds,
+    EnterBiochar,
+    DatePlant,
+    Osukten,
+    kocorCT,
+    Jasur,
+    grass1,
+    Watering1,
+    DateFertilizerVeg,
+    VegMakro,
+    grass2,
+    Watering2,
+    DateFerGen,
+    GenMakro,
+    CaterPiler,
+    averageBB,
+    HarvestAge,
+  } = req.body;
+
+  console.log(
+    OSukAwal,
+    PengLaTak,
+    DolomitPetak,
+    CTAvailable,
+    KompostdanBio,
+    TypeSeeds,
+    EnterBiochar,
+    DatePlant,
+    Osukten,
+    kocorCT,
+    Jasur,
+    grass1,
+    Watering1,
+    DateFertilizerVeg,
+    VegMakro,
+    grass2,
+    Watering2,
+    DateFerGen,
+    GenMakro,
+    CaterPiler,
+    averageBB,
+    HarvestAge
+  );
+
+  try {
+    const dataEdit = await MenTan.findOne({
+      $or: [
+        { "Petak1._id": groupId },
+        { "Petak2._id": groupId },
+        { "Petak3._id": groupId },
+      ],
+    });
+
+    if (!dataEdit) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+    let updated = false;
+    // Check Petak1
+    const petak1Item = Array.isArray(dataEdit.Petak1)
+      ? dataEdit.Petak1.find((p) => p._id.toString() === groupId.toString())
+      : null;
+    if (petak1Item) {
+      petak1Item.ObatSuketAwal1 = OSukAwal;
+      petak1Item.PengolahanLahanPetak1 = PengLaTak;
+      petak1Item.DolomitPetak1 = DolomitPetak;
+      petak1Item.KetersediaanCompostTea_Jadam1 = CTAvailable;
+      petak1Item.KetersediaanCompostdanBio1 = KompostdanBio;
+      petak1Item.JenisBibitPetak1 = TypeSeeds;
+      petak1Item.MasukMediaBioChar1 = EnterBiochar;
+      petak1Item.TanggalTanamPetak1 = DatePlant;
+      petak1Item.ObatSuket10Hari1 = Osukten;
+      petak1Item.KocorCompostTea1 = kocorCT;
+      petak1Item.JadamSulfur1 = Jasur;
+      petak1Item.ControlSuket1_1 = grass1;
+      petak1Item.PenyiramanTahap1_1 = Watering1;
+      petak1Item.TglPemupukan1_1 = DateFertilizerVeg;
+      petak1Item.PupukVegetatifMakro1 = VegMakro;
+      petak1Item.ControlSuket2_1 = grass2;
+      petak1Item.PenyiramanTahap2_1 = Watering2;
+      petak1Item.TglPemupukanGen1 = DateFerGen;
+      petak1Item.PupukGeneratifMakro1 = GenMakro;
+      petak1Item.ObatUlat1 = CaterPiler;
+      petak1Item.UsiaPanendanKendala1 = HarvestAge;
+      petak1Item.Rata_rataBb1 = averageBB;
+      updated = true;
+    }
+
+    // Check Petak2
+    const petak2Item = Array.isArray(dataEdit.Petak2)
+      ? dataEdit.Petak2.find((p) => p._id.toString() === groupId.toString())
+      : null;
+    if (petak2Item) {
+      petak2Item.ObatSuketAwal2 = OSukAwal;
+      petak2Item.PengolahanLahanPetak2 = PengLaTak;
+      petak2Item.DolomitPetak2 = DolomitPetak;
+      petak2Item.KetersediaanCompostTea_Jadam2 = CTAvailable;
+      petak2Item.KetersediaanCompostdanBio2 = KompostdanBio;
+      petak2Item.JenisBibitPetak2 = TypeSeeds;
+      petak2Item.MasukMediaBioChar2 = EnterBiochar;
+      petak2Item.TanggalTanamPetak2 = DatePlant;
+      petak2Item.ObatSuket10Hari2 = Osukten;
+      petak2Item.KocorCompostTea2 = kocorCT;
+      petak2Item.JadamSulfur2 = Jasur;
+      petak2Item.ControlSuket1_2 = grass1;
+      petak2Item.PenyiramanTahap1_2 = Watering1;
+      petak2Item.TglPemupukan1_2 = DateFertilizerVeg;
+      petak2Item.PupukVegetatifMakro2 = VegMakro;
+      petak2Item.ControlSuket2_2 = grass2;
+      petak2Item.PenyiramanTahap2_2 = Watering2;
+      petak2Item.TglPemupukanGen2 = DateFerGen;
+      petak2Item.PupukGeneratifMakro2 = GenMakro;
+      petak2Item.ObatUlat2 = CaterPiler;
+      petak2Item.UsiaPanendanKendala2 = HarvestAge;
+      petak2Item.Rata_rataBb2 = averageBB;
+      updated = true;
+    }
+
+    // Check Petak3
+    const petak3Item = dataEdit.Petak3.find(
+      (p) => p._id.toString() === groupId
+    );
+    if (petak3Item) {
+      petak3Item.ObatSuketAwal3 = OSukAwal;
+      petak3Item.JenisBibitPetak3 = TypeSeeds;
+      petak3Item.TanggalTanamPetak3 = DatePlant;
+      petak3Item.JadamSulfur3 = Jasur;
+      petak3Item.TglPemupukan1_3 = DateFertilizerVeg;
+      petak3Item.PupukVegetatifMakro3 = VegMakro;
+      petak3Item.TglPemupukanGen3 = DateFerGen;
+      petak3Item.PupukGeneratifMakro3 = GenMakro;
+      petak3Item.ObatUlat3 = CaterPiler;
+      petak3Item.UsiaPanenPetak3 = HarvestAge;
+      petak3Item.Rata_rataBb3 = averageBB;
+
+      updated = true;
+    }
+    console.log("groupId:", groupId);
+    console.log("dataEdit:", dataEdit);
+    console.log("Petak1:", dataEdit.Petak1);
+    console.log("Petak2:", dataEdit.Petak2);
+
+    if (!updated) {
+      return res.status(404).json({ message: "No matching product found" });
+    }
+
+    await dataEdit.save();
+
+    res.status(200).json({ dataEdit });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/display-hidro", authMiddleware, async (req, res) => {
+  try {
+    const data = await ManagementHidro.find({});
+    console.log(data, "ini data management hidroponik");
+
+    res.render("admin/displayHidro", { layout: layoutAdmin, data });
+  } catch (err) {
+    console.error(err);
+    // res.redirect("admin/displayMentan", { data, layout: layoutAdmin });
+  }
+});
+
+router.get("/post-hidro", authMiddleware, async (req, res) => {
+  try {
+    const data = await ManagementHidro.find({});
+    console.log(data, "ini data produk");
+
+    res.render("admin/formHidroponik", { layout: layoutAdmin, data });
+  } catch (err) {
+    console.error(err);
+    // res.redirect("admin/displayMentan", { data, layout: layoutAdmin });
+  }
+});
+
+router.post(
+  "/post-hidro",
+  authMiddleware,
+  uploads.fields([
+    { name: "Progress1", maxCount: 3 },
+    { name: "Progress2", maxCount: 3 },
+    { name: "Progress3", maxCount: 3 },
+  ]),
+  async (req, res) => {
+    try {
+      const db = mongoose.connection.db;
+      const bucket = new mongoose.mongo.GridFSBucket(db, {
+        bucketName: "uploads",
+      });
+      const saveFiles = async (files) => {
+        if (!files || files.length === 0) return null;
+
+        const savedFiles = [];
+
+        for (const file of files) {
+          const stream = bucket.openUploadStream(file.originalname, {
+            contentType: file.mimetype,
+          });
+
+          const fileId = stream.id; // ✅ THIS is the correct ID
+
+          stream.end(file.buffer);
+
+          await new Promise((resolve, reject) => {
+            stream.on("finish", resolve);
+            stream.on("error", reject);
+          });
+
+          savedFiles.push({
+            fileId: fileId,
+            filename: file.originalname,
+            fileType: file.mimetype,
+            url: `/files/${fileId}`,
+            uploadedAt: new Date(),
+          });
+        }
+
+        return savedFiles;
+      };
+      // Upload files
+      const DokProg1 = await saveFiles(req.files["Progress1"]);
+      const DokProg2 = await saveFiles(req.files["Progress2"]);
+      const DokProg3 = await saveFiles(req.files["Progress3"]);
+
+      // Build document
+      const post = new ManagementHidro({
+        Kebun1: [
+          {
+            TglSemai1: req.body.DateOfScatter1,
+            JenisBibitKebun1: req.body.TypeSeeds1,
+            KetersediaanABmix1: req.body.ABmixAvailable1,
+            KetersediaanJadamSulfur1: req.body.JasurAvailable1,
+            KetersediaanArangSekamOrMetan1: req.body.MetanAvailable1,
+            KutilangOrNot1: req.body.KutilangOrNot1,
+            PPM1_1: req.body.firstPPM1,
+            PPM2_1: req.body.secondPPM1,
+            PPM3_1: req.body.thirdPPM1,
+            PPM4_1: req.body.fourthPPM1,
+            SprayJadam1_1: req.body.Jasur1_1,
+            SprayPesNab1_1: req.body.Pesnab1_1,
+            SprayJadam2_1: req.body.Jasur2_1,
+            SprayPesNab2_1: req.body.Pesnab2_1,
+            SprayJadam3_1: req.body.Jasur3_1,
+            SprayPesNab3_1: req.body.Pesnab3_1,
+            SprayJadam4_1: req.body.Jasur4_1,
+            SprayPesNab4_1: req.body.Jasur4_1,
+            ObatUlat1: req.body.CaterPiler1,
+            UsiaPanendanKendala1: req.body.HarvestAge1,
+            Rata_rataBb1: req.body.averageBB1,
+            PembersihanPipa1: req.body.cleaningPipe1,
+            DokProgress1: DokProg1,
+          },
+        ],
+
+        Kebun2: [
+          {
+            TglSemai2: req.body.DateOfScatter2,
+            JenisBibitKebun2: req.body.TypeSeeds2,
+            KetersediaanABmix2: req.body.ABmixAvailable2,
+            KetersediaanJadamSulfur2: req.body.JasurAvailable2,
+            KetersediaanArangSekamOrMetan2: req.body.MetanAvailable2,
+            KutilangOrNot2: req.body.KutilangOrNot2,
+            PPM1_2: req.body.firstPPM2,
+            PPM2_2: req.body.secondPPM2,
+            PPM3_2: req.body.thirdPPM2,
+            PPM4_2: req.body.fourthPPM2,
+            SprayJadam1_2: req.body.Jasur1_2,
+            SprayPesNab1_2: req.body.Pesnab1_2,
+            SprayJadam2_2: req.body.Jasur2_2,
+            SprayPesNab2_2: req.body.Pesnab2_2,
+            SprayJadam3_2: req.body.Jasur3_2,
+            SprayPesNab3_2: req.body.Pesnab3_2,
+            SprayJadam4_2: req.body.Jasur4_2,
+            SprayPesNab4_2: req.body.Jasur4_2,
+            ObatUlat2: req.body.CaterPiler2,
+            UsiaPanendanKendala2: req.body.HarvestAge2,
+            Rata_rataBb2: req.body.averageBB2,
+            PembersihanPipa2: req.body.cleaningPipe2,
+            DokProgress2: DokProg2,
+          },
+        ],
+        Kebun3: [
+          {
+            TglSemai3: req.body.DateOfScatter3,
+            JenisBibitKebun3: req.body.TypeSeeds3,
+            KetersediaanABmix3: req.body.ABmixAvailable3,
+            KetersediaanJadamSulfur3: req.body.JasurAvailable3,
+            KetersediaanArangSekamOrMetan3: req.body.MetanAvailable3,
+            KutilangOrNot3: req.body.KutilangOrNot3,
+            PPM1_3: req.body.firstPPM3,
+            PPM2_3: req.body.secondPPM3,
+            PPM3_3: req.body.thirdPPM3,
+            PPM4_3: req.body.fourthPPM3,
+            SprayJadam1_3: req.body.Jasur1_3,
+            SprayPesNab1_3: req.body.Pesnab1_3,
+            SprayJadam2_3: req.body.Jasur2_3,
+            SprayPesNab2_3: req.body.Pesnab2_3,
+            SprayJadam3_3: req.body.Jasur3_3,
+            SprayPesNab3_3: req.body.Pesnab3_3,
+            SprayJadam4_3: req.body.Jasur4_3,
+            SprayPesNab4_3: req.body.Jasur4_3,
+            ObatUlat3: req.body.CaterPiler3,
+            UsiaPanendanKendala3: req.body.HarvestAge3,
+            Rata_rataBb3: req.body.averageBB3,
+            PembersihanPipa3: req.body.cleaningPipe3,
+            DokProgress3: DokProg3,
+          },
+        ],
+      });
+      await post.save();
+      // res.status(201).json({ message: "Post created", post });
+      res.redirect("/display-hidro");
+    } catch (err) {
+      console.error("Upload failed:", err);
+      res.status(500).json({ error: "Upload failed", details: err.message });
+    }
+  }
+);
+//how to display edit
+
+router.get(
+  "/edit-item-petak/:groupId/:elementId",
+  authMiddleware,
+  async (req, res) => {
+    const { groupId, elementId } = req.params;
+
+    try {
+      const post = await MenTan.findById(groupId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      // Try to find in each array
+      let item =
+        post.Petak1.id(elementId) ||
+        post.Petak2.id(elementId) ||
+        post.Petak3.id(elementId);
+
+      if (!item) {
+        return res
+          .status(404)
+          .json({ message: "Item not found in any Produk array" });
+      }
+
+      // let penanda =
+      //   item.ObatSuketAwal1 || item.ObatSuketAwal2 || item.ObatSuketAwal3;
+
+      res.render("admin/editMentan", {
+        data: item,
+        // penanda,
+        layout: layoutAdmin,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ message: "Error fetching nested item" });
+    }
+  }
+);
+
+router.get(
+  "/edit-item-kebun/:groupId/:elementId",
+  authMiddleware,
+  async (req, res) => {
+    const { groupId, elementId } = req.params;
+
+    try {
+      const post = await ManagementHidro.findById(groupId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      // Try to find in each array
+      let item =
+        post.Kebun1.id(elementId) ||
+        post.Kebun2.id(elementId) ||
+        post.Kebun3.id(elementId);
+
+      if (!item) {
+        return res
+          .status(404)
+          .json({ message: "Item not found in any Produk array" });
+      }
+
+      res.render("admin/editHidro", {
+        data: item,
+        // penanda,
+        layout: layoutAdmin,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ message: "Error fetching nested item" });
+    }
+  }
+);
+
+router.put("/edit-item-kebun/:groupId", authMiddleware, async (req, res) => {
+  const { groupId } = req.params;
+  const {
+    DateOfScatter,
+    TypeSeeds,
+    ABmixAvailable,
+    JasurAvailable,
+    MetanAvailable,
+    KutilangOrNot,
+    Measure1,
+    Measure2,
+    Measure3,
+    Measure4,
+    SprayJasur1,
+    SprayPesnab1,
+    SprayJasur2,
+    SprayPesnab2,
+    SprayJasur3,
+    SprayPesnab3,
+    SprayJasur4,
+    SprayPesnab4,
+    CaterPiler,
+    HarvestAge,
+    AverageBB,
+    CleaningPipe,
+  } = req.body;
+
+  console.log(
+    DateOfScatter,
+    TypeSeeds,
+    ABmixAvailable,
+    JasurAvailable,
+    MetanAvailable,
+    KutilangOrNot,
+    Measure1,
+    Measure2,
+    Measure3,
+    Measure4,
+    SprayJasur1,
+    SprayPesnab1,
+    SprayJasur2,
+    SprayPesnab2,
+    SprayJasur3,
+    SprayPesnab3,
+    SprayJasur4,
+    SprayPesnab4,
+    CaterPiler,
+    HarvestAge,
+    AverageBB,
+    "request hidroponik"
+  );
+
+  try {
+    const dataEdit = await ManagementHidro.findOne({
+      $or: [
+        { "Kebun1._id": groupId },
+        { "Kebun2._id": groupId },
+        { "Kebun3._id": groupId },
+      ],
+    });
+
+    if (!dataEdit) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    let updated = false;
+
+    // Check Kebun1
+
+    const kebun1Item = Array.isArray(dataEdit.Kebun1)
+      ? dataEdit.Kebun1.find((p) => p._id.toString() === groupId.toString())
+      : null;
+    if (kebun1Item) {
+      kebun1Item.TglSemai1 = DateOfScatter;
+      kebun1Item.JenisBibitKebun1 = TypeSeeds;
+      kebun1Item.KetersediaanABmix1 = ABmixAvailable;
+      kebun1Item.KetersediaanJadamSulfur1 = JasurAvailable;
+      kebun1Item.KetersediaanArangSekamOrMetan1 = MetanAvailable;
+      kebun1Item.KutilangOrNot1 = KutilangOrNot;
+      kebun1Item.PPM1_1 = Measure1;
+      kebun1Item.PPM2_1 = Measure2;
+      kebun1Item.PPM3_1 = Measure3;
+      kebun1Item.PPM4_1 = Measure4;
+      kebun1Item.SprayJadam1_1 = SprayJasur1;
+      kebun1Item.SprayPesNab1_1 = SprayPesnab1;
+      kebun1Item.SprayJadam2_1 = SprayJasur2;
+      kebun1Item.SprayPesNab2_1 = SprayPesnab2;
+      kebun1Item.SprayJadam3_1 = SprayJasur3;
+      kebun1Item.SprayPesNab3_1 = SprayPesnab3;
+      kebun1Item.SprayJadam4_1 = SprayJasur4;
+      kebun1Item.SprayPesNab4_1 = SprayPesnab4;
+      kebun1Item.ObatUlat1 = CaterPiler;
+      kebun1Item.UsiaPanendanKendala1 = HarvestAge;
+      kebun1Item.Rata_rataBb1 = AverageBB;
+      kebun1Item.PembersihanPipa1 = CleaningPipe;
+      updated = true;
+    }
+
+    // Check Kebun2
+    const kebun2Item = Array.isArray(dataEdit.Kebun1)
+      ? dataEdit.Kebun2.find((p) => p._id.toString() === groupId.toString())
+      : null;
+    if (kebun2Item) {
+      kebun2Item.TglSemai2 = DateOfScatter;
+      kebun2Item.JenisBibitKebun2 = TypeSeeds;
+      kebun2Item.KetersediaanABmix2 = ABmixAvailable;
+      kebun2Item.KetersediaanJadamSulfur2 = JasurAvailable;
+      kebun2Item.KetersediaanArangSekamOrMetan2 = MetanAvailable;
+      kebun2Item.KutilangOrNot2 = KutilangOrNot;
+      kebun2Item.PPM1_2 = Measure1;
+      kebun2Item.PPM2_2 = Measure2;
+      kebun2Item.PPM3_2 = Measure3;
+      kebun2Item.PPM4_2 = Measure4;
+      kebun2Item.SprayJadam1_2 = SprayJasur1;
+      kebun2Item.SprayPesNab1_2 = SprayPesnab1;
+      kebun2Item.SprayJadam2_2 = SprayJasur2;
+      kebun2Item.SprayPesNab2_2 = SprayPesnab2;
+      kebun2Item.SprayJadam3_2 = SprayJasur3;
+      kebun2Item.SprayPesNab3_2 = SprayPesnab3;
+      kebun2Item.SprayJadam4_2 = SprayJasur4;
+      kebun2Item.SprayPesNab4_2 = SprayPesnab4;
+      kebun2Item.ObatUlat2 = CaterPiler;
+      kebun2Item.UsiaPanendanKendala2 = HarvestAge;
+      kebun2Item.Rata_rataBb2 = AverageBB;
+      kebun2Item.PembersihanPipa2 = CleaningPipe;
+      updated = true;
+    }
+    // Check Kebun3
+    const kebun3Item = Array.isArray(dataEdit.Kebun3)
+      ? dataEdit.Kebun3.find((p) => p._id.toString() === groupId.toString())
+      : null;
+    if (kebun3Item) {
+      kebun3Item.TglSemai3 = DateOfScatter;
+      kebun3Item.JenisBibitKebun3 = TypeSeeds;
+      kebun3Item.KetersediaanABmix3 = ABmixAvailable;
+      kebun3Item.KetersediaanJadamSulfur3 = JasurAvailable;
+      kebun3Item.KetersediaanArangSekamOrMetan3 = MetanAvailable;
+      kebun3Item.KutilangOrNot3 = KutilangOrNot;
+      kebun3Item.PPM1_3 = Measure1;
+      kebun3Item.PPM2_3 = Measure2;
+      kebun3Item.PPM3_3 = Measure3;
+      kebun3Item.PPM4_3 = Measure4;
+      kebun3Item.SprayJadam1_3 = SprayJasur1;
+      kebun3Item.SprayPesNab1_3 = SprayPesnab1;
+      kebun3Item.SprayJadam2_3 = SprayJasur2;
+      kebun3Item.SprayPesNab2_3 = SprayPesnab2;
+      kebun3Item.SprayJadam3_3 = SprayJasur3;
+      kebun3Item.SprayPesNab3_3 = SprayPesnab3;
+      kebun3Item.SprayJadam4_3 = SprayJasur4;
+      kebun3Item.SprayPesNab4_3 = SprayPesnab4;
+      kebun3Item.ObatUlat3 = CaterPiler;
+      kebun3Item.UsiaPanendanKendala3 = HarvestAge;
+      kebun3Item.Rata_rataBb3 = AverageBB;
+      kebun3Item.PembersihanPipa3 = CleaningPipe;
+      updated = true;
+    }
+    console.log("groupId:", groupId);
+    console.log("dataEdit:", dataEdit);
+    console.log("Kebun1:", dataEdit.Kebun1);
+    console.log("Kebun2:", dataEdit.Kebun2);
+    console.log("Kebun3:", dataEdit.Kebun3);
+    if (!updated) {
+      return res.status(404).json({ message: "No matching product found" });
+    }
+
+    await dataEdit.save();
+
+    // res.status(200).json({ dataEdit });
+    res.redirect("/display-hidro");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.delete(
+  "/delete-item1-kebun1/:postId/:itemId",
+  authMiddleware,
+  async (req, res) => {
+    const { postId, itemId } = req.params;
+    console.log(postId, itemId, "request delete kebun1 anda sampai");
+
+    try {
+      const updatedPost = await ManagementHidro.findByIdAndUpdate(
+        postId,
+        { $pull: { Kebun1: { _id: itemId } } },
+        { new: true }
+      );
+
+      if (!updatedPost) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      res.redirect("/display-hidro");
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ message: "Error deleting nested item" });
+    }
+  }
+);
+
+router.delete("/delete-item1-kebun2/:postId/:itemId", async (req, res) => {
+  const { postId, itemId } = req.params;
+  console.log(postId, itemId, "request delete kebun 2 anda sampai");
+
+  try {
+    const updatedPost = await ManagementHidro.findByIdAndUpdate(
+      postId,
+      { $pull: { Kebun2: { _id: itemId } } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.redirect("/display-hidro");
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Error deleting nested item" });
+  }
+});
+
+router.delete("/delete-item1-kebun3/:postId/:itemId", async (req, res) => {
+  const { postId, itemId } = req.params;
+  console.log("DELETE kebun3 HIT", postId, itemId);
+
+  try {
+    const updatedPost = await ManagementHidro.findByIdAndUpdate(
+      postId,
+      { $pull: { Kebun3: { _id: itemId } } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.redirect("/display-hidro");
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Error deleting nested item" });
+  }
+});
+
+
+
+
 module.exports = router;

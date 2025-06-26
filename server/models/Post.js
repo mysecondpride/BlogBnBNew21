@@ -10,19 +10,93 @@ const Schema = mongoose.Schema;
 
 // Define the post schema
 const Post = new Schema({
-  title: { type: String },
-  body: { type: String },
-  createdAt: { type: Date, default: Date.now },
-  files: [
+  daftarIsi: [
     {
-      fileId: {
-        type: mongoose.Schema.Types.ObjectId,
-      },
-      filename: { type: String },
-      fileType: { type: String },
-      url: { type: String }, // e.g., local path or cloud URL
-      uploadedAt: { type: Date, default: Date.now },
+      judul: { type: String },
+      pengantar: { type: String },
+      sistematika: { type: String },
     },
-  ], // Embedding the file schema here
+  ],
+
+  element1: [
+    {
+      H1: { type: String },
+      body1: { type: String },
+      url: { type: String },
+      files: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ],
+    },
+  ],
+
+  element2: [
+    {
+      body2: { type: String },
+
+      files: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ], // Embedding the file schema here
+    },
+  ],
+
+  element3: [
+    {
+      body3: { type: String },
+      url: { type: String },
+      files: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ], // Embedding the file schema here
+    },
+  ],
+
+  element4: [
+    {
+      body4: { type: String },
+
+      files: [
+        {
+          fileId: {
+            type: mongoose.Schema.Types.ObjectId,
+          },
+          filename: { type: String },
+          fileType: { type: String },
+          url: { type: String }, // e.g., local path or cloud URL
+          uploadedAt: { type: Date, default: Date.now },
+        },
+      ], // Embedding the file schema here
+    },
+  ],
+
+  penutup: [
+    {
+      penutup: { type: String },
+    },
+  ],
+
+  // Embedding the file schema here
 });
 module.exports = mongoose.model("Post", Post);

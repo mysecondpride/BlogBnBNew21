@@ -1,77 +1,106 @@
+<div>
 
 <form action="/add-post" method="POST" class="form" enctype="multipart/form-data">
-  <div class="form-add-post1">
+
+  <div>
     <label for="title" class="form-label">Judul</label>
     <input
       type="text"
       id="title"
       name="title"
       class="form-control"
-      placeholder="Tulis judulnya"
       required
     />
   </div>
-  <div class="form add-post2">
-    <label for="body" class="form-label">Pargraf 1</label>
-    <textarea
-      id="body"
-      name="body"
-      class="form-control"
-      rows="10"
-      cols="50"
-      placeholder="Tulis Paragraf 1"
-      required
-    ></textarea>
-  </div>
+<div>
+  <label for="pengantar">Pengantar</label>
+  <textarea
+  id="title"
+  name="preface"
+  class="form-control"
+style="width: 100%; height: 200px"
+  required
+  > </textarea>
+</div>
+<label for="sistematika">sistematika pembahasan</label>
+<div>
+  <textarea
+  id="sistematika"
+  name="structure"
+  class="form-control"
+ style="width: 100%; height: 200px"
+  required
+  > </textarea>
 
-    <h2>Upload Image Blog</h2>
+</div>
+<label for="paragraf1">Paragraf1</label>
+<div>
+  <input type="text" name="H1Judul" class="form-control" placeholder="Judul" />
 
-  <div class="mb-3">
-    <label for="utama" class="form-label"
-      ><i class="bi bi-cloud-upload"></i> Select Image (1,3)</label
-    >
-    <input
+  <textarea
+    name="body1"
+    class="form-control"
+    style="width: 100%; height: 200px;"
+    required
+    placeholder="Tuliskan isi konten di sini..."
+  ></textarea>
+
+  <input
+    type="file"
+    id="bismillah"
+    name="BlogImg1"
+    class="form-control"
+    multiple
+    required
+  />
+</div>
+<div>
+  <label for="paragraf2">Paragraf2</label>
+<textarea name="body2"   class="form-control" id=""  style="width: 100%; height: 200px" required></textarea>
+
+        <input
       type="file"
+      id="bismillah"
+      name="BlogImg2"
       class="form-control"
-      id="file"
-      name="utama"
+      placeholder="tulis body1"
       multiple
       required
-   
     />
+</div>
+<div>
+  <label for="paragraf3" >Paragraf3</label>
 
-  </div>
+  <textarea name="body3"    class="form-control"  id=""  style="width: 100%; height: 200px" required></textarea>
 
-    <div class="form add-post2">
-    <label for="body" class="form-label">Pargraf 2</label>
-    <textarea
-      id="body"
-      name="body2"
+  
+      <input
+      type="file" 
+      id="bismillah"
+      name="BlogImg3"
       class="form-control"
-      rows="10"
-      cols="50"
-      placeholder="Tulis Paragraf 1"
+       multiple
       required
-    ></textarea>
-  </div>
+    />
+</div>
 
-  <div class="mb-3">
-    <label for="utama" class="form-label"
-      ><i class="bi bi-cloud-upload"></i> Select Image (1,3)</label
-    >
-    <input
+<div>
+  <label for="paragraf4">Paragraf4</label>
+<textarea name="body4"  class="form-control" id=""  style="width: 100%; height: 200px" required></textarea>
+        <input
       type="file"
+      id="bismillah"
+      name="BlogImg4"
       class="form-control"
-      id="file"
-      name="utama2"
-      multiple
+       multiple
       required
-   
     />
-
-  </div>
-
-  <button type="submit" class="submit-post">Posting Your Article</button>
+</div>
+<div>
+  <label for="penutup">Penutup</label>
+<textarea name="closing"   class="form-control"id=""  style="width: 100%; height: 200px"; required></textarea>
+</div>
+  <button type="submit" class="submit-post" >Posting Your Article</button>
 </form>
 </div>
 

@@ -1,0 +1,26 @@
+<h2>Hasil Pencarian "<%= keyword %>"</h2>
+
+<% if (results.length === 0) { %>
+<p><b>Produk tidak ditemukan.</b></p>
+<% } else { %> <% results.forEach(doc => { %> <% (doc.Produk1 ||
+[]).forEach(item => { %> <% if (item.NamaProduk1 &&
+item.NamaProduk1.toLowerCase().includes(keyword.toLowerCase())) { %>
+<div>
+  <h3><%= item.NamaProduk1 %></h3>
+  <p>Harga: <%= item.Harga1 %></p>
+</div>
+<% } %> <% }) %> <% (doc.Produk2 || []).forEach(item => { %> <% if
+(item.NamaProduk2 &&
+item.NamaProduk2.toLowerCase().includes(keyword.toLowerCase())) { %>
+<div>
+  <h3><%= item.NamaProduk2 %></h3>
+  <p>Harga: <%= item.Harga2 %></p>
+</div>
+<% } %> <% }) %> <% (doc.Produk3 || []).forEach(item => { %> <% if
+(item.NamaProduk3 &&
+item.NamaProduk3.toLowerCase().includes(keyword.toLowerCase())) { %>
+<div>
+  <h3><%= item.NamaProduk3 %></h3>
+  <p>Harga: <%= item.Harga3 %></p>
+</div>
+<% } %> <% }) %> <% }) %> <% } %>

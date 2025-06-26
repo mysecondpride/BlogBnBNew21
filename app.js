@@ -75,8 +75,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public")); //express.static()--is not middleware itself
 
 //request dan respond di pisahkan dalam suatu route
-app.use("/", require("./server/routes/main"));
 app.use("/", require("./server/routes/admin"));
+app.use("/", require("./server/routes/main"));
 
 app.listen(PORT, () => {
   console.log(`success to connect to the ${PORT}`);

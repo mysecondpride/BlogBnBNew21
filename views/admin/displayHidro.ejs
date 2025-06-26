@@ -1,0 +1,162 @@
+<% data.forEach(item => { const kebun1 = item.Kebun1 || []; if (kebun1.length >
+0) { const first = kebun1[0]; %>
+<div>
+  <h2>Kebun1</h2>
+  <p>TanggalSemai1: <%= first.TglSemai1 %></p>
+  <p>JenisBibitKebun1: <%= first.JenisBibitKebun1 %></p>
+  <p>KetersediaanABmix1: <%= first.KetersediaanABmix1 %></p>
+  <p>KetersediaanJadamSulfur1: <%= first.KeterseidaanJadamSulfur1 %></p>
+  <p>
+    KetersediaanArangSekam/Metan1: <%= first.KetersediaanArangSekamOrMetan1 %>
+  </p>
+  <p>KutilangOrNot1: <%= first.KutilangOrNot1 %></p>
+  <p>PPM1: <%= first.PPM1_1 %></p>
+  <p>PPM2: <%= first.PPM2_1 %></p>
+  <p>PPM3: <%= first.PPM3_1 %></p>
+  <p>PPM4: <%= first.PPM4_1 %></p>
+  <p>SprayJadam1: <%= first.SprayJadam1_1 %></p>
+  <p>SprayPesnab1: <%= first.SprayPesNab1_1 %></p>
+  <p>SprayJadam2: <%= first.SprayJadam2_1 %></p>
+  <p>SprayPesnab2: <%= first.SprayPesNab2_1 %></p>
+  <p>SprayJadam3: <%= first.SprayJadam3_1 %></p>
+  <p>SprayPesnab3: <%= first.SprayPesNab3_1 %></p>
+  <p>SprayJadam4: <%= first.SprayJadam4_1 %></p>
+  <p>SprayPesnab4: <%= first.SprayPesNab4_1 %></p>
+  <p>ObatUlat1: <%= first.ObatUlat1 %></p>
+  <p>UsiaPanendanKendala1: <%= first.UsiaPanendanKendala1 %></p>
+  <p>Rata-rataBB1: <%= first.Rata_rataBb1 %></p>
+  <p>PembersihanPipa1: <%= first.PembersihanPipa1 %></p>
+  <% } %> <% kebun1.forEach(element1 => { const images = element1.DokProgress1
+  || []; if (images.length > 0) { %> <% images.forEach(img => { %>
+  <img
+    src="/imagesofpetak1/<%= item._id %>/<%= img.fileId %>"
+    alt=""
+    height="200px"
+    width="150px"
+  />
+  <% }) %> <% } %>
+</div>
+<form
+  action="/delete-item1-kebun1/<%= item._id %>/<%= element1._id %>?_method=DELETE"
+  method="POST"
+>
+  <input type="submit" value="delete" />
+</form>
+
+<form
+  action="/edit-item-kebun/<%= item._id %>/<%= element1._id %>"
+  method="get"
+>
+  <input type="submit" value="edit" />
+</form>
+
+<% }) %> <% }) %>
+
+<br />
+<% data.forEach(item => { const kebun2 = item.Kebun2 || []; if (kebun2.length >
+0) { const second = kebun2[0]; %>
+<div>
+  <h2>Kebun2</h2>
+  <p>TanggalSemai2: <%= second.TglSemai2 %></p>
+  <p>JenisBibitKebun2: <%= second.JenisBibitKebun2 %></p>
+  <p>KetersediaanABmix2: <%= second.KetersediaanABmix2 %></p>
+  <p>KetersediaanJadamSulfur2: <%= second.KeterseidaanJadamSulfur2 %></p>
+  <p>
+    KetersediaanArangSekam/Metan2: <%= second.KetersediaanArangSekamOrMetan2 %>
+  </p>
+  <p>KutilangOrNot2: <%= second.KutilangOrNot2 %></p>
+  <p>PPM1: <%= second.PPM1_2 %></p>
+  <p>PPM2: <%= second.PPM2_2 %></p>
+  <p>PPM3: <%= second.PPM3_2 %></p>
+  <p>PPM4: <%= second.PPM4_2 %></p>
+  <p>SprayJadam1: <%= second.SprayJadam1_2 %></p>
+  <p>SprayPesnab1: <%= second.SprayPesNab1_2 %></p>
+  <p>SprayJadam2: <%= second.SprayJadam2_2 %></p>
+  <p>SprayPesnab2: <%= second.SprayPesNab2_2 %></p>
+  <p>SprayJadam3: <%= second.SprayJadam3_2 %></p>
+  <p>SprayPesnab3: <%= second.SprayPesNab3_2 %></p>
+  <p>SprayJadam4: <%= second.SprayJadam4_2 %></p>
+  <p>SprayPesnab4: <%= second.SprayPesNab4_2 %></p>
+  <p>ObatUlat2: <%= second.ObatUlat2 %></p>
+  <p>UsiaPanendanKendala2: <%= second.UsiaPanendanKendala2 %></p>
+  <p>Rata-rataBB2: <%= second.Rata_rataBb2 %></p>
+  <p>PembersihanPipa2: <%= second.PembersihanPipa2 %></p>
+  <% } %> <% kebun2.forEach(element2 => { const images = element2.DokProgress2
+  || []; if (images.length > 0) { %> <% images.forEach(img => { %>
+  <img
+    src="/imagesofpetak1/<%= item._id %>/<%= img.fileId %>"
+    alt=""
+    height="200px"
+    width="150px"
+  />
+  <% }) %> <% } %>
+</div>
+<form
+  action="/delete-item1-kebun2/<%= item._id %>/<%= element2._id %>?_method=DELETE"
+  method="POST"
+>
+  <input type="submit" value="delete" />
+</form>
+
+<form
+  action="/edit-item-kebun/<%= item._id %>/<%= element2._id %>"
+  method="get"
+>
+  <input type="submit" value="edit" />
+</form>
+
+<% }) %> <% }) %>
+<br />
+<% data.forEach(item => { const kebun3 = item.Kebun3 || []; if (kebun3.length >
+0) { const third = kebun3[0]; %>
+<div>
+  <h2>Kebun3</h2>
+  <p>TanggalSemai3: <%= third.TglSemai3 %></p>
+  <p>JenisBibitKebun3: <%= third.JenisBibitKebun3 %></p>
+  <p>KetersediaanABmix3: <%= third.KetersediaanABmix3 %></p>
+  <p>KetersediaanJadamSulfur3: <%= third.KeterseidaanJadamSulfur3 %></p>
+  <p>
+    KetersediaanArangSekam/Metan3: <%= third.KetersediaanArangSekamOrMetan3 %>
+  </p>
+  <p>KutilangOrNot3: <%= third.KutilangOrNot3 %></p>
+  <p>PPM1: <%= third.PPM1_3 %></p>
+  <p>PPM2: <%= third.PPM2_3 %></p>
+  <p>PPM3: <%= third.PPM3_3 %></p>
+  <p>PPM4: <%= third.PPM4_3 %></p>
+  <p>SprayJadam1: <%= third.SprayJadam1_3 %></p>
+  <p>SprayPesnab1: <%= third.SprayPesNab1_3 %></p>
+  <p>SprayJadam2: <%= third.SprayJadam2_3 %></p>
+  <p>SprayPesnab2: <%= third.SprayPesNab2_3 %></p>
+  <p>SprayJadam3: <%= third.SprayJadam3_3 %></p>
+  <p>SprayPesnab3: <%= third.SprayPesNab3_3 %></p>
+  <p>SprayJadam4: <%= third.SprayJadam4_3 %></p>
+  <p>SprayPesnab4: <%= third.SprayPesNab4_3 %></p>
+  <p>ObatUlat3: <%= third.ObatUlat3 %></p>
+  <p>UsiaPanendanKendala3: <%= third.UsiaPanendanKendala3 %></p>
+  <p>Rata-rataBB3: <%= third.Rata_rataBb3 %></p>
+  <p>PembersihanPipa3: <%= third.PembersihanPipa3 %></p>
+  <% } %> <% kebun3.forEach(element3 => { const images = element3.DokProgress3
+  || []; if (images.length > 0) { %> <% images.forEach(img => { %>
+  <img
+    src="/imagesofpetak1/<%= item._id %>/<%= img.fileId %>"
+    alt=""
+    height="200px"
+    width="150px"
+  />
+  <% }) %> <% } %>
+</div>
+<form
+  action="/delete-item1-kebun3/<%= item._id %>/<%= element3._id %>?_method=DELETE"
+  method="POST"
+>
+  <input type="submit" value="delete" />
+</form>
+
+<form
+  action="/edit-item-kebun/<%= item._id %>/<%= element3._id %>"
+  method="get"
+>
+  <input type="submit" value="edit" />
+</form>
+
+<% }) %> <% }) %>

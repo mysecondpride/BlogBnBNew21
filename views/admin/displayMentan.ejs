@@ -1,0 +1,143 @@
+<div>
+  <h1>PETAK1</h1>
+  <% data.forEach(item => { const petak1 = item.Petak1 || []; if (petak1.length
+  > 0) { const first = petak1[0]; %>
+
+  <p>ObatSuketAwal1: <%= first.ObatSuketAwal1 %></p>
+  <p>PengelolaanLahanPetak1: <%= first.PengolahanLahanPetak1 %></p>
+  <p>DolomitPetak1: <%= first.DolomitPetak1 %></p>
+  <p>KetersedianCT dan Jasur1: <%= first.KetersediaanCompostTea_Jadam1 %></p>
+  <p>KetersediaanKompost dan Bio1:<%= first.KetersediaanCompostdanBio1 %></p>
+  <p>JenisBibitPetak1: <%= first.JenisBibitPetak1 %></p>
+  <p>MasukMediaBioChar1: <%= first.MasukMediaBioChar1 %></p>
+  <p>TanggalTanamPetak1: <%= first.TanggalTanamPetak1 %></p>
+  <p>ObatSuketHariten1: <%=first.ObatSuket10Hari1 %></p>
+  <p>KocorKompostTea1: <%= first.KocorCompostTea1 %></p>
+  <p>JadamSulfur1: <%=first.JadamSulfur1 %></p>
+  <p>ControlSuket1_1: <%= first.ControlSuket1_1 %></p>
+  <p>PenyiramanTahap1_1: <%= first.PenyiramanTahap1_1 %></p>
+  <p>TglPemupukan1_1: <%= first.TglPemupukan1_1 %></p>
+  <p>PupukVegetatifMakro1: <%= first.PupukVegetatifMakro1 %></p>
+  <p>ControlSuket2_1: <%=first.ControlSuket2_1 %></p>
+  <p>PenyiramanTahap2_1: <%= first.PenyiramanTahap2_1 %></p>
+  <p>TglPemupukanGen1: <%= first.TglPemupukanGen1 %></p>
+  <p>PupukGeneratifMakro1: <%= first.PupukGeneratifMakro1 %></p>
+  <p>ObatUlat1: <%= first.ObatUlat1 %></p>
+  <p>UsiaPanendanKendala: <%= first.UsiaPanendanKendala1 %></p>
+  <p>Rata-rataBB: <%= first.Rata_rataBb1 %></p>
+  <% } petak1.forEach(element1 => { const images = element1.DokProgress1 || [];
+  %> <% if (images.length > 0) { %> <% images.forEach(img => { %>
+  <img
+    src="/imagesofpetak1/<%= item._id %>/<%= img.fileId %>"
+    alt="supplier sayur hidroponik"
+    height="200"
+    width="150"
+  />
+  <% }); %> <% } %>
+  <form
+    action="/delete-item1-petak1/<%= item._id %>/<%= element1._id %>?_method=DELETE"
+    method="POST"
+  >
+    <input type="submit" value="delete" />
+  </form>
+
+  <form
+    action="/edit-item-petak/<%= item._id %>/<%= element1._id %>"
+    method="get"
+  >
+    <input type="submit" value="edit" />
+  </form>
+  <% }); %> <% }); %>
+</div>
+<div>
+  <h1>PETAK2</h1>
+  <% data.forEach(item => { const petak2 = item.Petak2 || []; if (petak2.length
+  > 0) { const first = petak2[0]; %>
+  <p>ObatSuketAwal2: <%= first.ObatSuketAwal2 %></p>
+  <p>PengelolaanLahanPetak1: <%= first.PengolahanLahanPetak2 %></p>
+  <p>DolomitPetak1: <%= first.DolomitPetak2 %></p>
+  <p>KetersedianCT dan Jasur1: <%= first.KetersediaanCompostTea_Jadam2 %></p>
+  <p>KetersediaanKompost dan Bio1:<%= first.KetersediaanCompostdanBio2 %></p>
+  <p>JenisBibitPetak1: <%= first.JenisBibitPetak2 %></p>
+  <p>MasukMediaBioChar1: <%= first.MasukMediaBioChar2 %></p>
+  <p>TanggalTanamPetak1: <%= first.TanggalTanamPetak2 %></p>
+  <p>ObatSuketHariten1: <%=first.ObatSuket10Hari2 %></p>
+  <p>KocorKompostTea1: <%= first.KocorCompostTea2 %></p>
+  <p>JadamSulfur1: <%=first.JadamSulfur1 %></p>
+  <p>ControlSuket1_1: <%= first.ControlSuket1_2 %></p>
+  <p>PenyiramanTahap1_1: <%= first.PenyiramanTahap1_2 %></p>
+  <p>TglPemupukan1_1: <%= first.TglPemupukan1_2 %></p>
+  <p>PupukVegetatifMakro1: <%= first.PupukVegetatifMakro2 %></p>
+  <p>ControlSuket2_1: <%=first.ControlSuket2_2 %></p>
+  <p>PenyiramanTahap2_1: <%= first.PenyiramanTahap2_2 %></p>
+  <p>TglPemupukanGen1: <%= first.TglPemupukanGen2 %></p>
+  <p>PupukGeneratifMakro1: <%= first.PupukGeneratifMakro2 %></p>
+  <p>ObatUlat1: <%= first.ObatUlat2 %></p>
+  <p>UsiaPanendanKendala: <%= first.UsiaPanendanKendala2 %></p>
+  <p>Rata-rataBB: <%= first.Rata_rataBb2 %></p>
+  <% } petak2.forEach(element2 => { const images = element2.DokProgress2 || [];
+  %> <% if (images.length > 0) { %> <% images.forEach(img => { %>
+  <img
+    src="/imagesofpetak2/<%= item._id %>/<%= img.fileId %>"
+    alt="supplier sayur hidroponik"
+    height="200px"
+    width="150px"
+  />
+  <% }); %> <% } %>
+
+  <form
+    action="/delete-item1-petak2/<%= item._id %>/<%= element2._id %>?_method=DELETE"
+    method="POST"
+  >
+    <input type="submit" value="delete" />
+  </form>
+
+  <form
+    action="/edit-item-petak/<%= item._id %>/<%= element2._id %>"
+    method="get"
+  >
+    <input type="submit" value="edit" />
+  </form>
+  <% }); %> <% }); %>
+</div>
+<div>
+  <h1>PETAK3</h1>
+  <% data.forEach(item => { const petak3 = item.Petak3 || []; if (petak3.length
+  > 0) { const first = petak3[0]; %>
+  <p>ObatSuketAwal3: <%= first.ObatSuketAwal3 %></p>
+  <p>JenisBibitPetak3: <%= first.JenisBibitPetak3 %></p>
+  <p>TanggalTanamPetak3: <%= first.TanggalTanamPetak3 %></p>
+  <p>ObatSuketHariten1: <%=first.ObatSuket10Hari3 %></p>
+  <p>JadamSulfur3: <%=first.JadamSulfur3 %></p>
+  <p>TglPemupukan1_3: <%= first.TglPemupukan1_3 %></p>
+  <p>PupukVegetatifMakro3: <%= first.PupukVegetatifMakro3 %></p>
+  <p>TglPemupukanGen3: <%= first.TglPemupukanGen3 %></p>
+  <p>PupukGeneratifMakro3: <%= first.PupukGeneratifMakro3 %></p>
+  <p>ObatUlat3: <%= first.ObatUlat3 %></p>
+  <p>UsiaPanendanKendala3: <%= first.UsiaPanendanKendala3 %></p>
+  <p>Rata-rataBB: <%= first.Rata_rataBb3 %></p>
+  <% } petak3.forEach(element3 => { const images = element3.DokProgress3 || [];
+  %> <% if (images.length > 0) { %> <% images.forEach(img => { %>
+  <img
+    src="/imagesofpetak3/<%= item._id %>/<%= img.fileId %>"
+    alt="supplier sayur hidroponik"
+    height="200px"
+    width="150px"
+  />
+  <% }); %> <% } %>
+
+  <form
+    action="/delete-item1-petak3/<%= item._id %>/<%= element3._id %>?_method=DELETE"
+    method="POST"
+  >
+    <input type="submit" value="delete" />
+  </form>
+
+  <form
+    action="/edit-item-petak/<%= item._id %>/<%= element3._id %>"
+    method="get"
+  >
+    <input type="submit" value="edit" />
+  </form>
+  <% }); %> <% }); %>
+</div>

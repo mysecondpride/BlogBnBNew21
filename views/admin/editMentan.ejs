@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="/edit-item-petak/<%=data._id%>?_method=PUT" method="POST">
+      <br />
+      <h1>Petak1/2/3</h1>
+      <label for="ObatSuketAwal">ObatSuketAwal</label>
+      <input
+        type="text"
+        name="OSukAwal"
+        value="<%= data.ObatSuketAwal1||data.ObatSuketAwal2 ||data.ObatSuketAwal3 %>"
+      />
+      <label for="PengolahanLahanPetak1">PengolahanLahanPetak1</label>
+      <input
+        type="text"
+        name="PengLaTak"
+        value="<%=data.PengolahanLahanPetak1|| data.PengolahanLahanPetak2 %>"
+      />
+      <label for="DolomitPetak">DolomitPetak1</label>
+      <input
+        type="text"
+        name="DolomitPetak"
+        value="<%= data.DolomitPetak1||data.DolomitPetak2 %>"
+      />
+      <label for="KetersediaanKompostTea1">CompostTeaAvailable</label>
+      <input
+        type="text"
+        name="CTAvailable"
+        value="<%=data.KetersediaanCompostTea_Jadam1||data.KetersediaanCompostTea_Jadam2 %>"
+      />
+      <label for="KetersediaanKompostdanBio1">KompostdanBioAvailable1</label>
+      <input
+        type="text"
+        name="KompostdanBio"
+        value="<%= data.KetersediaanCompostdanBio1||data.KetersediaanCompostdanBio2 %>"
+      />
+      <label for="JenisBibit">JenisBenihPetak1</label>
+      <input
+        type="Text"
+        name="TypeSeeds"
+        value="<%= data.JenisBibitPetak1||data.JenisBibitPetak2 ||data.JenisBibitPetak3 %>"
+      />
+      <label for="BioCharMasuk">BioCharMasuk</label>
+      <input
+        type="Text"
+        name="EnterBiochar"
+        value="<%= data.MasukMediaBioChar1||data.MasukMediaBioChar2   %>"
+      />
+      <label for="TglTanamPetak1">TanggalTanamPetak1</label>
+      <input
+        type="Date"
+        name="DatePlant"
+        value="<%=data.TanggalTanamPetak1||data.TanggalTanamPetak2 ||data.TanggalTanamPetak3 %>"
+      />
+      <label for="Osukten">ObatSuketHariKe-10</label>
+      <input
+        type="Text"
+        name="Osukten1"
+        value="<%=data.ObatSuket10Hari1||data.ObatSuket10Hari2 ||data.ObatSuket10Hari3  %>"
+      />
+      <label for="kocorCT">KocorCTVegetatif1</label>
+      <input
+        type="number"
+        name="kocorCT"
+        value="<%= data.KocorCompostTea1||data.KocorCompostTea2  %>"
+      />
+      <label for="Jasur">Jasur1</label>
+      <input
+        type="Text"
+        name="Jasur"
+        value="<%= data.JadamSulfur1||data.JadamSulfur2 || data.JadamSulfur3  %>"
+      />
+      <label for="ControlSuket1_1">ControlSuket1</label>
+      <input
+        type="Text"
+        name="grass1"
+        value="<%= data.ControlSuket1_1||data.ControlSuket1_2  %>"
+      />
+      <label for="Penyiraman1">PenyiramanTahap1</label>
+      <input
+        type="Text"
+        name="Watering1"
+        value="<%= data.PenyiramanTahap1_1||data.PenyiramanTahap1_2  %>"
+      />
+      <label for="TglPemupukan1">TglPemupukanVeg1</label>
+      <input
+        type="date"
+        name="DateFertilizerVeg"
+        value="<%=data.TanggalPemupukan1_1||data.TanggalPemupukan1_2 ||data.TglPemupukan1_3  %>"
+      />
+      <label for="FerMakro">PupukVegetatifMakro1</label>
+      <input
+        type="Text"
+        name="VegMakro"
+        value="<%= data.PupukVegetatifMakro1||data.PupukVegetatifMakro2 || data.PupukVegetatifMakro3  %>"
+      />
+      <label for="ControlSuket2_1">ControlSuket2_1</label>
+      <input type="Text" name="grass2" value="<%= data.ControlSuket2_1  %>" />
+      <label for="Penyiraman2">PenyiramanTahap2</label>
+      <input
+        type="Text"
+        name="Watering2"
+        value="<%= data.PenyiramanTahap2_1||data.PenyiramanTahap2_2   %>"
+      />
+      <label for="TglPemupukangen1">TglPupukGen1</label>
+      <input
+        type="date"
+        name="DateFerGen"
+        value="<%= data.TglPemupukanGen1||data.TglPemupukanGen2 ||data.TglPemupukanGen3  %>"
+      />
+      <label for="PupukGeneratif">PupukGeneratif</label>
+      <input
+        type="Text"
+        name="GenMakro"
+        value="<%=data.PupukGeneratifMakro1||data.PupukGeneratifMakro2 ||data.PupukGeneratifMakro3 %>"
+      />
+      <label for="ObatUlat">ObatUlat</label>
+      <input
+        type="Text"
+        name="CaterPiler"
+        value="<%= data.ObatUlat1 ||data.ObatUlat2 ||data.ObatUlat3 %>"
+      />
+      <label for="UsiaPanen">UsiaPanendanKendala</label>
+      <input
+        type="Text"
+        name="HarvestAge"
+        value="<%= data.UsiaPanendanKendala1||data.UsiaPanendanKendala2 ||data.UsiaPanenPetak3  %>"
+      />
+      <label for="Rata-rata BB1">RerataBB/pohon1</label>
+      <input
+        type="Text"
+        name="averageBB"
+        value="<%=data.Rata_rataBb1||data.Rata_rataBb2 ||data.Rata_rataBb3 %>"
+      />
+
+      <br />
+      <button type="submit" class="submit-post">Edit Management Jagung</button>
+    </form>
+  </body>
+</html>

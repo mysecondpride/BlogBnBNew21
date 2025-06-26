@@ -1,39 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
   const allButtons = document.querySelectorAll(".searchBtn");
   const searchBar = document.querySelector(".searchBar");
-  const searchInput = document.getElementById(".searchInput");
-  const searchClose = document.getElementById(".searchClose ");
+  const searchInput = document.getElementById("searchInput"); // ✅ NO dot
+  const searchClose = document.getElementById("searchClose"); // ✅ NO dot or space
 
-  for (var i = 0; i < allButtons.length; i++) {
-    allButtons[i].addEventListener("click", function () {
-      searchBar.style.visibility = "visible";
+  // ✅ Always reset searchBar when page loads
+  if (searchBar) {
+    searchBar.classList.remove("open");
+  }
+
+  // ✅ Open search when searchBtn is clicked
+  allButtons.forEach((button) => {
+    button.addEventListener("click", function () {
       searchBar.classList.add("open");
       this.setAttribute("aria-expanded", "true");
-      searchInput.focus();
+      if (searchInput) searchInput.focus();
+    });
+  });
+
+  // ✅ Close search when Close button is clicked
+  if (searchClose) {
+    searchClose.addEventListener("click", function () {
+      searchBar.classList.remove("open");
     });
   }
 });
 
-// 1. Ambil ID dari URL (misal: https://example.com/post/123 → id=123)
-const pathSegments = window.location.pathname.split("/"); // ["", "post", "123"]
-const postId = pathSegments[2]; // "123"
 
-// 2. Bangun URL lengkap untuk share (termasuk ID)
-// const currentUrl = window.location.href; // atau sesuaikan jika perlu
-const currentUrl = `https://localhost:5000/post/${postId}`;
-
-// 3. Dapatkan tombol share
-const facebookBtn = document.querySelector(".facebook-btn");
-
-// 4. Update link share dengan URL yang mengandung ID
-if (postId) {
-  // Share Facebook
-  facebookBtn.onclick = () => {
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        currentUrl
-      )}`,
-      "_blank"
-    );
-  };
-}
