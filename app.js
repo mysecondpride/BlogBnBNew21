@@ -25,7 +25,7 @@ const methodOverride = require("method-override");
 // const connect = require("./server/config/db");
 
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 //maintanance.
 const isMaintenanceMode = process.env.MAINTENANCE === 'true';
