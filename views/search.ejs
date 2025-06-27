@@ -8,6 +8,7 @@ item.NamaProduk1.toLowerCase().includes(keyword.toLowerCase())) { %>
 <div>
   <h3><%= item.NamaProduk1 %></h3>
   <p>Harga: <%= item.Harga1 %></p>
+   <p>Stok: <%= item.Stok1 %></p>
 </div>
 <% } %> <% }) %> <% (doc.Produk2 || []).forEach(item => { %> <% if
 (item.NamaProduk2 &&
@@ -15,6 +16,7 @@ item.NamaProduk2.toLowerCase().includes(keyword.toLowerCase())) { %>
 <div>
   <h3><%= item.NamaProduk2 %></h3>
   <p>Harga: <%= item.Harga2 %></p>
+     <p>Stok: <%= item.Stok2 %></p>
 </div>
 <% } %> <% }) %> <% (doc.Produk3 || []).forEach(item => { %> <% if
 (item.NamaProduk3 &&
@@ -22,5 +24,7 @@ item.NamaProduk3.toLowerCase().includes(keyword.toLowerCase())) { %>
 <div>
   <h3><%= item.NamaProduk3 %></h3>
   <p>Harga: <%= item.Harga3 %></p>
+       <p>Stok: <%= item.Stok3 %></p>
+
 </div>
 <% } %> <% }) %> <% }) %> <% } %>

@@ -6,11 +6,10 @@
     <title>Supplier Sayuran Hidroponik Surabaya Sidoarjo</title>
   </head>
   <body>
-       <% const imageAnggur= "../public/img/Anggur Angelica.jpg"%>
-    <% const imageHasilBuah= "../public/img/anggur buah angelica.jpg"%>
-     <% const imageKelengkeng= "../public/img/kelengkeng.jpg"%>
+       <% const imageSemai= "../public/img/Semai.jpg"%>
+    <% const imageKebun= "../public/img/Kebun.jpg"%>
      <% const Hidroponik="../public/img/Hidroponik.jpg" %>
-    <% const hidroPonikImages=[imageAnggur, imageKelengkeng,imageHasilBuah] %>
+    <% const hidroPonikImages=[imageSemai, imageKebun,Hidroponik] %>
     <h1>Tentang Kami</h1>
     <p>
     Supplier Sayuran Hidroponik Surabaya Sidoarjo WalikDamenNesia adalah suplier sayur hidroponik dan perbumbuan duniawi. Kami menjual hasil kebun hidroponik dan perbumbuan duniawi untuk skala rumah tangga dan resto.
@@ -30,7 +29,7 @@
     Sayuran Hidroponik kami fresh dari kebun 
     <br>
     <% hidroPonikImages.forEach(element => { %>
-      <img src="<%= element %>" alt="" width="150" heigth="150">
+      <img src="<%= element %>" alt="SupplierSayuranHidroponik" width="150" heigth="150">
      
     <% }) %>
     <br>

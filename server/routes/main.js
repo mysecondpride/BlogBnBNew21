@@ -25,6 +25,7 @@ const conn = mongoose.createConnection(process.env.MONGODB_URI);
 //Making a global variable
 let gfs;
 
+
 // Bagaimana ketika connect dengan database bisa langsung tertuju pada collection
 conn.once("open", function () {
   const bucket = new GridFSBucket(conn.db, {
@@ -34,6 +35,9 @@ conn.once("open", function () {
   // Now you use bucket to upload/download files
 });
 
+router.get("/maintenance", (req, res) => {
+  res.send("<h1>Website is under maintenance. Please come back later.</h1>");
+});
 
 router.get("/", async (req, res) => {
   const locals = {

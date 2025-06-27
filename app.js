@@ -4,6 +4,10 @@ const bodyParser = require("body-parser");
 const path = require("path");
 // const fs = require("fs");
 
+//sitemap
+const { SitemapStream, streamToPromise } = require('sitemap');
+const { createGzip } = require('zlib');
+
 // connect;
 const connectDB = require("./server/config/db");
 require("dotenv").config();
@@ -23,8 +27,8 @@ const methodOverride = require("method-override");
 const app = express();
 const PORT = 5000;
 
-//pemanggilan connection of mongoDB
-
+//maintanance.
+const isMaintenanceMode = process.env.MAINTENANCE === 'true';
 // bagaimana kita bisa mendapatkan data search tapi dengan aturan middleware?? berikut ini caranya
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -78,6 +82,49 @@ app.use(express.static("public")); //express.static()--is not middleware itself
 app.use("/", require("./server/routes/admin"));
 app.use("/", require("./server/routes/main"));
 
+app.use((req, res, next) => {
+  if (isMaintenanceMode && req.url !== "/maintenance") {
+    return res.redirect("/maintenance");
+  }
+  next();
+});
+
+//sitemap
+app.get("/sitemap.xml", async (req, res) => {
+  try {
+    res.header("Content-Type", "application/xml");
+    res.header("Content-Encoding", "gzip");
+
+    const smStream = new SitemapStream({
+      hostname: "https://suppliersayuranhidroponik.com",
+    });
+    const pipeline = smStream.pipe(createGzip());
+
+    // Write only PUBLIC routes from your main site
+    smStream.write({ url: "/", changefreq: "daily", priority: 1.0 });
+    smStream.write({ url: "/about", changefreq: "monthly", priority: 0.7 });
+    smStream.write({ url: "/blog", changefreq: "weekly", priority: 0.8 });
+
+    // Optional: include dynamic pages (e.g., posts, products)
+    const posts = await PostProducts.find();
+    posts.forEach((post) => {
+      smStream.write({
+        url: `/post/${post.slug}`,
+        changefreq: "daily",
+        priority: 1.0,
+      });
+    });
+
+    smStream.end();
+    const sitemapOutput = await streamToPromise(pipeline);
+    res.send(sitemapOutput);
+  } catch (e) {
+    console.error(e);
+    res.status(500).end();
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`success to connect to the ${PORT}`);
 });
+

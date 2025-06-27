@@ -200,6 +200,7 @@ router.post(
 
       // Build document
       const post = new Post({
+        customId: Date.now().toString(), // or any custom generator
         daftarIsi: [
           {
             judul: req.body.title,
@@ -280,18 +281,20 @@ router.get("/imageOfElement1/:fileId", async (req, res) => {
   }
 });
 
-router.delete("/delete-post/:id", async (req, res) => {
+router.delete("/delete-post/:customId", async (req, res) => {
   try {
-    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    const deletedPost = await Post.findOneAndDelete({
+      customId: req.params.customId,
+    });
     if (!deletedPost) {
       return res.status(404).json({ message: "Post not found" });
     }
-    res.redirect("/admin/dashboard"); // 🔁 reloads fresh data
-    // res.status(200).json({ message: "Post deleted successfully" });
+    res.redirect("/admin/dashboard");
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 router.get("/display-products", authMiddleware, async (req, res) => {
   try {

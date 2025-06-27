@@ -10,6 +10,11 @@ const Schema = mongoose.Schema;
 
 // Define the post schema
 const Post = new Schema({
+  customId: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   daftarIsi: [
     {
       judul: { type: String },
