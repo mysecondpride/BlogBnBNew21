@@ -29,3 +29,6 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - backend
+
+  volumes:
+  mongo_data:
