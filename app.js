@@ -21,6 +21,8 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
 const User = require("./server/models/User");
+const bcrypt = require("bcrypt");
+
 
 //connect to mongoDB
 // const connect = require("./server/config/db");
@@ -134,7 +136,7 @@ const seedUsers = async () => {
       console.log("User BudiSiswo already exists. Skipping seeding...");
       return;
     }
-    
+
     const users = [
       {
         username: "Alexandro",
@@ -150,8 +152,6 @@ const seedUsers = async () => {
     console.log("Users seeded successfully");
   } catch (err) {
     console.error("Seeder Error:", err);
-  } finally {
-    mongoose.connection.close();
   }
 };
 
