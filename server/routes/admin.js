@@ -103,24 +103,24 @@ const authMiddleware = (req, res, next) => {
 /* POST */
 /* Check-Register */
 
-router.post("/register", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    try {
-      const user = await User.create({ username, password: hashedPassword });
-      res.status(201).json({ message: "user created" });
-    } catch (error) {
-      if (error.code === 11000) {
-        //jika tidak unik
-        res.status(409).json({ message: "User already in use" }); //email atau password konflik
-      }
-      res.status(500).json({ message: "internal server error" });
-    }
-  } catch (error) {
-    console.log("error", error);
-  }
-});
+// router.post("/register", async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     try {
+//       const user = await User.create({ username, password: hashedPassword });
+//       res.status(201).json({ message: "user created" });
+//     } catch (error) {
+//       if (error.code === 11000) {
+//         //jika tidak unik
+//         res.status(409).json({ message: "User already in use" }); //email atau password konflik
+//       }
+//       res.status(500).json({ message: "internal server error" });
+//     }
+//   } catch (error) {
+//     console.log("error", error);
+//   }
+// });
 
 // dashboard
 router.get("/dashboard", authMiddleware, async (req, res) => {
