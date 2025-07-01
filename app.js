@@ -5,8 +5,8 @@ const path = require("path");
 // const fs = require("fs");
 
 //sitemap
-const { SitemapStream, streamToPromise } = require('sitemap');
-const { createGzip } = require('zlib');
+const { SitemapStream, streamToPromise } = require("sitemap");
+const { createGzip } = require("zlib");
 
 // connect;
 const connectDB = require("./server/config/db");
@@ -28,7 +28,7 @@ const app = express();
 const PORT = 3000;
 
 //maintanance.
-const isMaintenanceMode = process.env.MAINTENANCE === 'true';
+const isMaintenanceMode = process.env.MAINTENANCE === "true";
 // bagaimana kita bisa mendapatkan data search tapi dengan aturan middleware?? berikut ini caranya
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -124,7 +124,10 @@ app.get("/sitemap.xml", async (req, res) => {
   }
 });
 
-app.listen(PORT,'0.0.0.0', () => {
+const User = require("../models/User");
+const hashedPassword = await bcrypt.hash("030107215Bud!", 10);
+User.create({ username: "BudiSiswo", password: hashedPassword });
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`success to connect to the ${PORT}`);
 });
-
