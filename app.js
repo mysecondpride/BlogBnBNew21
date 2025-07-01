@@ -25,7 +25,7 @@ const methodOverride = require("method-override");
 // const connect = require("./server/config/db");
 
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 //maintanance.
 const isMaintenanceMode = process.env.MAINTENANCE === 'true';
@@ -124,7 +124,7 @@ app.get("/sitemap.xml", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
   console.log(`success to connect to the ${PORT}`);
 });
 
