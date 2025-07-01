@@ -96,7 +96,7 @@ app.get("/sitemap.xml", async (req, res) => {
     res.header("Content-Encoding", "gzip");
 
     const smStream = new SitemapStream({
-      hostname: "https://suppliersayuranhidroponik.com",
+      hostname: "https://suppliersayuranhidroponik.my.id",
     });
     const pipeline = smStream.pipe(createGzip());
 
