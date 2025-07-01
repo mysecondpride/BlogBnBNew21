@@ -124,9 +124,6 @@ app.get("/sitemap.xml", async (req, res) => {
   }
 });
 
-const User = require("../models/User");
-const hashedPassword = await bcrypt.hash("030107215Bud!", 10);
-User.create({ username: "BudiSiswo", password: hashedPassword });
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`success to connect to the ${PORT}`);
