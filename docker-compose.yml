@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongo:
@@ -6,6 +6,9 @@ services:
     container_name: mongodb
     volumes:
       - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
 
   backend:
     build:
@@ -29,6 +32,6 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - backend
-      
+
 volumes:
   mongo_data:
