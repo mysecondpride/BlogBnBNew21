@@ -3,65 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Supplier Sayuran Hidroponik Surabaya Sidoarjo</title>
+    <title>Lumbung Pangan--Supplier Sayuran Hidroponik Surabaya Sidoarjo</title>
   </head>
   <body>
-    <% const daftar = data.daftarIsi; %> <% if (daftar.length > 0) { %> <%
-    daftar.forEach(item => { %>
-    <h1><%= item.judul %></h1>
-    <p><%= item.pengantar %></p>
-    <p><%= item.sistematika %></p>
-    <% }) %> <% } else { %>
-    <p>Belum Artikel.</p>
-    <% } %> <% const elementFirst= data.element1 %> <% if
-    (elementFirst.length>0) { %> <% elementFirst.forEach(item => { %>
-    <h1><%= item.H1 %></h1>
-    <p><%=item.body1 %></p>
-
-    <% const images=item.files %> <% images.forEach(element => { %>
-    <img
-      src="/imageOfElement1/<%= element.fileId %>"
-      alt="imageOfElement1"
-      style="height: 200px; width: 150px"
-    />
-    <% }) %> <% }) %> <% } %> <% const elementSecond= data.element2 %> <% if
-    (elementSecond.length>0) { %> <% elementSecond.forEach(item => { %>
-
-    <p><%=item.body2 %></p>
-
-    <% const images=item.files %> <% images.forEach(element => { %>
-    <img
-      src="/imageOfElement1/<%= element.fileId %>"
-      alt="imageOfElement1"
-      style="height: 200px; width: 150px"
-    />
-    <% }) %> <% }) %> <% } %> <% const elementThird= data.element3 %> <% if
-    (elementThird.length>0) { %> <% elementThird.forEach(item => { %>
-
-    <p><%=item.body3 %></p>
-
-    <% const images=item.files %> <% images.forEach(element => { %>
-    <img
-      src="/imageOfElement1/<%= element.fileId %>"
-      alt="imageOfElement1"
-      style="height: 200px; width: 150px"
-    />
-    <% }) %> <% }) %> <% } %> <% const elementFourth= data.element4 %> <% if
-    (elementFourth.length>0) { %> <% elementFourth.forEach(item => { %>
-
-    <p><%=item.body4 %></p>
-
-    <% const images=item.files %> <% images.forEach(element => { %>
-    <img
-      src="/imageOfElement1/<%= element.fileId %>"
-      alt="imageOfElement1"
-      style="height: 200px; width: 150px"
-    />
-    <% }) %> <% }) %> <% } %> <% const elementPenutup= data.penutup %> <% if
-    (elementPenutup.length>0) { %> <% elementPenutup.forEach(item => { %>
-
-    <p><%=item.penutup %></p>
-
-    <% }) %> <% } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1><%= title %></h1>
+  <hr>
+  <div>
+    <%- content %> <!-- IMPORTANT: use <%- %> to render HTML -->
+  </div>
+</body>
+</html>
   </body>
 </html>

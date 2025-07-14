@@ -24,14 +24,16 @@
 <a href="/display-mentan" class="buttonBuatan">Hasil Management Tanam</a>
 
 <a href="/display-hidro" class="buttonBuatan">Hasil Management HidroPonik</a>
+
+
 <% data.forEach((item) => { %>
   <% if (item && item._id) { %>
     <ul>
-      <% const tableOfContent = item.daftarIsi || []; %>
-      <% if (tableOfContent.length > 0) { %>
-        <% const first = tableOfContent[0]; %>
+      <% const element = item.element1 || []; %>
+      <% if (element.length > 0) { %>
+        <% const first = element[0]; %>
         <a href="/post-article/<%= item._id %>">
-          <p><%= first.judul %></p>
+          <p><%= first.title %></p>
         </a>
       <% } %>
 
@@ -39,9 +41,7 @@
         <input type="submit" value="delete blog" />
       </form>
     </ul>
-  <% } else { %>
-    <!-- Optional: you can skip this else block entirely to avoid extra space -->
-    <!-- <p>Data has been deleted or _id missing</p> -->
   <% } %>
 <% }); %>
+
 </ul>

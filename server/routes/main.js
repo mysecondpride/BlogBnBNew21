@@ -8,6 +8,9 @@ const router = express.Router();
 // router penghubung ke package dan model
 const mongoose = require("mongoose");
 
+//sitemap
+const { SitemapStream, streamToPromise } = require("sitemap")
+const { createGzip } = require("zlib");
 //perobaan layout di main
 // const layOut = require(".");
 //schema yang diperlukan:
@@ -42,9 +45,9 @@ router.get("/maintenance", (req, res) => {
 router.get("/", async (req, res) => {
   const locals = {
     title:
-      "Supplier Sayuran Hidroponik Surabaya Sidoarjo WalikDamenNesia, Jual Sayur Hidroponik Surabaya Sidoarjo ongkir flat",
+      "Lumbung Pangan | Supplier Sayuran Hidroponik Surabaya Sidoarjo , Jual Sayur Hidroponik Surabaya Sidoarjo ongkir flat",
     description:
-      " Jual sayuran hidroponik surabaya sidoarjo, supplier sayuran hidroponik surabaya sidoarjo,Salada Lettuce | Salada Keriting | Sawi Packcoy | Sawi Samhong | Bumbu dapur",
+      " Jual sayuran hidroponik Surabaya Sidoarjo, supplier sayuran hidroponik surabaya sidoarjo,Salada Lettuce | Salada Keriting | Sawi Pakcoy|Jamur Tiram | Sawi Samhong | Bumbu dapur",
   };
 
   try {
@@ -56,9 +59,9 @@ router.get("/", async (req, res) => {
 });
 router.get("/blog", async (req, res) => {
   const locals = {
-    title: "Supplier Sayuran Hidroponik Surabaya Sidoarjo WalikDameNesia",
+    title: "Lumbung Pangan | Supplier Sayuran Hidroponik Surabaya Sidoarjo ",
     description:
-      "Salada Lettuce | Salada Keriting | Sawi Packcoy | Sawi Samhong | Bumbu dapur ",
+      "Salada Lettuce | Salada Keriting | Sawi Pakcoi | Sawi Samhong | Bumbu dapur ",
   };
   // router ini untuk melempar data yang sudah kita post
   let perPage = 200;
@@ -125,15 +128,59 @@ router.get("/about", (req, res) => {
 });
 router.get("/post/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const data = await Post.findById(id); // 🟢 This uses the _id
-    console.log(data, " ini adalah data");
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).send("Post not found");
 
-    res.render("post-article", { data });
-  } catch (error) {
-    console.log("error", error);
+    const contentBlock =
+      post.element1 && post.element1.length > 0
+        ? post.element1[0]
+        : { title: "", content: "" };
+
+    res.render("post-article", {
+      title: contentBlock.title,
+      content: contentBlock.content,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
   }
 });
+
+//sitemap
+router.get("/sitemap.xml", async (req, res) => {
+  try {
+    res.header("Content-Type", "application/xml");
+    res.header("Content-Encoding", "gzip");
+
+    const smStream = new SitemapStream({
+      hostname: "https://suppliersayuranhidroponik.my.id",
+    });
+    const pipeline = smStream.pipe(createGzip());
+
+    // Write only PUBLIC routes from your main site
+    smStream.write({ url: "/", changefreq: "daily", priority: 1.0 });
+    smStream.write({ url: "/about", changefreq: "monthly", priority: 0.7 });
+    smStream.write({ url: "/blog", changefreq: "weekly", priority: 0.8 });
+
+    // Optional: include dynamic pages (e.g., posts, products)
+    const posts = await PostProducts.find();
+    posts.forEach((post) => {
+      smStream.write({
+        url: `/post/${post.slug}`,
+        changefreq: "daily",
+        priority: 1.0,
+      });
+    });
+
+    smStream.end();
+    const sitemapOutput = await streamToPromise(pipeline);
+    res.send(sitemapOutput);
+  } catch (e) {
+    console.error(e);
+    res.status(500).end();
+  }
+});
+
 
 router.use((req, res, next) => {
   res.status(404).render("404"); // This renders views/404.ejs

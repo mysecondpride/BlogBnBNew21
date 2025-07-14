@@ -1,37 +1,37 @@
-version: "3.8"
+  version: "3.8"
 
-services:
-  mongo:
-    image: mongo:7.0
-    container_name: mongodb
-    volumes:
-      - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+  services:
+    mongo:
+      image: mongo:7.0
+      container_name: mongodb
+      volumes:
+        - mongo_data:/data/db
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: example
 
-  backend:
-    build:
-      context: .
-    container_name: node-backend
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    depends_on:
-      - mongo
+    backend:
+      build:
+        context: .
+      container_name: node-backend
+      ports:
+        - "3000:3000"
+      env_file:
+        - .env
+      depends_on:
+        - mongo
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - /etc/letsencrypt:/etc/letsencrypt
-    depends_on:
-      - backend
+    nginx:
+      image: nginx:latest
+      container_name: nginx
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - ./nginx:/etc/nginx/conf.d
+        - /etc/letsencrypt:/etc/letsencrypt
+      depends_on:
+        - backend
 
-volumes:
-  mongo_data:
+  volumes:
+    mongo_data:

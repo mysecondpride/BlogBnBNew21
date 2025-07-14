@@ -146,138 +146,98 @@ router.get("/add-post", authMiddleware, async (req, res) => {
   }
 });
 
-router.post(
-  "/add-post",
-  authMiddleware,
-  uploads.fields([
-    { name: "BlogImg1", maxCount: 3 },
-    { name: "BlogImg2", maxCount: 3 },
-    { name: "BlogImg3", maxCount: 3 },
-    { name: "BlogImg4", maxCount: 3 },
-  ]),
-  async (req, res) => {
-    try {
-      const db = mongoose.connection.db;
-      const bucket = new mongoose.mongo.GridFSBucket(db, {
-        bucketName: "uploads",
-      });
 
-      const saveFiles = async (files) => {
-        if (!files || files.length === 0) return null;
 
-        const savedFiles = [];
-
-        for (const file of files) {
-          const stream = bucket.openUploadStream(file.originalname, {
-            contentType: file.mimetype,
-          });
-
-          const fileId = stream.id; // ✅ THIS is the correct ID
-
-          stream.end(file.buffer);
-
-          await new Promise((resolve, reject) => {
-            stream.on("finish", resolve);
-            stream.on("error", reject);
-          });
-
-          savedFiles.push({
-            fileId: fileId,
-            filename: file.originalname,
-            fileType: file.mimetype,
-            url: `/files/${fileId}`,
-            uploadedAt: new Date(),
-          });
-        }
-
-        return savedFiles;
-      };
-      // Upload files
-      const blogImg1File = await saveFiles(req.files["BlogImg1"]);
-      const blogImg2File = await saveFiles(req.files["BlogImg2"]);
-      const blogImg3File = await saveFiles(req.files["BlogImg3"]);
-      const blogImg4File = await saveFiles(req.files["BlogImg4"]);
-
-      // Build document
-      const post = new Post({
-        customId: Date.now().toString(), // or any custom generator
-        daftarIsi: [
-          {
-            judul: req.body.title,
-            pengantar: req.body.preface,
-            sistematika: req.body.structure,
-          },
-        ],
-        element1: [
-          {
-            H1: req.body.H1Judul,
-            body1: req.body.body1,
-            url: req.body.url,
-            files: blogImg1File ? blogImg1File : null, // this is a single object
-          },
-        ],
-        element2: [
-          {
-            body2: req.body.body2,
-            files: blogImg2File ? blogImg2File : null, // this is a single object
-          },
-        ],
-        element3: [
-          {
-            body3: req.body.body3,
-            url: req.body.url,
-            files: blogImg3File ? blogImg3File : null, // this is a single object
-          },
-        ],
-
-        element4: [
-          {
-            body4: req.body.body4,
-            files: blogImg4File ? blogImg4File : null, // this is a single object
-          },
-        ],
-        penutup: [
-          {
-            penutup: req.body.closing,
-          },
-        ],
-      });
-
-      await post.save();
-      res.status(201).json({ message: "Post created", post });
-      // res.redirect("/dashboard");
-    } catch (err) {
-      console.error("Upload failed:", err);
-      res.status(500).json({ error: "Upload failed", details: err.message });
-    }
-  }
-);
-const { Types } = require("mongoose");
-const ManagementHidro = require("../models/ManagementHidro");
-
-router.get("/post-article/:id", authMiddleware, async (req, res) => {
+router.post("/upload-image", uploads.single("image"), async (req, res) => {
   try {
-    const { id } = req.params;
-    const data = await Post.findById(id); // 🟢 This uses the _id
-    console.log(data, " ini adalah data");
+    const db = mongoose.connection.db;
+    const bucket = new mongoose.mongo.GridFSBucket(db, {
+      bucketName: "uploads",
+    });
 
-    res.render("admin/post-article", { data, layout: layoutAdmin });
-  } catch (error) {
-    console.log("error", error);
+    const stream = bucket.openUploadStream(req.file.originalname, {
+      contentType: req.file.mimetype,
+    });
+
+    stream.end(req.file.buffer);
+
+    stream.on("finish", () => {
+      res.status(200).json({ url: `/files/${stream.id}` });
+    });
+
+    stream.on("error", () => {
+      res.status(500).json({ error: "Upload failed" });
+    });
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-router.get("/imageOfElement1/:fileId", async (req, res) => {
+router.post("/add-post", authMiddleware, async (req, res) => {
+  try {
+    const { title, content } = req.body;
+
+    const post = new Post({
+      customId: Date.now().toString(),
+      element1: [
+        {
+          title,
+          content,
+          url: null, // jika tidak ada URL
+          files: [],
+        },
+      ],
+    });
+
+    await post.save();
+    res.status(201).json({ message: "Post created", post });
+  } catch (err) {
+    console.error("Upload failed:", err);
+    res.status(500).json({ error: "Upload failed", details: err.message });
+  }
+});
+const { Types } = require("mongoose");
+const ManagementHidro = require("../models/ManagementHidro");
+
+router.get("/post-article/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).send("Post not found");
+
+    const contentBlock =
+      post.element1 && post.element1.length > 0
+        ? post.element1[0]
+        : { title: "", content: "" };
+
+    res.render("admin/post-article", {
+      title: contentBlock.title,
+      content: contentBlock.content,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.get("/files/:id", async (req, res) => {
   const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
     bucketName: "uploads",
   });
 
   try {
-    const fileId = new mongoose.Types.ObjectId(req.params.fileId);
-    const stream = bucket.openDownloadStream(fileId);
-    stream.pipe(res);
+    const fileId = new mongoose.Types.ObjectId(req.params.id);
+    const downloadStream = bucket.openDownloadStream(fileId);
+
+    downloadStream.on("error", (err) => {
+      console.error("File download error:", err.message);
+      res.status(404).send("Image not found");
+    });
+
+    downloadStream.pipe(res);
   } catch (err) {
-    res.status(404).send("Image not found");
+    console.error("Invalid file ID:", err.message);
+    res.status(400).send("Invalid file ID");
   }
 });
 
@@ -289,7 +249,7 @@ router.delete("/delete-post/:customId", async (req, res) => {
     if (!deletedPost) {
       return res.status(404).json({ message: "Post not found" });
     }
-    res.redirect("/admin/dashboard");
+    res.redirect("/dashboard");
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
