@@ -20,6 +20,9 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
+const User = require("./server/models/User");
+const bcrypt = require("bcrypt");
+
 
 //connect to mongoDB
 // const connect = require("./server/config/db");
@@ -123,6 +126,36 @@ app.get("/sitemap.xml", async (req, res) => {
     res.status(500).end();
   }
 });
+
+const seedUsers = async () => {
+  try {
+
+
+    const existingUser = await User.findOne({ username: "BudiSiswo" });
+    if (existingUser) {
+      console.log("User BudiSiswo already exists. Skipping seeding...");
+      return;
+    }
+
+    const users = [
+      {
+        username: "Alexandro",
+        password: await bcrypt.hash("admin@123", 12),
+      },
+      {
+        username: "BudiSiswo",
+        password: await bcrypt.hash("2017101071989Bud!030107215Bud!", 12),
+      },
+    ];
+
+    await User.insertMany(users);
+    console.log("Users seeded successfully");
+  } catch (err) {
+    console.error("Seeder Error:", err);
+  }
+};
+
+seedUsers();
 
 
 app.listen(PORT, "0.0.0.0", () => {
