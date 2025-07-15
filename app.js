@@ -20,9 +20,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
-const User = require("./server/models/User");
-const bcrypt = require("bcrypt");
-
 
 //connect to mongoDB
 // const connect = require("./server/config/db");
@@ -70,6 +67,7 @@ app.use(
   })
 );
 
+console.log("🔍 MONGODB_URI:", process.env.MONGODB_URI);
 //templete engine
 
 //penggunaan app.use yang memerlukan suatu middleware-- kalimat ini terinspirasi dari bugging
@@ -92,70 +90,6 @@ app.use((req, res, next) => {
   next();
 });
 
-//sitemap
-app.get("/sitemap.xml", async (req, res) => {
-  try {
-    res.header("Content-Type", "application/xml");
-    res.header("Content-Encoding", "gzip");
-
-    const smStream = new SitemapStream({
-      hostname: "https://suppliersayuranhidroponik.my.id",
-    });
-    const pipeline = smStream.pipe(createGzip());
-
-    // Write only PUBLIC routes from your main site
-    smStream.write({ url: "/", changefreq: "daily", priority: 1.0 });
-    smStream.write({ url: "/about", changefreq: "monthly", priority: 0.7 });
-    smStream.write({ url: "/blog", changefreq: "weekly", priority: 0.8 });
-
-    // Optional: include dynamic pages (e.g., posts, products)
-    const posts = await PostProducts.find();
-    posts.forEach((post) => {
-      smStream.write({
-        url: `/post/${post.slug}`,
-        changefreq: "daily",
-        priority: 1.0,
-      });
-    });
-
-    smStream.end();
-    const sitemapOutput = await streamToPromise(pipeline);
-    res.send(sitemapOutput);
-  } catch (e) {
-    console.error(e);
-    res.status(500).end();
-  }
-});
-
-const seedUsers = async () => {
-  try {
-
-
-    const existingUser = await User.findOne({ username: "BudiSiswo" });
-    if (existingUser) {
-      console.log("User BudiSiswo already exists. Skipping seeding...");
-      return;
-    }
-
-    const users = [
-      {
-        username: "Alexandro",
-        password: await bcrypt.hash("admin@123", 12),
-      },
-      {
-        username: "BudiSiswo",
-        password: await bcrypt.hash("2017101071989Bud!030107215Bud!", 12),
-      },
-    ];
-
-    await User.insertMany(users);
-    console.log("Users seeded successfully");
-  } catch (err) {
-    console.error("Seeder Error:", err);
-  }
-};
-
-seedUsers();
 
 
 app.listen(PORT, "0.0.0.0", () => {

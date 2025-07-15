@@ -1,26 +1,20 @@
-// db.js
 const mongoose = require("mongoose");
-// require("dotenv").config();
-
-// const connectDB = async () => {
-//   try {
-//     mongoose.set("strictQuery", false);
-//     const conn = await mongoose.connect(process.env.MONGODB_URI);
-//     console.log(`Database connected: ${connection.host}`);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// server/config/db.js (example)
+require("dotenv").config(); // WAJIB agar env terbaca
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log("MongoDB connected");
-  } catch (err) { 
-    console.error("MongoDB connection error:", err);
-    process.exit(1);
+    console.log("📡 Connecting to:", process.env.MONGODB_URI); // Debug log
+
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log("✅ MongoDB connected");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err.message);
+    process.exit(1); // Stop app kalau error
   }
 };
+
 module.exports = connectDB;
