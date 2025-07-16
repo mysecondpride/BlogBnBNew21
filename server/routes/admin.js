@@ -90,12 +90,12 @@ router.post('/admin', async (req, res) => {
   const user = await User.findOne({ username });
 
   if (!user) {
-    return res.render("login", { error: "User not found" });
+    return res.render("dashboard", { error: "User not found" });
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return res.render("login", { error: "Wrong password" });
+    return res.render("dashboard", { error: "Wrong password" });
   }
 
   // Simpan ke session

@@ -45,70 +45,7 @@
           onImageUpload: function (files) {
             const formData = new FormData();
             formData.append('image', files[0]);
-=======
-<!-- Quill CSS -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
 
-<form action="/add-post" method="POST" enctype="multipart/form-data">
-  <!-- BODY1 - Quill Editor -->
-  <label>Body 1:</label>
-  <div id="editor1" class="quill-box" style="height: 200px;"></div>
-  <input type="hidden" name="body1" id="body1" />
-
-  <!-- BODY2 -->
-  <label>Body 2:</label>
-  <div id="editor2" class="quill-box" style="height: 200px;"></div>
-  <input type="hidden" name="body2" id="body2" />
-
-  <!-- BODY3 -->
-  <label>Body 3:</label>
-  <div id="editor3" class="quill-box" style="height: 200px;"></div>
-  <input type="hidden" name="body3" id="body3" />
-
-  <!-- BODY4 -->
-  <label>Body 4:</label>
-  <div id="editor4" class="quill-box" style="height: 200px;"></div>
-  <input type="hidden" name="body4" id="body4" />
-
-  <!-- PENUTUP -->
-  <label>Penutup:</label>
-  <div id="editor5" class="quill-box" style="height: 150px;"></div>
-  <input type="hidden" name="closing" id="closing" />
-
-  <!-- File Inputs -->
-  <input type="file" name="BlogImg1" multiple />
-  <input type="file" name="BlogImg2" multiple />
-  <input type="file" name="BlogImg3" multiple />
-  <input type="file" name="BlogImg4" multiple />
-
-  <button type="submit">Submit</button>
-</form>
-
-<!-- Quill JS -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-
-<script>
-  const editors = [
-    { id: "editor1", input: "body1" },
-    { id: "editor2", input: "body2" },
-    { id: "editor3", input: "body3" },
-    { id: "editor4", input: "body4" },
-    { id: "editor5", input: "closing" },
-  ];
-
-  const quillInstances = {};
-
-  editors.forEach(({ id, input }) => {
-    quillInstances[id] = new Quill(`#${id}`, { theme: "snow" });
-
-    // Hook into form submit
-    document.querySelector("form").addEventListener("submit", function () {
-      const html = quillInstances[id].root.innerHTML;
-      document.getElementById(input).value = html;
-    });
-  });
-</script>
->>>>>>> c1086d8f0773ddd80fa9e649c3310998a8bd9b1d
 
             fetch('/upload-image', {
               method: 'POST',
