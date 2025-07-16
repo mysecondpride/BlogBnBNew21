@@ -64,24 +64,51 @@ router.get("/robots.txt", (req, res) => {
   res.sendFile(path.join(__dirname, "robots.txt"));
 });
 
-router.post("/admin", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(401).json({ message: "invalid credentials" });
-    }
-    const isPassword = await bcrypt.compare(password, user.password);
-    if (!isPassword) {
-      return res.status(401).json({ message: "invalid credentials" });
-    }
-    const token = jwt.sign({ userId: user._id }, jwtSecret);
-    res.cookie("token", token, { httpOnly: true });
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.log("error");
+// router.post("/admin", async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+//     const user = await User.findOne({ username });
+//     if (!user) {
+//       return res.status(401).json({ message: "invalid credentials" });
+//     }
+//     const isPassword = await bcrypt.compare(password, user.password);
+//     if (!isPassword) {
+//       return res.status(401).json({ message: "invalid credentials" });
+//     }
+//     const token = jwt.sign({ userId: user._id }, jwtSecret);
+//     res.cookie("token", token, { httpOnly: true });
+//     res.redirect("/dashboard");
+//   } catch (error) {
+//     console.log("error");
+//   }
+// });
+
+
+
+router.post('/admin', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    return res.render("login", { error: "User not found" });
   }
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    return res.render("login", { error: "Wrong password" });
+  }
+
+  // Simpan ke session
+  req.session.userId = user._id;
+  req.session.role = user.role;
+
+  res.redirect("/dashboard");
 });
+
+
+
+
+
 
 //function that helping me out after soon we erase the cookies
 const authMiddleware = (req, res, next) => {
