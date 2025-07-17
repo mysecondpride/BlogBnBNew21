@@ -28,18 +28,27 @@
 
 <% data.forEach((item) => { %>
   <% if (item && item._id) { %>
-    <ul>
+    <ul class="blog-post">
       <% const element = item.element1 || []; %>
+      
       <% if (element.length > 0) { %>
         <% const first = element[0]; %>
-        <a href="/post-article/<%= item._id %>">
-          <p><%= first.title %></p>
-        </a>
+        <li>
+          <a href="/post-article/<%= item._id %>">
+            <p><%= first.title %></p>
+          </a>
+        </li>
+      <% } else { %>
+        <li>
+          <p><em>Artikel belum tersedia</em></p>
+        </li>
       <% } %>
 
-      <form action="/delete-post/<%= item.customId %>?_method=DELETE" method="POST">
-        <input type="submit" value="delete blog" />
-      </form>
+      <li>
+        <form action="/delete-post/<%= item.customId %>?_method=DELETE" method="POST" onsubmit="return confirm('Yakin hapus blog ini?');">
+          <input type="submit" value="Delete Blog" />
+        </form>
+      </li>
     </ul>
   <% } %>
 <% }); %>

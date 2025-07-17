@@ -64,51 +64,81 @@ router.get("/robots.txt", (req, res) => {
   res.sendFile(path.join(__dirname, "robots.txt"));
 });
 
-// router.post("/admin", async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-//     const user = await User.findOne({ username });
-//     if (!user) {
-//       return res.status(401).json({ message: "invalid credentials" });
-//     }
-//     const isPassword = await bcrypt.compare(password, user.password);
-//     if (!isPassword) {
-//       return res.status(401).json({ message: "invalid credentials" });
-//     }
-//     const token = jwt.sign({ userId: user._id }, jwtSecret);
-//     res.cookie("token", token, { httpOnly: true });
-//     res.redirect("/dashboard");
-//   } catch (error) {
-//     console.log("error");
-//   }
-// });
-
-
-
-router.post('/admin', async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-
-  if (!user) {
-    return res.render("admin/dashboard", { error: "User not found" });
+router.post("/admin", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ message: "invalid credentials" });
+    }
+    const isPassword = await bcrypt.compare(password, user.password);
+    if (!isPassword) {
+      return res.status(401).json({ message: "invalid credentials" });
+    }
+    const token = jwt.sign({ userId: user._id }, jwtSecret);
+    res.cookie("token", token, { httpOnly: true });
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.log("error");
   }
-
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
-    return res.render("admin/dashboard", { error: "Wrong password" });
-  }
-
-  // Simpan ke session
-  req.session.userId = user._id;
-  req.session.role = user.role;
-
-  res.redirect("/dashboard");
 });
 
 
 
+// router.post('/admin', async (req, res) => {
+//   const { username, password } = req.body;
+//   const user = await User.findOne({ username });
+
+//   if (!user) {
+//     return res.render("admin/dashboard", { error: "User not found" });
+//   }
+
+//   const match = await bcrypt.compare(password, user.password);
+//   if (!match) {
+//     return res.render("admin/dashboard", { error: "Wrong password" });
+//   }
+
+//   // Simpan ke session
+//   req.session.userId = user._id;
+//   req.session.role = user.role;
+
+//   res.redirect("/dashboard");
+// });
 
 
+// router.post("/admin", async (req, res) => {
+//   const { username, password } = req.body;
+
+//   try {
+//     // 1. Cari user berdasarkan username
+//     const user = await User.findOne({ username });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // 2. Cocokkan password yang dikirim dengan yang ada di database
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if (!isMatch) {
+//       return res.status(401).json({ message: "Invalid password" });
+//     }
+
+    // 3. Jika berhasil, bisa kasih token atau konfirmasi sukses
+    // res.json({
+    //   message: "Login successful",
+    //   user: {
+    //     id: user._id,
+    //     username: user.username,
+    //     role: user.role,
+    //   },
+    // });
+//     res.redirect("/dashboard");
+//   } catch (error) {
+//     console.error("Login error:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 //function that helping me out after soon we erase the cookies
 const authMiddleware = (req, res, next) => {

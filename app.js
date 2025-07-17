@@ -54,6 +54,8 @@ app.use(express.static("public")); // could block /image
 //   })
 // );
 
+
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET, // Use an env variable (not hardcoded)
