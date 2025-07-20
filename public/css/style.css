@@ -88,8 +88,8 @@ container{
     background-color: #45a049;
 }
 .main{
-    padding:40px 40px;
-    margin-left:40px;
+    padding: 5px 5px;
+        margin-left: 10px;
 }
 .searchBar {
     opacity: 0;

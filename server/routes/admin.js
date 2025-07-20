@@ -249,6 +249,7 @@ router.post("/add-post", authMiddleware, async (req, res) => {
 
     await post.save();
     res.status(201).json({ message: "Post created", post });
+    // res.redirect("/dashboard");
   } catch (err) {
     console.error("Upload failed:", err);
     res.status(500).json({ error: "Upload failed", details: err.message });
@@ -297,6 +298,67 @@ router.get("/files/:id", async (req, res) => {
     res.status(400).send("Invalid file ID");
   }
 });
+
+router.get("/edit-post-article/:customId", async (req, res) => {
+  try {
+    const post = await Post.findOne({ customId: req.params.customId });
+    if (!post) return res.status(404).send("Post not found");
+
+    const contentBlock =
+      post.element1 && post.element1.length > 0
+        ? post.element1[0]
+        : { title: "", content: "" };
+
+    res.render("admin/edit-post-article", {
+      title: contentBlock.title,
+      content: contentBlock.content,
+      customId: req.params.customId,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.put(
+  "/update-post-article/:customId",
+  authMiddleware,
+  async (req, res) => {
+    console.log("params:", req.params);
+    console.log("body:", req.body);
+
+    const { customId } = req.params;
+    console.log("CustomId value:", customId);
+
+    const { title, content } = req.body;
+
+    try {
+      const dataEdit = await Post.findOne({ customId });
+
+      if (!dataEdit) {
+        return res.status(404).json({ message: "Data not found" });
+      }
+
+      // Asumsikan hanya 1 artikel di element1
+      if (dataEdit.element1 && dataEdit.element1.length > 0) {
+        dataEdit.element1[0].title = title;
+        dataEdit.element1[0].content = content;
+      } else {
+        // Jika element1 belum ada, buat baru
+        dataEdit.element1 = [{ title, content }];
+      }
+
+      await dataEdit.save();
+
+      res.status(200).json({ message: "Update successful", dataEdit });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+
 
 router.delete("/delete-post/:customId", async (req, res) => {
   try {

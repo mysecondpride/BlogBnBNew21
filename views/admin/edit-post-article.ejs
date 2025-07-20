@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Artikel</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Edit Artikel</h1>
+
+    <form
+      action="/update-post-article/<%= customId %>?_method=PUT"
+      method="POST"
+    >
+      <label for="title">Judul:</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="<%= title %>"
+        required
+      />
+      <label for="content">Konten:</label>
+      <textarea id="summernote" name="content"><%= content %></textarea>
+
+      <button type="submit">Simpan Perubahan</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#summernote").summernote({
+          height: 300,
+        });
+      });
+    </script>
+  </body>
+</html>

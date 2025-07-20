@@ -1,31 +1,23 @@
 <div class="admin-title">
-  <h2>WalikDameNesia</h2>
-  <a href="/add-post" class="button">add new post brey</a>
+  <h2>LP</h2>
+  <a href="/add-post" class="button">Post Blog</a>
 </div>
-
 <ul  class="admin-post">
   <li>
-    TokoKu
-    <a href="/display-products" >Klik disini untuk melihat display etalase</a>
+    <a href="/display-products" >Ke etalase</a>
   </li>
    <li>
-    TokoKu
-    <a href="/post-display-products">Klik disini untuk mempost product baru</a>
+    <a href="/post-display-products">Post Product</a>
   </li>
    <li>
-    Mentan
-    <a href="/post-mentan">Klik disini untuk mempost managementanam</a>
+    <a href="/post-mentan">Post ManTan</a>
   </li>
      <li>
-    ManagemenHidroPonik
-    <a href="/post-hidro">Klik disini untuk mempost ManagementHidroPonik</a>
+    <a href="/post-hidro">Post ManNik</a>
   </li>
 
-<a href="/display-mentan" class="buttonBuatan">Hasil Management Tanam</a>
-
-<a href="/display-hidro" class="buttonBuatan">Hasil Management HidroPonik</a>
-
-
+<a href="/display-mentan" class="buttonBuatan">Show ManTan</a>
+<a href="/display-hidro" class="buttonBuatan">Show Hidroponik</a>
 <% data.forEach((item) => { %>
   <% if (item && item._id) { %>
     <ul class="blog-post">
@@ -49,6 +41,13 @@
           <input type="submit" value="Delete Blog" />
         </form>
       </li>
+ <li>
+        <form action="/edit-post-article/<%= item.customId%>" method="get" onsubmit="return">
+          <input type="submit" value="edit blog" />
+        </form>
+      </li>
+
+
     </ul>
   <% } %>
 <% }); %>
