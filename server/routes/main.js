@@ -164,13 +164,15 @@ router.get("/sitemap.xml", async (req, res) => {
 
     // Optional: include dynamic pages (e.g., posts, products)
     const posts = await PostProducts.find();
-    posts.forEach((post) => {
+  posts.forEach((post) => {
+    if (post.slug && post.slug.trim() !== "") {
       smStream.write({
         url: `/post/${post.slug}`,
         changefreq: "daily",
         priority: 1.0,
       });
-    });
+    }
+  });
 
     smStream.end();
     const sitemapOutput = await streamToPromise(pipeline);
