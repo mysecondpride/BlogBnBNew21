@@ -3,39 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lumbung Pangan, Supplier Sayuran Hidroponik Surabaya Sidoarjo</title>
+    <title>Lumbung Pangan, Jual Umbi Garut, jual tepung garut dan jual tepung umbi garut Gresik Surabaya Sidoarjo</title>
   </head>
   <body>
-       <% const imageSemai= "../public/img/Semai.jpg"%>
-    <% const imageKebun= "../public/img/Kebun.jpg"%>
-     <% const Hidroponik="../public/img/Hidroponik.jpg" %>
-    <% const hidroPonikImages=[imageSemai, imageKebun,Hidroponik] %>
+       <% const imageUmbiGarut= "../public/img/ubigarut.jpg"%>
+    <% const imageTepungGarut= "../public/img/tepungUbiGarut.jpg"%>
+    
+    <% const umbis=[imageUmbiGarut, imageTepungGarut] %>
     <h1>Tentang Kami</h1>
     <p>
-    Lumbung Pangan adalah supplier sayuran hidroponik dan aneka bumbu dapur. Kami menjual hasil kebun hidroponik dan non hidroponik untuk resto, hotel, catering dan rumah tangga.Sayuran yang kami panen merupakan sayuran fresh, panen pagi langsung dijual di hari itu juga.
+    Lumbung Pangan adalah toko umbi, sepesial umbi garut dan tepung garut. Kami menjual hasil kebun petani umbi.
+    Umbi adalah kekayaan alam Indonesia sebagai negara tropis. Kelebihan dari umbi adalah gluten free, sedangkan kelebihan umbi garut dibandingkan dengan umbi lainnya adalah selain gluten free, memiliki serat yang mudah larut
+    Sehingga khasiat umbi garut bisa membantu penderita maagh atau peradangan usus. Dengan soft/ pati strach yang dimiliki oleh umbi garut menjadikannya ia harus dilestarikan dan diwariskan
+    untuk anak-anak Indonesia demi masa depan sistim pencernaan SDM indonesia yang berkualitas.
+
     
       <br>
-      <h2>Hasil kebun sayuran hidroponik Lumbung Pangan</h2>
-      <p>Salada lettuce</p>
-      <p>Salada keriting</p>
-      <p>Sawi Pakcoi</p>
-      <p>Sawi Samhong</p>
+      <h2>Produk Lumbung Pangan</h2>
+      <h3>Umbi Garut</h3>
+      <h3>Tepung Garut</h3>
+      <h4>Singkong</h4>
+      <h5>Aneka Pisang</h5>
       <p>dan lain lain sesuai yang tertera pada:<a href="/">display products</a> </p> 
-    selain itu kami menjual beraneka macam bumbu seperti berikut ini:
-    Cabe, Tomat, Merica, Bawang Merah, Bawang Putih dll
+  
 
-    <h2>Mengapa Harus Belanja di Lumbung Pangan, Supplier Sayur Hidroponik Suarabya Sidoarjo?</h2>
-    Lumbung Pangan memberikan flat ongkir untuk rute surabaya-sidoarjo (Ongkir terjangkau)
+    <h2>Mengapa Harus Belanja di Lumbung Pangan, Jual Umbi Garut Gresik Surabaya Sidoarjo?</h2>
+    Lumbung Pangan memberikan flat ongkir untuk rute gresik-surabaya-sidoarjo (Ongkir terjangkau)
     <br>
-    Sayuran Hidroponik kami fresh dari kebun, serta item produk lain yang non hidroponik dengan harga yang kompetitif.
+   Umbi Garut Kami adalah umbi yang berkualitas dengan  size umbi yang sudah disortir dan tersedia pilihan paket-paket umbi dengan harga yang kompetitif.
     <br>
-    <% hidroPonikImages.forEach(element => { %>
-      <img src="<%= element %>" alt="SupplierSayuranHidroponik" width="150" heigth="150">
+    <% umbis.forEach(element => { %>
+      <img src="<%= element %>" alt="UmbiGarut" width="150" heigth="150">
      
     <% }) %>
     <br>
     <br />
-    <img src="<%= Hidroponik %>" alt="SupplierSayuranHidroponik" height="170" width="150">
   
   </body>
 </html>

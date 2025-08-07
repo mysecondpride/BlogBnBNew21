@@ -1,10 +1,17 @@
 body {
-    background-color: aquamarine;
+    background-image: url("https://suppliersayuranhidroponik.my.id/public/img/ubigarut.jfif");
 font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 400;
     font-style: normal;
         /* font-style: normal; */
 
+}
+
+.hero {
+    padding: 100px 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Optional: dark overlay for text readability */
+    text-align: center;
 }
 .header {
     background-color: #007bff;
