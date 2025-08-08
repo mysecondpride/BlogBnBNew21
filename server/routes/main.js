@@ -42,11 +42,16 @@ router.get("/maintenance", (req, res) => {
   res.send("<h1>Website is under maintenance. Please come back later.</h1>");
 });
 
+router.get("/promo", (req, res) => {
+  res.render("landing"); // akan render views/landing.ejs
+});
+
 router.get("/", async (req, res) => {
   const locals = {
     title:
-      "Lumbung Pangan | Supplier Tepung Garut dan Umbi Garut, Jelarut, Jual Umbi Garut (arrowroot) dan Tepung Garut",
-    description: " Jual Umbi Garut dan tepung garut Gresik, Surabaya, Sidoarjo",
+      "Lumbung Pangan | Jual Tepung Garut dan Ubi Garut, Jelarut, Kirut, Jual Umbi Garut (arrowroot) dan Tepung Garut",
+    description:
+      " Jual Umbi Garut, Ubi Garut, Kirut dan tepung garut, tepung pati garut, jengkirut, irut, Gresik, Surabaya, Sidoarjo",
   };
 
   try {
@@ -59,9 +64,9 @@ router.get("/", async (req, res) => {
 router.get("/blog", async (req, res) => {
   const locals = {
     title:
-      "Lumbung Pangan | Jual Umbi Garut, Jelarut, Ararut,jual tepung garut ",
+      "Lumbung Pangan | Jual Umbi Garut, Jelarut, irut, jengkirut, tepung pati garut,jual tepung garut ",
     description:
-      "Jual Umbi Garut, Jelarut, Ararut,jual tepung garut, jual tempung umbi garut surabaya, gresik, sidoarjo ",
+      "Jual Umbi Garut, Irut, Jengkirut, Jual Ubi garut, Jelarut, Ararut,jual tepung garut, jual tepung pati garut, irut, surabaya, gresik, sidoarjo ",
   };
   // router ini untuk melempar data yang sudah kita post
   let perPage = 200;
@@ -155,22 +160,47 @@ router.get("/sitemap.xml", async (req, res) => {
     const smStream = new SitemapStream({
       hostname: "https://suppliersayuranhidroponik.my.id",
     });
-    const pipeline = smStream.pipe(createGzip());
+    const pipeline = smStream.pipe(res);
 
-    // Write only PUBLIC routes from your main site
-    smStream.write({ url: "/", changefreq: "daily", priority: 1.0 });
-    smStream.write({ url: "/about", changefreq: "monthly", priority: 0.7 });
-    smStream.write({ url: "/blog", changefreq: "daily", priority: 0.8 });
+    const blogs = await Post.find();
+    blogs.forEach((blog) => {
+      let urlPath = null;
 
-    // Optional: include dynamic pages (e.g., posts, products)
+      if (
+        blog.slug &&
+        typeof blog.slug === "string" &&
+        blog.slug.trim() !== ""
+      ) {
+        urlPath = `/post/${blog.slug.trim()}`;
+      } else if (blog._id) {
+        urlPath = `/post/${blog._id.toString()}`;
+      }
+
+      if (urlPath) {
+        smStream.write({
+          url: urlPath,
+          changefreq: "daily",
+          priority: 0.9,
+        });
+      } else {
+        console.warn("Skipped blog (missing slug and ID):", blog);
+      }
+    });
+
     const posts = await PostProducts.find();
     posts.forEach((post) => {
-      if (post.slug && post.slug.trim() !== "") {
+      if (
+        post.slug &&
+        typeof post.slug === "string" &&
+        post.slug.trim() !== ""
+      ) {
         smStream.write({
-          url: `/post/${post.slug}`,
+          url: `/post/${post.slug.trim()}`,
           changefreq: "daily",
           priority: 1.0,
         });
+      } else {
+        console.warn("Skipped product post (missing slug):", post);
       }
     });
 
@@ -178,28 +208,28 @@ router.get("/sitemap.xml", async (req, res) => {
     const sitemapOutput = await streamToPromise(pipeline);
     res.send(sitemapOutput);
   } catch (e) {
-    console.error(e);
+    console.error("Sitemap generation error:", e);
     res.status(500).end();
   }
 });
 
-const blogs = await Post.find();
-blogs.forEach((blog) => {
-  if (blog.slug && blog.slug.trim() !== "") {
-    smStream.write({
-      url: `/post/${blog.slug}`,
-      changefreq: "daily",
-      priority: 0.9,
-    });
-  } else {
-    // fallback jika hanya ada _id
-    smStream.write({
-      url: `/post/${blog._id}`,
-      changefreq: "daily",
-      priority: 0.9,
-    });
-  }
-});
+// const blogs = await Post.find();
+// blogs.forEach((blog) => {
+//   if (blog.slug && blog.slug.trim() !== "") {
+//     smStream.write({
+//       url: `/post/${blog.slug}`,
+//       changefreq: "daily",
+//       priority: 0.9,
+//     });
+//   } else {
+//     // fallback jika hanya ada _id
+//     smStream.write({
+//       url: `/post/${blog._id}`,
+//       changefreq: "daily",
+//       priority: 0.9,
+//     });
+//   }
+// });
 
 
 router.use((req, res, next) => {
