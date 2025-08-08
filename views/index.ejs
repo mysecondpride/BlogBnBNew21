@@ -27,8 +27,7 @@
     <% const produk1 = item.Produk1 || [] %>
     <% if (produk1.length > 0) { 
          const first = produk1[0] %>
-    
-      <p>produk: <%= first.NamaProduk1 %></p>
+      <h2>produk: <%= first.NamaProduk1 %></h2>
       <p>harga: <%= first.Harga1 %></p>
       <p>stok: <%= first.Stok1 %></p>
       <p>keterangan: <%= first.Keterangan1 %></p>
@@ -41,7 +40,6 @@
          
          %>
       
-
       <% if (images.length > 0) { 
            images.forEach(img => { %>
         <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" alt="" height="300" width="200">
@@ -53,7 +51,7 @@
     <div>
       <% data.forEach(item => { %> <% const produk2 = item.Produk2 %> <% if
       (produk2.length > 0) { %>
-      <p>produk:<%= produk2[0].NamaProduk2 %></p>
+      <h2>produk:<%= produk2[0].NamaProduk2 %></h2>
       <p>harga: <%= produk2[0].Harga2 %></p>
       <p>stok: <%= produk2[0].Stok2 %></p>
       <p>Keterangan: <%= produk2[0].Keterangan2 %></p>
@@ -72,7 +70,7 @@
     <div>
       <% data.forEach(item => { %> <% const produk3 = item.Produk3 %> <% if
       (produk3.length > 0) { %>
-      <p>produk:<%= produk3[0].NamaProduk3 %></p>
+      <h2>produk:<%= produk3[0].NamaProduk3 %></h2>
       <p>harga: <%= produk3[0].Harga3 %></p>
       <p>stok: <%= produk3[0].Stok3 %></p>
       <p>Keterangan: <%= produk3[0].Keterangan3 %></p>

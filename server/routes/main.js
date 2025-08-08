@@ -64,9 +64,9 @@ router.get("/", async (req, res) => {
 router.get("/blog", async (req, res) => {
   const locals = {
     title:
-      "Lumbung Pangan | Jual Umbi Garut, Jelarut, irut, jengkirut, tepung pati garut,jual tepung garut ",
+      "Lumbung Pangan | Jual Ubi Garut, Jelarut, irut, jengkirut, tepung pati garut,jual tepung garut ",
     description:
-      "Jual Umbi Garut, Irut, Jengkirut, Jual Ubi garut, Jelarut, Ararut,jual tepung garut, jual tepung pati garut, irut, surabaya, gresik, sidoarjo ",
+      "Jual Ubi Garut, Irut, Jengkirut, Jual Ubi garut, Jelarut, Ararut,tepung garut,tepung pati garut, irut, surabaya, gresik, sidoarjo ",
   };
   // router ini untuk melempar data yang sudah kita post
   let perPage = 200;
