@@ -788,74 +788,79 @@ router.post(
 
       // Build document
       const post = new MenTan({
-        Petak1: [
+        TambulampotCabe11: [
           {
-            ObatSuketAwal1: req.body.OSukAwal1,
-            PengolahanLahanPetak1: req.body.PengLaTak1,
-            DolomitPetak1: req.body.DolomitPetak1,
+            OvenMediaTanam1: req.body.MediaHigienis1,
+            DolomitPot1: req.body.DolomitPot1,
             KetersediaanCompostTea_Jadam1: req.body.CTAvailable1,
             KetersediaanCompostdanBio1: req.body.KompostdanBio1,
-            JenisBibitPetak1: req.body.TypeSeeds1,
-            MasukMediaBioChar1: req.body.EnterBiochar1,
+            JenisBibitCabe1: req.body.TypeSeeds1,
             TanggalTanamPetak1: req.body.DatePlant1,
-            ObatSuket10Hari1: req.body.Osukten1,
             KocorCompostTea1: req.body.kocorCT1,
             JadamSulfur1: req.body.Jasur1,
-            ControlSuket1_1: req.body.grass1_1,
-            PenyiramanTahap1_1: req.body.Watering1_1,
             TglPemupukan1_1: req.body.DateFertilizerVeg1,
             PupukVegetatifMakro1: req.body.VegMakro1,
-            ControlSuket2_1: req.body.grass2_1,
-            PenyiramanTahap2_1: req.body.Watering2_1,
             TglPemupukanGen1: req.body.DateFerGen1,
             PupukGeneratifMakro1: req.body.GenMakro1,
-            ObatUlat1: req.body.CaterPiler1,
+            ObatTrip1: req.body.ObatTrip1,
+            RotasiObatTrip1: req.body.RotasiObatTrip1,
             UsiaPanendanKendala1: req.body.HarvestAge1,
             Rata_rataBb1: req.body.averageBB1,
             DokProgress1: DokProg1,
           },
         ],
-        Petak2: [
+        TambulampotCabe2: [
           {
-            ObatSuketAwal2: req.body.OSukAwal2,
-            PengolahanLahanPetak2: req.body.PengLaTak2,
-            DolomitPetak2: req.body.DolomitPetak2,
+            OvenMediaTanam2: req.body.MediaHigienis2,
+            DolomitPot2: req.body.DolomitPot2,
             KetersediaanCompostTea_Jadam2: req.body.CTAvailable2,
             KetersediaanCompostdanBio2: req.body.KompostdanBio2,
-            JenisBibitPetak2: req.body.TypeSeeds2,
-            MasukMediaBioChar2: req.body.EnterBiochar2,
+            JenisBibitCabe2: req.body.TypeSeeds2,
+            Fertility2: req.body.EnterBiochar2,
+            Moist2: req.body.Moisture2,
+            PH2: req.body.PH2,
+            Temp2: req.body.Temp2,
+            Sunlight2: req.body.Sunlight2,
+            Humidity2: req.body.Humidity2,
             TanggalTanamPetak2: req.body.DatePlant2,
-            ObatSuket10Hari2: req.body.Osukten2,
             KocorCompostTea2: req.body.kocorCT2,
             JadamSulfur2: req.body.Jasur2,
-            ControlSuket1_2: req.body.grass1_2,
-            PenyiramanTahap1_2: req.body.Watering1_2,
             TglPemupukan1_2: req.body.DateFertilizerVeg2,
             PupukVegetatifMakro2: req.body.VegMakro2,
-            ControlSuket2_2: req.body.grass2_2,
-            PenyiramanTahap2_2: req.body.Watering2_2,
             TglPemupukanGen2: req.body.DateFerGen2,
             PupukGeneratifMakro2: req.body.GenMakro2,
-            ObatUlat2: req.body.CaterPiler2,
+            ObatTrip2: req.body.ObatTrip2,
+            RotasiObatTrip2: req.body.RotasiObatTrip2,
             UsiaPanendanKendala2: req.body.HarvestAge2,
             Rata_rataBb2: req.body.averageBB2,
             DokProgress2: DokProg2,
           },
         ],
-        Petak3: [
+        TambulampotCabe3: [
           {
-            ObatSuketAwal3: req.body.OSukAwal3,
-            JenisBibitPetak3: req.body.TypeSeeds3,
+            OvenMediaTanam3: req.body.MediaHigienis3,
+            DolomitPot3: req.body.DolomitPot3,
+            KetersediaanCompostTea_Jadam3: req.body.CTAvailable3,
+            KetersediaanCompostdanBio3: req.body.KompostdanBio3,
+            JenisBibitCabe3: req.body.TypeSeeds3,
+            Fertility3: req.body.Fertility3,
+            Moist3: req.body.Moisture3,
+            PH3: req.body.PH3,
+            Temp3: req.body.Temp3,
+            Sunlight3: req.body.Sunlight3,
+            Humidity3: req.body.Humidity3,
             TanggalTanamPetak3: req.body.DatePlant3,
-            ObatSuket10Hari3: req.body.Osukten3,
+            KocorCompostTea3: req.body.kocorCT3,
             JadamSulfur3: req.body.Jasur3,
             TglPemupukan1_3: req.body.DateFertilizerVeg3,
             PupukVegetatifMakro3: req.body.VegMakro3,
             TglPemupukanGen3: req.body.DateFerGen3,
             PupukGeneratifMakro3: req.body.GenMakro3,
-            ObatUlat3: req.body.CaterPiler3,
-            UsiaPanenPetak3: req.body.HarvestAge3,
+            ObatTrip3: req.body.ObatTrip3,
+            RotasiObatTrip3: req.body.RotasiObatTrip3,
+            UsiaPanendanKendala3: req.body.HarvestAge3,
             Rata_rataBb3: req.body.averageBB3,
+            DokProgress3: DokProg3,
           },
         ],
       });
@@ -894,7 +899,7 @@ router.delete(
     try {
       const updatedPost = await MenTan.findByIdAndUpdate(
         postId,
-        { $pull: { Petak1: { _id: itemId } } },
+        { $pull: { TambulampotCabe11: { _id: itemId } } },
         { new: true }
       );
 
@@ -916,7 +921,7 @@ router.delete("/delete-item1-petak2/:postId/:itemId", async (req, res) => {
   try {
     const updatedPost = await MenTan.findByIdAndUpdate(
       postId,
-      { $pull: { Petak2: { _id: itemId } } },
+      { $pull: { TambulampotCabe2: { _id: itemId } } },
       { new: true }
     );
 
@@ -938,7 +943,7 @@ router.delete("/delete-item1-petak3/:postId/:itemId", async (req, res) => {
   try {
     const updatedPost = await MenTan.findByIdAndUpdate(
       postId,
-      { $pull: { Petak3: { _id: itemId } } },
+      { $pull: { TambulampotCabe3: { _id: itemId } } },
       { new: true }
     );
 
@@ -956,51 +961,51 @@ router.delete("/delete-item1-petak3/:postId/:itemId", async (req, res) => {
 router.put("/edit-item-petak/:groupId", authMiddleware, async (req, res) => {
   const { groupId } = req.params;
   const {
-    OSukAwal,
-    PengLaTak,
-    DolomitPetak,
+    MediaHigienis,
+    DolomitPot,
     CTAvailable,
     KompostdanBio,
     TypeSeeds,
-    EnterBiochar,
+    Fertility,
+    Moist,
+    PH,
+    Temp,
+    Sunlight,
+    Humidity,
     DatePlant,
-    Osukten,
     kocorCT,
     Jasur,
-    grass1,
-    Watering1,
     DateFertilizerVeg,
     VegMakro,
-    grass2,
-    Watering2,
     DateFerGen,
     GenMakro,
-    CaterPiler,
+    ObatTrip,
+    RotasiObatTrip,
     averageBB,
     HarvestAge,
   } = req.body;
 
   console.log(
-    OSukAwal,
-    PengLaTak,
-    DolomitPetak,
+    MediaHigienis,
+    DolomitPot,
     CTAvailable,
     KompostdanBio,
     TypeSeeds,
-    EnterBiochar,
+    Fertility,
+    Moist,
+    PH,
+    Temp,
+    Sunlight,
+    Humidity,
     DatePlant,
-    Osukten,
     kocorCT,
     Jasur,
-    grass1,
-    Watering1,
     DateFertilizerVeg,
     VegMakro,
-    grass2,
-    Watering2,
     DateFerGen,
     GenMakro,
-    CaterPiler,
+    ObatTrip,
+    RotasiObatTrip,
     averageBB,
     HarvestAge
   );
@@ -1008,9 +1013,9 @@ router.put("/edit-item-petak/:groupId", authMiddleware, async (req, res) => {
   try {
     const dataEdit = await MenTan.findOne({
       $or: [
-        { "Petak1._id": groupId },
-        { "Petak2._id": groupId },
-        { "Petak3._id": groupId },
+        { "TambulampotCabe1._id": groupId },
+        { "TambulampotCabe2._id": groupId },
+        { "TambulampotCabe3._id": groupId },
       ],
     });
 
@@ -1019,88 +1024,93 @@ router.put("/edit-item-petak/:groupId", authMiddleware, async (req, res) => {
     }
     let updated = false;
     // Check Petak1
-    const petak1Item = Array.isArray(dataEdit.Petak1)
-      ? dataEdit.Petak1.find((p) => p._id.toString() === groupId.toString())
+    const TambulampotCabe1Item = Array.isArray(dataEdit.TambulampotCabe1)
+      ? dataEdit.TambulampotCabe1.find(
+          (p) => p._id.toString() === groupId.toString()
+        )
       : null;
-    if (petak1Item) {
-      petak1Item.ObatSuketAwal1 = OSukAwal;
-      petak1Item.PengolahanLahanPetak1 = PengLaTak;
-      petak1Item.DolomitPetak1 = DolomitPetak;
-      petak1Item.KetersediaanCompostTea_Jadam1 = CTAvailable;
-      petak1Item.KetersediaanCompostdanBio1 = KompostdanBio;
-      petak1Item.JenisBibitPetak1 = TypeSeeds;
-      petak1Item.MasukMediaBioChar1 = EnterBiochar;
-      petak1Item.TanggalTanamPetak1 = DatePlant;
-      petak1Item.ObatSuket10Hari1 = Osukten;
-      petak1Item.KocorCompostTea1 = kocorCT;
-      petak1Item.JadamSulfur1 = Jasur;
-      petak1Item.ControlSuket1_1 = grass1;
-      petak1Item.PenyiramanTahap1_1 = Watering1;
-      petak1Item.TglPemupukan1_1 = DateFertilizerVeg;
-      petak1Item.PupukVegetatifMakro1 = VegMakro;
-      petak1Item.ControlSuket2_1 = grass2;
-      petak1Item.PenyiramanTahap2_1 = Watering2;
-      petak1Item.TglPemupukanGen1 = DateFerGen;
-      petak1Item.PupukGeneratifMakro1 = GenMakro;
-      petak1Item.ObatUlat1 = CaterPiler;
-      petak1Item.UsiaPanendanKendala1 = HarvestAge;
-      petak1Item.Rata_rataBb1 = averageBB;
+    if (TambulampotCabe1Item) {
+      TambulampotCabe1Item.OvenMediaTanam1 = MediaHigienis;
+      TambulampotCabe1Item.DolomitPot1 = DolomitPot;
+      TambulampotCabe1Item.KetersediaanCompostTea_Jadam1 = CTAvailable;
+      TambulampotCabe1Item.KetersediaanCompostdanBio1 = KompostdanBio;
+      TambulampotCabe1Item.JenisBibitPetak1 = TypeSeeds;
+      TambulampotCabe1Item.Fertility1 = Fertility;
+      TambulampotCabe1Item.Moist1 = Moist;
+      TambulampotCabe1Item.PH1 = PH;
+      TambulampotCabe1Item.Temp1 = Temp;
+      TambulampotCabe1Item.Sunlight1 = Sunlight;
+      TambulampotCabe1Item.Humidity1 = Humidity;
+      TambulampotCabe1Item.TanggalTanamPetak1 = TanggalTanamPetak;
+      TambulampotCabe1Item.TglPemupukan1_1 = DateFertilizerVeg;
+      TambulampotCabe1Item.PupukVegetatifMakro1 = VegMakro;
+      TambulampotCabe1Item.TglPemupukanGen1 = DateFerGen;
+      TambulampotCabe1Item.PupukGeneratifMakro1 = GenMakro;
+      TambulampotCabe1Item.ObatTrip1 = ObatTrip;
+      TambulampotCabe1Item.RotasiObatTrip1 = RotasiObatTrip;
+      TambulampotCabe1Item.Rata_rataBb1 = averageBB;
       updated = true;
     }
 
     // Check Petak2
-    const petak2Item = Array.isArray(dataEdit.Petak2)
+    const TambulampotCabe2Item = Array.isArray(dataEdit.TambulampotCabe1)
       ? dataEdit.Petak2.find((p) => p._id.toString() === groupId.toString())
       : null;
-    if (petak2Item) {
-      petak2Item.ObatSuketAwal2 = OSukAwal;
-      petak2Item.PengolahanLahanPetak2 = PengLaTak;
-      petak2Item.DolomitPetak2 = DolomitPetak;
-      petak2Item.KetersediaanCompostTea_Jadam2 = CTAvailable;
-      petak2Item.KetersediaanCompostdanBio2 = KompostdanBio;
-      petak2Item.JenisBibitPetak2 = TypeSeeds;
-      petak2Item.MasukMediaBioChar2 = EnterBiochar;
-      petak2Item.TanggalTanamPetak2 = DatePlant;
-      petak2Item.ObatSuket10Hari2 = Osukten;
-      petak2Item.KocorCompostTea2 = kocorCT;
-      petak2Item.JadamSulfur2 = Jasur;
-      petak2Item.ControlSuket1_2 = grass1;
-      petak2Item.PenyiramanTahap1_2 = Watering1;
-      petak2Item.TglPemupukan1_2 = DateFertilizerVeg;
-      petak2Item.PupukVegetatifMakro2 = VegMakro;
-      petak2Item.ControlSuket2_2 = grass2;
-      petak2Item.PenyiramanTahap2_2 = Watering2;
-      petak2Item.TglPemupukanGen2 = DateFerGen;
-      petak2Item.PupukGeneratifMakro2 = GenMakro;
-      petak2Item.ObatUlat2 = CaterPiler;
-      petak2Item.UsiaPanendanKendala2 = HarvestAge;
-      petak2Item.Rata_rataBb2 = averageBB;
+    if (TambulampotCabe2Item) {
+      TambulampotCabe2Item.OvenMediaTanam2 = MediaHigienis;
+      TambulampotCabe2Item.DolomitPot2 = DolomitPot;
+      TambulampotCabe2Item.KetersediaanCompostTea_Jadam2 = CTAvailable;
+      TambulampotCabe2Item.KetersediaanCompostdanBio2 = KompostdanBio;
+      TambulampotCabe2Item.JenisBibitPetak2 = TypeSeeds;
+      TambulampotCabe2Item.Fertility2 = Fertility;
+      TambulampotCabe2Item.Moist2 = Moist;
+      TambulampotCabe2Item.PH2 = PH;
+      TambulampotCabe2Item.Temp2 = Temp;
+      TambulampotCabe2Item.Sunlight2 = Sunlight;
+      TambulampotCabe2Item.Humidity2 = Humidity;
+      TambulampotCabe2Item.TanggalTanamPetak2 = TanggalTanamPetak;
+      TambulampotCabe2Item.TglPemupukan1_2 = DateFertilizerVeg;
+      TambulampotCabe2Item.PupukVegetatifMakro2 = VegMakro;
+      TambulampotCabe2Item.TglPemupukanGen2 = DateFerGen;
+      TambulampotCabe2Item.PupukGeneratifMakro2 = GenMakro;
+      TambulampotCabe2Item.ObatTrip2 = ObatTrip;
+      TambulampotCabe2Item.RotasiObatTrip2 = RotasiObatTrip;
+      TambulampotCabe2Item.Rata_rataBb2 = averageBB;
       updated = true;
     }
 
     // Check Petak3
-    const petak3Item = dataEdit.Petak3.find(
-      (p) => p._id.toString() === groupId
-    );
-    if (petak3Item) {
-      petak3Item.ObatSuketAwal3 = OSukAwal;
-      petak3Item.JenisBibitPetak3 = TypeSeeds;
-      petak3Item.TanggalTanamPetak3 = DatePlant;
-      petak3Item.JadamSulfur3 = Jasur;
-      petak3Item.TglPemupukan1_3 = DateFertilizerVeg;
-      petak3Item.PupukVegetatifMakro3 = VegMakro;
-      petak3Item.TglPemupukanGen3 = DateFerGen;
-      petak3Item.PupukGeneratifMakro3 = GenMakro;
-      petak3Item.ObatUlat3 = CaterPiler;
-      petak3Item.UsiaPanenPetak3 = HarvestAge;
-      petak3Item.Rata_rataBb3 = averageBB;
-
+    const TambulampotCabe3Item = Array.isArray(dataEdit.TambulampotCabe3)
+      ? dataEdit.TambulampotCabe3.find(
+          (p) => p._id.toString() === groupId.toString()
+        )
+      : null;
+    if (TambulampotCabe3Item) {
+      TambulampotCabe3Item.OvenMediaTanam3 = MediaHigienis;
+      TambulampotCabe3Item.DolomitPot3 = DolomitPot;
+      TambulampotCabe3Item.KetersediaanCompostTea_Jadam3 = CTAvailable;
+      TambulampotCabe3Item.KetersediaanCompostdanBio3 = KompostdanBio;
+      TambulampotCabe3Item.JenisBibitPetak3 = TypeSeeds;
+      TambulampotCabe3Item.Fertility3 = Fertility;
+      TambulampotCabe3Item.Moist3 = Moist;
+      TambulampotCabe3Item.PH3 = PH;
+      TambulampotCabe3Item.Temp3 = Temp;
+      TambulampotCabe3Item.Sunlight3 = Sunlight;
+      TambulampotCabe3Item.Humidity3 = Humidity;
+      TambulampotCabe3Item.TanggalTanamPetak3 = TanggalTanamPetak;
+      TambulampotCabe3Item.TglPemupukan1_3 = DateFertilizerVeg;
+      TambulampotCabe3Item.PupukVegetatifMakro3 = VegMakro;
+      TambulampotCabe3Item.TglPemupukanGen3 = DateFerGen;
+      TambulampotCabe3Item.PupukGeneratifMakro3 = GenMakro;
+      TambulampotCabe3Item.ObatTrip3 = ObatTrip;
+      TambulampotCabe3Item.RotasiObatTrip3 = RotasiObatTrip;
+      TambulampotCabe3Item.Rata_rataBb3 = averageBB;
       updated = true;
     }
     console.log("groupId:", groupId);
     console.log("dataEdit:", dataEdit);
-    console.log("Petak1:", dataEdit.Petak1);
-    console.log("Petak2:", dataEdit.Petak2);
+    console.log("TambulampotCabe1:", dataEdit.TambulampotCabe1);
+    console.log("Petak2:", dataEdit.TambulampotCabe2);
 
     if (!updated) {
       return res.status(404).json({ message: "No matching product found" });
