@@ -895,7 +895,7 @@ router.delete(
     try {
       const updatedPost = await MenTan.findByIdAndUpdate(
         postId,
-        { $pull: { TambulampotCabe11: { _id: itemId } } },
+        { $pull: { TambulampotCabe1: { _id: itemId } } },
         { new: true }
       );
 
@@ -1304,9 +1304,9 @@ router.get(
 
       // Try to find in each array
       let item =
-        post.Petak1.id(elementId) ||
-        post.Petak2.id(elementId) ||
-        post.Petak3.id(elementId);
+        post.TambulampotCabe1.id(elementId) ||
+        post.TambulampotCabe2.id(elementId) ||
+        post.TambulampotCabe3.id(elementId);
 
       if (!item) {
         return res
