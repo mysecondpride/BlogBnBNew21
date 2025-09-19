@@ -45,17 +45,11 @@ mongoose.connection.once("open", () => {
   console.log("MongoDB connected");
 });
 
-router.get("/admin", async (req, res) => {
-  try {
-    const locals = {
-      title: "admin",
-      description: "ini adalah page dari admin",
-    };
-    res.render("admin/index", { locals });
-  } catch (error) {
-    console.log("error", error);
-  }
-});
+// router.get("/admin", 
+//   catch (error) {
+//     console.log("error", error);
+//   }
+// );
 
 /* POST */
 /* Check-Login */
@@ -745,6 +739,7 @@ router.post(
   uploads.fields([
     { name: "Progress1", maxCount: 3 },
     { name: "Progress2", maxCount: 3 },
+    { name: "Progress3", maxCount: 3 },
   ]),
   async (req, res) => {
     try {
@@ -785,6 +780,7 @@ router.post(
       // Upload files
       const DokProg1 = await saveFiles(req.files["Progress1"]);
       const DokProg2 = await saveFiles(req.files["Progress2"]);
+      const DokProg3 = await saveFiles(req.files["Progress3"]);
 
       // Build document
       const post = new MenTan({
