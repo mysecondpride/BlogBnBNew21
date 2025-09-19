@@ -788,7 +788,7 @@ router.post(
 
       // Build document
       const post = new MenTan({
-        TambulampotCabe11: [
+        TambulampotCabe1: [
           {
             OvenMediaTanam1: req.body.MediaHigienis1,
             DolomitPot1: req.body.DolomitPot1,
