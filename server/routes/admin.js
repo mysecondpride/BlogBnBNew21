@@ -45,11 +45,15 @@ mongoose.connection.once("open", () => {
   console.log("MongoDB connected");
 });
 
-// router.get("/admin", 
-//   catch (error) {
-//     console.log("error", error);
-//   }
-// );
+router.get("/admin", (req, res) => {
+  try {
+    // isi logic di sini
+    res.render("/", { layout: layoutAdmin });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).send("Terjadi kesalahan server");
+  }
+});
 
 /* POST */
 /* Check-Login */
