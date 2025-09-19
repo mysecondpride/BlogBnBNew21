@@ -48,7 +48,7 @@ mongoose.connection.once("open", () => {
 router.get("/admin", (req, res) => {
   try {
     // isi logic di sini
-    res.render("/", { layout: layoutAdmin });
+    res.render("admin/index", { layout: layoutAdmin });
   } catch (error) {
     console.log("error", error);
     res.status(500).send("Terjadi kesalahan server");
