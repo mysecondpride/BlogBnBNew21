@@ -155,58 +155,33 @@ router.get("/post/:id", async (req, res) => {
 router.get("/sitemap.xml", async (req, res) => {
   try {
     res.header("Content-Type", "application/xml");
-    res.header("Content-Encoding", "gzip");
 
     const smStream = new SitemapStream({
       hostname: "https://suppliersayuranhidroponik.my.id",
     });
-    const pipeline = smStream.pipe(res);
+
+    // langsung pipe ke response
+    smStream.pipe(res);
 
     const blogs = await Post.find();
     blogs.forEach((blog) => {
-      let urlPath = null;
-
-      if (
-        blog.slug &&
-        typeof blog.slug === "string" &&
-        blog.slug.trim() !== ""
-      ) {
-        urlPath = `/post/${blog.slug.trim()}`;
-      } else if (blog._id) {
-        urlPath = `/post/${blog._id.toString()}`;
-      }
-
-      if (urlPath) {
-        smStream.write({
-          url: urlPath,
-          changefreq: "daily",
-          priority: 0.9,
-        });
-      } else {
-        console.warn("Skipped blog (missing slug and ID):", blog);
-      }
+      smStream.write({
+        url: blog.slug ? `/post/${blog.slug}` : `/post/${blog._id}`,
+        changefreq: "daily",
+        priority: 0.9,
+      });
     });
 
     const posts = await PostProducts.find();
     posts.forEach((post) => {
-      if (
-        post.slug &&
-        typeof post.slug === "string" &&
-        post.slug.trim() !== ""
-      ) {
-        smStream.write({
-          url: `/post/${post.slug.trim()}`,
-          changefreq: "daily",
-          priority: 1.0,
-        });
-      } else {
-        console.warn("Skipped product post (missing slug):", post);
-      }
+      smStream.write({
+        url: post.slug ? `/post/${post.slug}` : `/post/${post._id}`,
+        changefreq: "daily",
+        priority: 1.0,
+      });
     });
 
     smStream.end();
-    const sitemapOutput = await streamToPromise(pipeline);
-    res.send(sitemapOutput);
   } catch (e) {
     console.error("Sitemap generation error:", e);
     res.status(500).end();
