@@ -26,4 +26,43 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+var draggable = new Draggabilly(".draggable");
+
+var draggable = new Draggabilly(".draggable", {
+  containment: true,
+});
+
+var draggable = new Draggabilly(".draggable", {
+  axis: "x",
+});
+
+var draggable = new Draggabilly(".draggable", {
+  axis: "y",
+});
+
+var draggable = new Draggabilly(".draggable", {
+  grid: [20, 20],
+});
+
+//handle
+var draggable = new Draggabilly(".draggable", {
+  handle: ".handle",
+});
+
+const box = document.querySelector(".box");
+
+box.style.fontSize = "20px";
+box.style.border = "1px solid black";
+
+//event handler
+draggable.on("dragStart", () => {
+  box.style.background = "yellow";
+});
+draggable.off("dragEnd", () => {
+  box.style.background = "09F";
+});
+
+
+
+
 

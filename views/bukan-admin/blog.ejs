@@ -1,0 +1,34 @@
+
+<body>
+
+<div class="author">
+  <h1 class="author__heading">Selamat datang di blog Mr Tom Debugging Mern</h1>
+  <p class="author__body">Blog ini berisi pengalaman debugging MERN</p>
+  <section class="articles">
+    <h2 class="articles__heading">Latest Post</h2>
+
+   <% if (data && data.length > 0) { %>
+  <% data.forEach(item => { %>
+    <% if (item && item._id) { %>
+      <% const element1= item.element1 %>
+      <% if (element1 && element1.length>0) { %>
+        <% const first= element1[0] %>
+        <li>
+        <a href="/eachArticle/<%= item._id %>"><%= first.title%> </a>
+        </li>
+  
+
+      <% } %>
+      <% } %>
+  <% }) %>
+<% } else { %>
+  <p>Tidak ditemukan data</p>
+<% } %>
+ <% if (nextPage !==null) { %>
+    <a href="/dashboard?page=<%= nextPage %>" class="pagination">&lt view older post</a>
+
+    <% } %>
+
+  </section>
+</div>
+</body>

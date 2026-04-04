@@ -1,11 +1,73 @@
 <h3>Sign In Please</h3>
-<form action="/admin" method="POST">
+<form action="/login" method="POST">
   <label for="username"><b>User name</b></label>
   <input type="text" name="username" placeholder="input username" />
+<br>
+ 
 
   <label for="password"><b>Password</b></label>
   <input type="password" name="password" placeholder="enter the password" />
-  <input type="submit" value="Login" class="btn" />
+
+  <br>
+
+    <label>Email Gmail:</label><br>
+    <input
+    type="email"
+    name="email"
+    pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+    title="Harus menggunakan email Gmail (@gmail.com)"
+    required
+  />
+<br>
+   
+     <input type="submit" value="Login" class="btn" />
+</form>
+
+<h3>Register Please</h3>
+<form action="/register" method="POST">
+
+  <label>Username</label>
+  <input type="username" name="username" required />
+  
+<br>
+  <label>Password</label>
+  <input type="password" name="password" required />
+  <br>
+   <label>Email Gmail:</label>
+   <br>
+    <input
+    type="email"
+    name="email"
+    pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+    title="Harus menggunakan email Gmail (@gmail.com)"
+    required
+  />
+<br>
+
+  <input type="submit" value="Register" />
+
 </form>
 
 
+<script>
+
+
+
+// $(document).ready(async function () {
+//   try {
+//     const res = await fetch("/getTheBlogDashboar", {
+//       method: "get",
+//       credentials: "same-origin"
+//     });
+
+//     const data = await res.json();
+
+//     if (data.success) {
+//       window.location.href = "/admin/dashboard";
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
+
+// </script>

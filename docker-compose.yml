@@ -3,9 +3,11 @@
   services:
     mongo:
       image: mongo:7.0
+         #mongodb server jalan di dalam container
       container_name: mongodb
+        #data disimpan di volume
       volumes:
-        - mongo_data:/data/db
+        - mongo_data:/data/db  
       environment:
         MONGO_INITDB_ROOT_USERNAME: root
         MONGO_INITDB_ROOT_PASSWORD: example

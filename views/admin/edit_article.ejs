@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Summernote edit blog</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <form action="/editblog" method="get">
+      <input type="text" name="title" value="<%=data.title%>" required />
+      <textarea
+        id="summernote"
+        name="content"
+        value="<%=data.content%>"
+        required
+      />
+      <button type="submit">Submit</button>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        fetch("/getImage/")
+          .then((res) => res.json())
+          .then(
+            images.forEach((img) => {
+              $("#summernote").summernote("insertImage", `/image/${img._id}`);
+            })
+          );
+      });
+    </script>
+  </body>
+</html>

@@ -50,15 +50,24 @@ button{
     height: 30px;
     
 }
+input {
+    background-color: grey color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8%;
+    height: 30px;
+    
+}
 
-img{
+
+/* img{
 
     border-radius: 10%;
     margin-left: 25px;
     margin-right: 10px;
         margin-bottom: 30px;
         margin-top: 10px;
-}
+    */
 
 a{color:var(--black)};
 h1 {
@@ -115,6 +124,11 @@ container{
     transform: translateY(0);
 }
 
+.indentedfor img {
+    width: 50% !important;
+    height: 50% !important;
+
+}
 .searchBarInput {
 margin:0;
 padding:0;
@@ -347,3 +361,21 @@ margin-bottom: 10px;
 
 }
 
+.box {
+
+    width: 200px;
+    height: 500px;
+    background: aquamarine
+}
+
+
+.draggable.is-pointer-down {
+    background: #09F;
+    z-index: 2;
+
+    .draggable.is-dragging {
+        opacity: 0.7;
+    }
+
+
+}

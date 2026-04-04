@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mr Tom | Blog Debugging Seputar MERN</title>
+  </head>
+  <body>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <title><%= title %></title>
+        <style>
+          body {
+            font-family: sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+          }
+        </style>
+      </head>
+      <body>
+        <div>
+          <form action="/getEditProfile/<%=data._id %>">
+            <input type="submit" value="edit-profile" />
+          </form>
+        </div>
+        <div>
+          <h1><%- title %></h1>
+        </div>
+
+        <div>
+          <%- content %>
+          <!-- IMPORTANT: use <%- %> to render HTML -->
+        </div>
+
+        <div>
+          <form action="/getEditProfile/<%=id %>">
+            <input type="button" />
+          </form>
+        </div>
+      </body>
+    </html>
+  </body>
+</html>

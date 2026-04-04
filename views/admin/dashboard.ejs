@@ -1,55 +1,110 @@
-<div class="admin-title">
-  <h2>LP</h2>
-  <a href="/add-post" class="button">Post Blog</a>
-</div>
-<ul  class="admin-post">
-  <li>
-    <a href="/display-products" >Ke etalase</a>
-  </li>
-   <li>
-    <a href="/post-display-products">Post Product</a>
-  </li>
-   <li>
-    <a href="/post-mentan">Post ManTan</a>
-  </li>
-     <li>
-    <a href="/post-hidro">Post ManNik</a>
-  </li>
 
-<a href="/display-mentan" class="buttonBuatan">Show ManTan</a>
-<a href="/display-hidro" class="buttonBuatan">Show Hidroponik</a>
-<% data.forEach((item) => { %>
-  <% if (item && item._id) { %>
-    <ul class="blog-post">
-      <% const element = item.element1 || []; %>
-      
-      <% if (element.length > 0) { %>
-        <% const first = element[0]; %>
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   </head>
+   <body>
+    <div>
+<div>
+<li class="admin-title">
+  <h2>Welcome to Mr. Tom Debungging </h2>
+
+  <a href="/getsummernote" class="button">
+    Post Blog
+  </a>
+
+  <div>
+    <a href="/getPostProfile" class="button">
+    PostProfile
+  </a>
+ 
+   
+  </div> 
+
+
+</li>
+<% if (data && data.length > 0) { %>
+  <% data.forEach(item => { %>
+    <% if (item && item._id) { %>
+      <% const element1= item.element1 %>
+      <% if (element1 && element1.length>0) { %>
+        <% const first= element1[0] %>
         <li>
-          <a href="/post-article/<%= item._id %>">
-            <p><%= first.title %></p>
-          </a>
+        <a href="/eachArticle/<%= item._id %>"><%= first.title%> </a>
         </li>
-      <% } else { %>
-        <li>
-          <p><em>Artikel belum tersedia</em></p>
-        </li>
+        <form  class="hover" action="/edit-postBlog/<%= item._id%>" method="get" onsubmit="return">
+          <input class="hover" type="submit" class="hover" value="edit blog">
+        </form>
+        <br>
+
+        <div>
+<button class="delete-btn" data-id="<%= item._id %>">
+  delete-blog
+</button>
+        </div>
+
       <% } %>
+      <% } %>
+  <% }) %>
+<% } else { %>
+  <p>Tidak ditemukan data</p>
+<% } %>
+ <% if (nextPage !==null) { %>
+    <a href="/dashboard?page=<%= nextPage %>" class="pagination">&lt view older post</a>
 
-      <li>
-        <form action="/delete-post/<%= item.customId %>?_method=DELETE" method="POST" onsubmit="return confirm('Yakin hapus blog ini?');">
-          <input type="submit" value="Delete Blog" />
-        </form>
-      </li>
- <li>
-        <form action="/edit-post-article/<%= item.customId%>" method="get" onsubmit="return">
-          <input type="submit" value="edit blog" />
-        </form>
-      </li>
+    <% } %>
 
 
-    </ul>
-  <% } %>
-<% }); %>
+  </div>
+  </div>
 
-</ul>
+    <script>
+    $(function () {
+      $(".hover").on({
+        mouseenter: function () {
+          $(this).css("background-color", "lightgray");
+        },
+        mouseleave: function () {
+          $(this).css("background-color", "lightblue");
+        },
+        click: function () {
+          $(this).css("background-color", "yellow");
+        },
+      });
+    });
+
+  console.log(document.querySelectorAll('.delete-btn').length, "delete button");
+document.querySelectorAll(".delete-btn").forEach(btn => {
+  
+  btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+    const id = btn.dataset.id;
+    const ok = confirm(
+      "Pastikan GAMBAR sudah dihapus!\nYakin mau hapus blog ini?"
+    );
+    if (!ok) return;
+
+    const res = await fetch(`/delete-blog/${id}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+    alert(data.message);
+    location.reload();
+  });
+});
+
+
+  </script>
+   </body>
+   </html>
+
+
+
+
+

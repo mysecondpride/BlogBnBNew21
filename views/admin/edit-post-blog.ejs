@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Summernote Image Upload</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+
+      input[type="text"],
+      button {
+        display: block;
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      #summernote {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Post Blog</h2>
+
+    <form action="/update-blog/<%=data._id%>?Method_PUT" method="POST">
+      <input type="text" name="title" value="<%=title%>" required />
+      <textarea id="summernote" name="content" required><%=content%></textarea>
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
+
+    <script>
+      // $(document).ready(function () {
+      //   $("#summernote").summernote({
+      //     // popover: {
+      //     //   image: [
+      //     //     ["resize", ["resizeFull", "resizeHalf", "resizeQuarter"]],
+      //     //     ["float", ["floatLeft", "floatRight", "floatNone"]],
+      //     //     ["remove", ["removeMedia"]],
+      //     //   ],
+      //     // },
+      //     height: 250,
+      //     callbacks: {
+      //       onImageUpload: function (files) {
+      //         const formData = new FormData();
+      //         formData.append("images", files);
+      //         // for (let i = 0; i < files.length; i++) {
+      //         //   formData.append("images", files[i]);
+      //         // }
+
+      //         //disinilah kontrak client post gambar dimulai dg postBlog
+      //         fetch("/upload-image", {
+      //           method: "POST",
+      //           body: formData,
+      //         })
+      //           .then((res) => res.json())
+      //           .then((data) => {
+      //             $("#summernote").summernote("insertImage", data.url);
+      //             console.log(data);
+      //           })
+
+      //           .catch((err) => {
+      //             console.error("Upload failed:", err);
+      //             alert("Image upload failed!");
+      //           });
+      //       },
+      //     },
+      //   });
+      // });
+
+      // $(document).ready(function () {
+      //   $("#summernote").summernote({
+      //     height: 300,
+      //     callbacks: {
+      //       onMediaDelete: function ($target) {
+      //         const fileId = $target.data("file-id");
+
+      //         if (!fileId) return;
+
+      //         fetch("/delete-image", {
+      //           method: "DELETE",
+      //           headers: {
+      //             "Content-Type": "application/json",
+      //           },
+      //           body: JSON.stringify({ fileId }),
+      //         })
+      //           .then((res) => res.json())
+      //           .then((data) => {
+      //             console.log("Image deleted:", data);
+      //           });
+      //       },
+      //     },
+      //   });
+      // });
+
+      $(document).ready(function () {
+        $("#summernote").summernote({
+          height: 300,
+          callbacks: {
+            onImageUpload: function (files) {
+              const formData = new FormData();
+
+              // kalau multi file
+              for (let i = 0; i < files.length; i++) {
+                formData.append("images", files[i]);
+              }
+
+              fetch("/upload-image", {
+                method: "POST",
+                body: formData,
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  // PENTING: sisipkan fileId
+                  const img = `<img src="${data.url}" data-file-id="${data.fileId}" />`;
+                  $("#summernote").summernote("insertNode", $(img)[0]);
+                })
+                .catch((err) => {
+                  console.error("Upload failed:", err);
+                });
+            },
+
+            onMediaDelete: function ($target) {
+              console.log("front ke back end");
+
+              fetch("/delete-image", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  fileId: $target.data("file-id"),
+                }),
+              })
+                .then((res) => res.json()) // ✅ parse response
+                .then((data) => {
+                  // ✅ hasil backend
+                  console.log("Response backend:", data);
+                })
+                .catch((err) => {
+                  console.error("Fetch error:", err);
+                });
+            },
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
