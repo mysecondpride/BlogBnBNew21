@@ -10,16 +10,16 @@ const authMiddleware = async(req, res, next) => {
 
 
   //token untuk role
-  const token = req.cookies.token;
+  const cookieBronis = req.cookies.token;
 
   // console.log(Object.keys(req)) kalau ingin mengetahui method yang ada di req
-  if (!token) {
+  if (!cookieBronis) {
     return res.status(401).json({ message: "unauthorized" });
   }
 
   //jika berhasil lakukan verifikasi token//tentunya pakai try krn ini database
   try {
-    const decoded = jwt.verify(token, jwtSecret);
+    const decoded = jwt.verify(cookieBronis, jwtSecret);
     const user = await User.findById(decoded.id);
     console.log("user", user);
     

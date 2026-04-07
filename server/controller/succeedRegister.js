@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const Post = require("../models/Post");
 const layoutAdmin = "../layouts/admin";
 
-exports.succeed = async (req, res) => {
+exports.succeedRegister = async (req, res) => {
   try {
     //jika tidak mengisi username dan passwordp
     const { username, password, email } = req.body;
@@ -33,8 +33,8 @@ exports.succeed = async (req, res) => {
 
     await newUser.save();
 
-    const data = await Post.find({});
-    console.log(data);
+    // const data = await Post.find({});
+    // console.log(data);
     return res.render("admin/dashboard", { data, layout: layoutAdmin });
   } catch (error) {
     console.error(error);

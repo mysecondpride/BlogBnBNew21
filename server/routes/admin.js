@@ -12,7 +12,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const User = "../routes/models/User";
 //how to connect by connection string
 
-const { succeed } = require("../controller/succeed");
+const { succeedRegister } = require("../controller/succeedRegister");
 const { getRegister } = require("../handler/getRegister");
 const authMiddleware = require("../controller/authMiddleware");
 const { authLogin } = require("../controller/login");
@@ -42,7 +42,7 @@ const { deleteImage } = require("../handler/blog_delete_image_gridFS");
 const { deleteBlog } = require("../controller/login");
 
 router.get("/go_to_the_dashboard", getRegister);
-router.post("/register", succeed);
+router.post("/register", succeedRegister);
 router.post("/login", authLogin, authMiddleware);
 router.get(
   "/dashboard",
