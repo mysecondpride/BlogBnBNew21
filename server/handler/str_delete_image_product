@@ -1,0 +1,55 @@
+const { GridFSBucket, ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
+const PostProducts = require("../models/PostProducts");
+
+async function deleteImage(produkKey, postId, fileId) {
+  if (!ObjectId.isValid(postId) || !ObjectId.isValid(fileId)) {
+    throw new Error("Invalid ObjectId");
+  }
+
+  const db = mongoose.connection.db;
+  const bucket = new GridFSBucket(db, { bucketName: "fs" });
+
+  const postObjectId = new ObjectId(postId);
+  const fileObjectId = new ObjectId(fileId);
+
+  // 1️⃣ Hapus referensi dulu (paling penting)
+  await PostProducts.updateOne(
+    { _id: postObjectId },
+    {
+      $pull: {
+        [`${produkKey}.$[p].fileImages`]: {
+          fileId: fileObjectId,
+        },
+      },
+    },
+    {
+      arrayFilters: [
+        { "p.fileImages": { $elemMatch: { fileId: fileObjectId } } },
+      ],
+    }
+  );
+
+  // 2️⃣ Hapus file GridFS (kalau ada)
+  try {
+    await bucket.delete(fileObjectId);
+  } catch (e) {
+    if (!String(e.message).includes("FileNotFound")) {
+      throw e;
+    }
+  }
+}
+
+// Controllers
+exports.deleteImageProduct = async (req, res) => {
+  try {
+    const { produkKey, postId, fileId } = req.params;
+
+    await deleteImage(produkKey, postId, fileId);
+
+    res.redirect("/display-products");
+  } catch (err) {
+    console.error(err);
+    res.status(400).send("Gagal menghapus gambar");
+  }
+};

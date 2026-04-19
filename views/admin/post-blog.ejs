@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <title>Summernote Image Upload</title>
 
+    <link rel="stylesheet"
+ href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet"
+ href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/monokai.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+
     <link
       href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css"
       rel="stylesheet"
@@ -23,6 +34,7 @@
         margin-bottom: 10px;
         font-size: 1rem;
       }
+       
 
       #summernote {
         margin-bottom: 10px;
@@ -42,67 +54,65 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
 
-    <script>
-      $(document).ready(function () {
-        $("#summernote").summernote({
-          // popover: {
-          //   image: [
-          //     ["resize", ["resizeFull", "resizeHalf", "resizeQuarter"]],
-          //     ["float", ["floatLeft", "floatRight", "floatNone"]],
-          //     ["remove", ["removeMedia"]],
-          //   ],
-          // },
-          height: 250,
-          callbacks: {
-            onImageUpload: function (files) {
-              const formData = new FormData();
-              formData.append("images", files[0]);
-              // for (let i = 0; i < files.length; i++) {
-              //   formData.append("images", files[i]);
-              // }
+   <script>
+  $(document).ready(function () {
+    $("#summernote").summernote({
+      height: 250,
+        codemirror: { // Menggunakan fitur bawaan CodeMirror untuk highlight
+        theme: 'monokai'
+    },  
 
-              //disinilah kontrak client post gambar dimulai dg postBlog
-              fetch("/upload-image", {
-                method: "POST",
-                body: formData,
-              })
-                .then((res) => res.json())
-                .then((data) => {
-                  $("#summernote").summernote("insertImage", data.url);
-                  console.log(data);
-                })
+      callbacks: {
+        onImageUpload: function (files) {
+          const formData = new FormData();
 
-                .catch((err) => {
-                  console.error("Upload failed:", err);
-                  alert("Image upload failed!");
-                });
+          for (let i = 0; i < files.length; i++) {
+            formData.append("images", files[i]);
+          }
 
-              // $("#summernote").summernote({
-              //   height: 300,
-              //   callbacks: {
-              //     onMediaDelete: function ($target) {
-              //       // const imageSrc = target[0].src;
-              //       const fileId = $target.data("file-id");
-              //       // const src = $target.attr("src")
-              //       //dimana letak kirim file_id nya
-              //       fetch("/delete-image", {
-              //         method: "POST",
-              //         headers: {
-              //           "Content-Type": "application/json",
-              //         },
-              //         body: JSON.stringify({ fileId }),
-              //       })
-              //         .then((res) => res.json())
-              //         .then((data) => {
-              //           console.log("image deleted from server", data);
-              //         });
-              //     },
-              //   },
-              // });
+          fetch("/upload-image", {
+            method: "POST",
+            body: formData,
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              // 🔥 WAJIB: buat img manual
+              const img = document.createElement("img");
+              img.src = data.url;
+              img.setAttribute("data-file-id", data.fileId);
+
+              $("#summernote").summernote("insertNode", img);
+            })
+            .catch((err) => {
+              console.error("Upload failed:", err);
+              alert("Image upload failed!");
+            });
+        },
+
+        // 🔥 INI YANG PALING PENTING UNTUK GRIDFS
+        onMediaDelete: function (target) {
+          const fileId = target[0].getAttribute("data-file-id");
+
+          if (!fileId) return;
+
+          fetch("/delete-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          },
-        });
-      });
-    </script>
+            body: JSON.stringify({ fileId }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log("Image deleted from server:", data);
+            })
+            .catch((err) => {
+              console.error("Delete failed:", err);
+            });
+        },
+      },
+    });
+  });
+</script>
   </body>
 </html>

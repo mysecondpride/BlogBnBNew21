@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= locals.title %></title>
-    <meta name="description" content="<%= locals.description %>" />
-    <link rel="stylesheet" href="/css/style.css" />
-     <!-- ✅ Google Fonts -->
- <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="text/javascript" defer src="/js/script.js"></script>
-    <link rel="icon" href="/img/favicon.png" type="image/png" />
-  </head>
-  <body>
-    <div class="container">
-      <%- include('../partials/header.ejs') %>
-      <%- include('../partials/search.ejs') %>
-    </div>
-    <%-body %>
- <div>
-<%- include('../partials/footer.ejs') %>
- </div>
-      
-  </body>
-</html>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= locals.title %></title>
+  <meta name="description" content="<%= locals.description %>" />
+  <link rel="stylesheet" href="/css/style.css" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <script defer src="/js/script.js"></script>
+  <link rel="icon" href="/img/favicon.png" type="image/png" />
+  
+</head>
+
+<body>
+  <div class="container">
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/search.ejs') %>
+  </div>
+
+  <%- body %>
+
+  <div>
+    <%- include('../partials/footer.ejs') %>
+  </div>
+</body>
+</html>

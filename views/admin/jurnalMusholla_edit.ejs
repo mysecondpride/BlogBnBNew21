@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Jurnal</title>
+  <style>
+    body{font-family:Arial;background:#f4f6f8;padding:30px}
+    .card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    input,textarea,button{padding:8px;margin:6px 0;width:100%;border-radius:6px;border:1px solid #ccc}
+    button{background:#2d89ef;color:#fff;border:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Edit Jurnal</h2>
+    <form action="/update/<%= row._id %>" method="POST">
+      <input type="date" name="tanggal"
+        value="<%= new Date(row.tanggal).toISOString().slice(0,10) %>" required />
+      <input type="text" name="materi" value="<%= row.materi %>" required />
+      <input type="text" name="homework" value="<%= row.homework %>" />
+      <textarea name="catatanOrtu"><%= row.catatanOrtu %></textarea>
+      <button type="submit">Update</button>
+    </form>
+  </div>
+</body>
+</html>

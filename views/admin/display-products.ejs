@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tom's Coding and Software Store</title>
+</head>
+<body>
+
+<!-- ================= PRODUK 1 ================= -->
+<div>
+<% data.forEach(item => { 
+     const produk1 = item.Produk1 || [];
+%>
+
+  <% if (produk1.length > 0) { 
+       const first = produk1[0]; %>
+
+    <p>produk: <%= first.NamaProduk1 %></p>
+    <p>harga: <%= first.Harga1 %></p>
+    <p>stok: <%= first.Stok1 %></p>
+    <p>keterangan: <%= first.Keterangan1 %></p>
+
+  <% } %>
+
+  <% produk1.forEach(element1 => { 
+       const images = element1.fileImages || [];
+  %>
+    <% images.forEach(img => { %>
+     <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" />
+<form action="/delete-item-image/Produk1/<%= item._id %>/<%= img.fileId %>?_method=DELETE" method="POST">
+  <input type="submit" value="delete-gambar" />
+</form>
+    </form>
+    <% }) %>
+
+    <form action="/delete-item1/<%= item._id %>/<%= element1._id %>?_method=DELETE" method="POST">
+      <input type="submit" value="delete" />
+    </form>
+
+    <form action="/edit-item-input/<%= item._id %>/<%= element1._id %>" method="get">
+      <input type="submit" value="edit" />
+    </form>
+
+    
+
+
+
+
+  <% }) %>
+
+<% }) %>
+</div>
+
+
+<!-- ================= PRODUK 2 ================= -->
+<div>
+<% data.forEach(item => { 
+     const produk2 = item.Produk2 || [];
+%>
+
+  <% if (produk2.length > 0) { %>
+    <p>produk: <%= produk2[0].NamaProduk2 %></p>
+    <p>harga: <%= produk2[0].Harga2 %></p>
+    <p>stok: <%= produk2[0].Stok2 %></p>
+    <p>Keterangan: <%= produk2[0].Keterangan2 %></p>
+  <% } %>
+
+  <% produk2.forEach(element2 => { 
+       const images = element2.fileImages || [];
+  %>
+
+    <% images.forEach(img => { %>
+      <img src="/imagesofproducts/<%= item._id %>/<=element2._id%>/<%= img.fileId %>" />
+
+<form action="/delete-item-image/Produk2/<%= item._id %>/<%= img.fileId %>?_method=DELETE" method="POST">
+  <input type="submit" value="delete-gambar" />
+</form>
+</form>
+    <% }) %>
+
+    <form action="/delete-item2/<%= item._id %>/<%= element2._id %>?_method=DELETE" method="POST">
+      <input type="submit" value="delete" />
+    </form>
+
+    <form action="/edit-item-input/<%= item._id %>/<%= element2._id %>" method="get">
+      <input type="submit" value="edit" />
+    </form>
+
+
+
+  <% }) %>
+
+<% }) %>
+</div>
+
+
+<!-- ================= PRODUK 3 ================= -->
+<div>
+<% data.forEach(item => { 
+     const produk3 = item.Produk3 || [];
+%>
+
+  <% if (produk3.length > 0) { %>
+    <p>produk: <%= produk3[0].NamaProduk3 %></p>
+    <p>harga: <%= produk3[0].Harga3 %></p>
+    <p>stok: <%= produk3[0].Stok3 %></p>
+    <p>Keterangan: <%= produk3[0].Keterangan3 %></p>
+  <% } %>
+
+  <% produk3.forEach(element3 => { 
+       const images = element3.fileImages || [];
+  %>
+
+    <% images.forEach(img => { %>
+      <img src="/imagesofproducts/<%=item._id %>/<%= img.fileId %>" height="200" width="150">
+     <form action="/delete-item-image/Produk3/<%= item._id %>/<%= img.fileId %>?_method=DELETE" method="POST">
+  <input type="submit" value="delete-gambar" />
+</form>
+    </form>
+    <% }) %>
+
+    <form action="/delete-item3/<%= item._id %>/<%= element3._id %>?_method=DELETE" method="POST">
+      <input type="submit" value="delete" />
+    </form>
+
+    <form action="/edit-item-input/<%= item._id %>/<%= element3._id %><%= element3._id %>" method="get">
+      <input type="submit" value="edit" />
+    </form>
+
+  
+
+  <% }) %>
+
+<% }) %>
+</div>
+
+</body>
+</html>

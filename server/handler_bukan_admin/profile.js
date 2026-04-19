@@ -1,7 +1,7 @@
 const express = require("express");
 const Profile = require("../models/Profile");
 
-exports.getProfileforVistior = async (req, res) => {
+exports.getProfileVistior = async (req, res) => {
   try {
     const local = "Mr.Tom Debugging MERN";
     const description =

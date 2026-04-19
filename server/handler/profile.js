@@ -94,7 +94,7 @@ exports.getEditProfile = async (req, res) => {
 
     console.log(title, "ini title");
 
-    res.render("admin/edit-post-profile", {
+    res.render("admin/edit-posted-profile", {
       data,
       title,
       content,

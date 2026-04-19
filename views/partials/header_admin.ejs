@@ -1,22 +1,42 @@
-<div class="header">
-  <a href="#">Admin_panel</a>
-</div>
-<div class="header__main">
-  <nav class="header__nav">
-    <ul>
-      <li>
-        <a href="/getPostedProfile">Profil</a>
-      </li>
-      <li>
-        <a href="/blog">Blog</a>
-      </li>
-     
-         <li>
-        <a href="/login">Dashboard</a>
-      </li>
-    </ul>
+
+  <!-- HEADER -->
+  <!-- <div class="header"> -->
+    <!-- <div class="logo">Perpustakaan Peradaban</div> -->
+    <button id="menuToggle" class="menuToggle">☰ Menu</button>
+<form action="/logout" method="POST">
+  <button type="submit">Logout</button>
+</form>
+  <!-- </div> -->
+
+  <!-- MENU -->
+  <nav id="mainMenu" class="mainMenu">
+    <a href="/display-products">Tom's Store</a>
+    <a href="/getPostedProfile">Profil</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/blog">Blog</a>
   </nav>
-  <div class="header__button">
-    <a href="/logout"><button>Logout</button></a>
-  </div>
-</div>
+
+    <script>
+    // Toggle menu
+    $("#menuToggle").on("click", function () {
+      $("#mainMenu").toggleClass("open");
+    });
+
+    // Delete blog (tetap sama)
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const id = btn.dataset.id;
+        const ok = confirm("Pastikan GAMBAR sudah dihapus!\nYakin mau hapus blog ini?");
+        if (!ok) return;
+
+        const res = await fetch(`/delete-blog/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        alert(data.message);
+        location.reload();
+      });
+    });
+  </script>
+
+
+

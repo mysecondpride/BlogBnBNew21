@@ -36,16 +36,13 @@ exports.postBlog = async (req, res) => {
           title,
           content,
           // url,
-          images: [],
+          // images: [],
         },
       ],
     });
 
     await data.save();
-    console.log(data);
-
-    // JANGAN render dashboard di sini
-
+    console.log(data,"ini adalah data");
     res.redirect("/dashboard");
   } catch (err) {
     console.error(err);
@@ -111,7 +108,9 @@ exports.updateBlog = async (req, res) => {
     }
 
     await dataEdit.save();
-    res.status(200).json({ message: "Update successful", dataEdit });
+
+    return res.redirect("/dashboard");
+    // res.status(200).json({ message: "Update successful", dataEdit });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
@@ -145,30 +144,35 @@ exports.getEachArticle = async (req, res) => {
 };
 
 exports.uploadImage = async (req, res) => {
-  console.log("hit uploadimage");
-
   try {
-    const db = mongoose.connection.db;
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "File tidak ada" });
+    }
 
-    const bucket = new mongoose.mongo.GridFSBucket(db, {
-      bucketName: "uploads",
+    const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: "fs",
     });
 
-    const stream = bucket.openUploadStream(req.file.originalname, {
-      contentType: req.file.mimetype,
-    });
+    const uploaded = [];
 
-    stream.end(req.file.buffer);
+    for (const file of req.files) {
+      const stream = bucket.openUploadStream(file.originalname, {
+        contentType: file.mimetype,
+      });
 
-    stream.on("finish", () => {
-      res.status(200).json({ url: `/files/${stream.id}` });
-    });
+      stream.end(file.buffer);
 
-    stream.on("error", () => {
-      res.status(500).json({ error: "Upload failed" });
-    });
+      await new Promise((resolve, reject) => {
+        stream.on("finish", () => {
+          uploaded.push(stream.id);
+          resolve();
+        });
+        stream.on("error", reject);
+      });
+    }
+
+    res.json({ files: uploaded.map(id => `/files/${id}`) });
   } catch (err) {
-    console.error("Unexpected error:", err);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ error: err.message });
   }
 };

@@ -1,5 +1,5 @@
 <h3>Sign In Please</h3>
-<form action="/login" method="POST">
+<form action="/login" method="POST" id="loginForm">
   <label for="username"><b>User name</b></label>
   <input type="text" name="username" placeholder="input username" />
 <br>
@@ -50,24 +50,29 @@
 
 
 <script>
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  e.preventDefault();
 
+  const form = new FormData(this);
 
-
-// $(document).ready(async function () {
-//   try {
-//     const res = await fetch("/getTheBlogDashboar", {
-//       method: "get",
-//       credentials: "same-origin"
-//     });
-
-//     const data = await res.json();
-
-//     if (data.success) {
-//       window.location.href = "/admin/dashboard";
-//     }
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
-
-// </script>
+  fetch("/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      username: form.get("username"),
+      password: form.get("password"),
+      email: form.get("email")
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.redirect) {
+      window.location.href = data.redirect;
+    } else {
+      alert(data.message || "Login gagal");
+    }
+  });
+});
+</script>

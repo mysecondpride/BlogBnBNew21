@@ -19,9 +19,9 @@ const { authLogin } = require("../controller/login");
 const { layoutMiddleware } = require("../controller/layOutMiddleware");
 const Post = require("../models/Post");
 const { isAdmin } = require("../controller/isAdmin");
-const { getPostBlog } = require("../handler/blog_admin");
+const { getPostBlog, uploadImage } = require("../handler/blog_admin");
 const { postBlog } = require("../handler/blog_admin");
-const uploads = require("../../utils/gridFs"); // Import GridFS upload
+const {sedap} = require("../../utils/gridFs"); // Import GridFS upload
 
 const { downloadImage } = require("../handler/blog_download_image");
 const upload = require("../handler/blog_upload_image");
@@ -40,6 +40,25 @@ const { getEditBlog } = require("../handler/blog_admin");
 const { updateBlog } = require("../handler/blog_admin");
 const { deleteImage } = require("../handler/blog_delete_image_gridFS");
 const { deleteBlog } = require("../controller/login");
+const { logout } = require("../handler/logoutClear");
+
+//variable untuk toko
+const {displayProductsAdm}= require("../handler/str_displayproducts_get");
+const { postDisplayProducts } = require("../handler/str_postdisplayproducts_post");
+const {getPostDisplayProducts}= require("../handler/str_postdisplayproducts_get")
+const {editPostDisplay}=require("../handler/str_editpostdisplay_put")
+
+
+//delete-item
+const{deleteItem1}=require("../handler/str_deleteitem1")
+const{deleteItem2}=require("../handler/str_deleteitem2")
+const{deleteItem3}=require("../handler/str_deleteitem3")
+
+
+const{deleteImageProduct}= require("../handler/str_delete_image_product")
+const { downloadImageProducts } = require("../handler/str_downloadImage");
+
+//jurnal mushola
 
 router.get("/go_to_the_dashboard", getRegister);
 router.post("/register", succeedRegister);
@@ -71,14 +90,18 @@ router.post(
   isAdmin,
   layoutMiddleware,
   upload.array("images"),
-  uploads.sedap,
+ sedap,
 );
+
+router.post("/post-display-products", authMiddleware,isAdmin,layoutMiddleware,   upload.fields([
+    { name: "Produk1Files", maxCount: 10 },
+    { name: "Produk2Files", maxCount: 1 },
+    { name: "Produk3Files", maxCount: 1 },
+  ]),postDisplayProducts)
 router.post("/postblog", authMiddleware, isAdmin, layoutMiddleware, postBlog);
 router.get(
   "/image/:id",
-  authMiddleware,
-  isAdmin,
-  layoutMiddleware,
+  upload.array("images"),
   downloadImage,
 );
 router.get(
@@ -97,9 +120,9 @@ router.post(
 );
 router.get(
   "/eachArticle/:id",
-  authMiddleware,
-  isAdmin,
-  layoutMiddleware,
+  // authMiddleware,
+  // isAdmin,
+  // layoutMiddleware,
   getEachArticle,
 );
 router.get(
@@ -151,4 +174,45 @@ router.delete(
   layoutMiddleware,
   deleteBlog,
 );
+// router untuk tom's store
+router.get("/show-post-display", authMiddleware,isAdmin,layoutMiddleware,getPostDisplayProducts)
+// router.post("/post-display-products",authMiddleware,isAdmin,layoutMiddleware,postDisplayProducts)
+router.get("/display-products", authMiddleware, isAdmin, layoutMiddleware,displayProductsAdm)
+router.post("/edit-post-display", authMiddleware, isAdmin,layoutMiddleware,editPostDisplay)
+
+router.get('/files/:fileId', authMiddleware,isAdmin,layoutMiddleware,downloadImage)
+
+router.post("/logout", authMiddleware,isAdmin,layoutMiddleware,logout)
 module.exports = router;
+
+//router untuk delete-item
+router.delete("/delete-item1/:postId/:itemId", authMiddleware, isAdmin,layoutMiddleware,deleteItem1 )
+router.delete("/delete-item2/:postId/:itemId", authMiddleware, isAdmin,layoutMiddleware,deleteItem2)
+router.delete("/delete-item3/:postId/:itemId", authMiddleware, isAdmin,layoutMiddleware,deleteItem3)
+
+
+//router untuk get image
+router.get("/imagesofproducts/:postId/:fileId", downloadImageProducts)
+
+//router untuk delete image
+router.delete(
+  "/delete-item-image/:produkKey/:postId/:fileId",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  deleteImageProduct
+);
+
+
+//jurnal mushola
+const c = require("../handler/jurnalMusholla");
+const uploadAudio = require("../handler/jurnalMusholla_uploadAudio");
+const {deleteAudioOnly}= require("../handler/jurnalMusholla_deleteAudio")
+
+
+router.get("/getToTheJurnal",  c.index);
+router.post("/add", uploadAudio.single("audio"), c.create);
+router.get("/edit/:id", c.editForm);
+router.post("/update/:id", c.update);
+router.get("/delete/:id", c.remove);
+router.delete("/delete-audio/:id",deleteAudioOnly);

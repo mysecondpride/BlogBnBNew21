@@ -1,20 +1,48 @@
+ <!-- header.ejs -->
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
 
+ <button id="menuToggleVisitor" class="menuToggleVisitor">☰ Menu</button>
 
-<div class="header">
-  <nav class="header__nav" margin-bottom="10">
-    <ul>
-      <li>
-        <a href="/">Profile</a>
-      </li>
-      <li>
-        <a href="/blog">Blog</a>
-      </li>
-      <li>
-        <a href="/dashboard">Pendaftaran</a>
-      </li>
-      
-    </ul>
+  <!-- </div> -->
+
+  <!-- MENU -->
+  <nav id="mainMenuBlogVisitor" class="mainMenuBlogVisitor">
+    <a href="/getTomStore">Tom's Store</a>
+    <a href="/">Profil</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/blogvisitor">Blog</a>
   </nav>
-  </div>
-</div>
-</div>
+
+    <script>
+
+      console.log("Script Jalan")
+    // Toggle menu
+console.log("SCRIPT JALAN");
+
+document.addEventListener("click", function (e) {
+  if (e.target.id === "menuToggleVisitor") {
+    console.log("TOMBOL DIKLIK");
+    document
+      .getElementById("mainMenuBlogVisitor")
+      .classList.toggle("open");
+  }
+});
+
+    // Delete blog (tetap sama)
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const id = btn.dataset.id;
+        const ok = confirm("Pastikan GAMBAR sudah dihapus!\nYakin mau hapus blog ini?");
+        if (!ok) return;
+
+        const res = await fetch(`/delete-blog/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        alert(data.message);
+        location.reload();
+      });
+    });
+  </script>
+
+
+

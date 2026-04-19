@@ -1,31 +1,27 @@
-const express = require("express");
-
-const mongoose = require("mongoose");
-const { GridFSBucket, ObjectId } = require("mongodb");
-
+const { ObjectId, GridFSBucket } = require('mongodb');
+const mongoose= require ('mongoose')
 exports.downloadImage = async (req, res) => {
   try {
     const db = mongoose.connection.db;
-    const bucket = new GridFSBucket(db, { bucketName: "fs" });
+    const bucket = new GridFSBucket(db);
 
-    //ini tambahannya ya, saat gambar disatukan dalam arrayy ini adalah setelah penyatuan skema
+    const { id } = req.params;
 
-    const _id = new mongoose.Types.ObjectId(req.params.id);
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).send("Invalid file id");
+    }
 
-    const files = await bucket.find({ _id }).toArray();
-    if (!files.length) {
+    const _id = new ObjectId(id);
+
+    const file = await db.collection("fs.files").findOne({ _id });
+    if (!file) {
       return res.status(404).send("File not found");
     }
 
-    res.set("Content-Type", files[0].contentType);
-    const downloadStream = bucket.openDownloadStream(_id);
+    res.set("Content-Type", file.contentType || "image/jpeg");
 
-    downloadStream.on("error", (err) => {
-      console.error(err);
-      res.status(404).send("File not found");
-    });
+    bucket.openDownloadStream(_id).pipe(res);
 
-    downloadStream.pipe(res);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
