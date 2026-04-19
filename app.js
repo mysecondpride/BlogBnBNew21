@@ -87,6 +87,6 @@ app.use(express.static("public")); //express.static()--is not middleware itself
 app.use("/", require("./server/routes/admin"));
 app.use("/", require("./server/routes/main"));
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
