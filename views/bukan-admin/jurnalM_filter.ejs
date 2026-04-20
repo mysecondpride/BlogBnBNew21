@@ -1,0 +1,77 @@
+
+
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Jurnal Harian Siswa</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:30px;color:#333}
+    h1{margin-bottom:10px}
+    .card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:20px}
+    form{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input,textarea,button{padding:8px;border-radius:6px;border:1px solid #ccc;font-size:14px}
+    textarea{resize:vertical}
+    button{background:#2d89ef;color:#fff;border:none;cursor:pointer}
+    button:hover{opacity:.9}
+    table{width:100%;border-collapse:collapse;margin-top:10px;background:#fff}
+    th,td{padding:10px;border-bottom:1px solid #eaeaea;text-align:left;vertical-align:top}
+    th{background:#fafafa}
+    tr:hover{background:#f9fbff}
+    .actions a{margin-right:8px;text-decoration:none;color:#2d89ef}
+    .search{display:flex;gap:10px;align-items:center}
+    .muted{color:#888;font-size:13px}
+  </style>
+</head>
+<body>
+
+<h1>📘 Jurnal Harian Siswa</h1>
+
+<div class="card search">
+  <form method="GET" action="/filter-per-date">
+    <label>Cari berdasarkan tanggal:</label>
+    <input type="date" name="tanggal" value="<%= selectedDate %>"/>
+    <button type="submit">Cari</button>
+    <a href="/jurnalVisitor" class="muted">Reset</a>
+  </form>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tanggal</th>
+      <th>Materi</th>
+      <th>Homework</th>
+      <th>Catatan Ortu</th>
+        <th>Audio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if(rows.length === 0){ %>
+      <tr><td colspan="5" class="muted">Belum ada data</td></tr>
+    <% } %>
+
+    <% rows.forEach(r => { %>
+      <tr>
+        <td><%= new Date(r.tanggal).toLocaleDateString("id-ID") %></td>
+        <td><%= r.materi %></td>
+        <td><%= r.homework %></td>
+        <td><%= r.catatanOrtu %></td>
+
+         <td>
+          <% if(r.audio){ %>
+            <audio controls style="width:180px">
+              <source src="/uploads/audio/<%= r.audio %>">
+            </audio>
+          <% } else { %>
+            <span class="muted">Tidak ada</span>
+          <% } %>
+        </td>
+
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+</body>
+
+</html>

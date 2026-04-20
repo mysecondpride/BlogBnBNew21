@@ -43,36 +43,92 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
 
     <script>
-      $(document).ready(function () {
-        $("#summernote").summernote({
-          height: 250,
-          callbacks: {
-            onImageUpload: function (files) {
-              const formData = new FormData();
-              formData.append("images", files[0]);
-              // for (let i = 0; i < files.length; i++) {
-              //   formData.append("images", files[i]);
-              // }
+        $(document).ready(function () {
+    $("#summernote").summernote({
+      height: 250,
 
-              //disinilah kontrak client post gambar dimulai dg postBlog
-              fetch("/upload-image", {
-                method: "POST",
-                body: formData,
-              })
-                .then((res) => res.json())
-                .then((data) => {
-                  $("#summernote").summernote("insertImage", data.url);
-                  console.log(data);
-                })
+      codemirror: {
+        theme: "monokai",
+      },
 
-                .catch((err) => {
-                  console.error("Upload failed:", err);
-                  alert("Image upload failed!");
-                });
-            },
-          },
-        });
-      });
+      /* ===== TOOLBAR & HEADING SEO ===== */
+      toolbar: [
+        ["style", ["style"]], // munculkan dropdown Style (H2, H3)
+        ["font", ["bold", "underline"]],
+        ["para", ["ul", "ol"]],
+        ["insert", ["link", "picture"]],
+        ["view", ["codeview"]],
+      ],
+
+      styleTags: [
+        "p",
+        { title: "Heading 2", tag: "h2" },
+        { title: "Heading 3", tag: "h3" },
+      ],
+
+      callbacks: {
+        /* ===== WAJIB: ENTER JADI <p> ===== */
+        onInit: function () {
+          document.execCommand("defaultParagraphSeparator", false, "p");
+        },
+
+        /* ===== BERSIHKAN HTML OTOMATIS (SEO) ===== */
+        onChange: function (contents) {
+          let clean = contents
+            .replace(/<div>/g, "<p>")
+            .replace(/<\/div>/g, "</p>")
+            .replace(/<br>/g, "");
+
+          $("#cleanContent").val(clean);
+        },
+
+        /* ===== UPLOAD IMAGE (punyamu, tidak diubah) ===== */
+        onImageUpload: function (files) {
+          const formData = new FormData();
+
+          for (let i = 0; i < files.length; i++) {
+            formData.append("images", files[i]);
+          }
+
+          fetch("/upload-image", {
+            method: "POST",
+            body: formData,
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              const img = document.createElement("img");
+              img.src = data.url;
+              img.setAttribute("data-file-id", data.fileId);
+
+              $("#summernote").summernote("insertNode", img);
+            })
+            .catch((err) => {
+              console.error("Upload failed:", err);
+              alert("Image upload failed!");
+            });
+        },
+
+        /* ===== DELETE IMAGE GRIDFS (punyamu, aman) ===== */
+        onMediaDelete: function (target) {
+          const fileId = target[0].getAttribute("data-file-id");
+          if (!fileId) return;
+
+          fetch("/delete-image-profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileId }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log("Image deleted from server:", data);
+            })
+            .catch((err) => {
+              console.error("Delete failed:", err);
+            });
+        },
+      },
+    });
+  });
     </script>
   </body>
 </html>

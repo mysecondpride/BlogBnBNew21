@@ -253,3 +253,30 @@ position:relative;
   right: 60px;
 }
 
+
+@media (max-width: 768px) {
+
+  .header__nav ul {
+    flex-direction: column;   /* ubah jadi vertikal */
+    gap: 15px;                /* kecilkan jarak */
+    align-items: center;
+  }
+
+/* ini adalah pengaturan untuk tampilah HP */
+
+  .header__nav ul li a {
+    font-size: 16px;          /* kecilkan font */
+  }
+
+  .header__button {
+    position: static;         /* KELUARKAN dari absolute */
+    margin-top: 15px;
+  }
+
+}
+.article-content p {
+  text-indent: 32px;     /* paragraf menjorok */
+  line-height: 1.9;      /* jarak baris nyaman */
+  margin-bottom: 18px;   /* jarak antar paragraf */
+  text-align: justify;   /* seperti artikel profesional */
+}

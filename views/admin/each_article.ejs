@@ -6,15 +6,16 @@
     <title>Document</title>
   </head>
   <body>
-    <div>
-      <% if (title) { %>
-      <ul class="main">
-        <h1><%= title %></h1>
-      </ul>
-      <% } %> <% if (content) { %>
-      <div class="indentedfor"><%- content %></div>
+  <div>
+  <% if (title) { %>
+    <h1><%= title %></h1>
+  <% } %>
 
-      <% } %>
+  <% if (content) { %>
+    <div class="article-content">
+      <%- content %>
     </div>
+  <% } %>
+</div>
   </body>
 </html>

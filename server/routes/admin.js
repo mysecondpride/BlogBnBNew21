@@ -146,8 +146,16 @@ router.delete(
   layoutMiddleware,
   deleteImage,
 );
+
+router.delete(
+  "/delete-image-profile",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  deleteImageProfile,
+);
 router.post(
-  "/edit-profile",
+  "/update-profile/:id",
   authMiddleware,
   isAdmin,
   layoutMiddleware,
@@ -208,11 +216,9 @@ router.delete(
 const c = require("../handler/jurnalMusholla");
 const uploadAudio = require("../handler/jurnalMusholla_uploadAudio");
 const {deleteAudioOnly}= require("../handler/jurnalMusholla_deleteAudio")
-
-
-router.get("/getToTheJurnal",  c.index);
-router.post("/add", uploadAudio.single("audio"), c.create);
-router.get("/edit/:id", c.editForm);
-router.post("/update/:id", c.update);
-router.get("/delete/:id", c.remove);
-router.delete("/delete-audio/:id",deleteAudioOnly);
+router.get("/getToTheJurnal", authMiddleware,isAdmin,layoutMiddleware, c.index);
+router.post("/add",authMiddleware,isAdmin,layoutMiddleware,uploadAudio.single("audio"), c.create);
+router.get("/edit/:id", authMiddleware,isAdmin,layoutMiddleware,c.editForm);
+router.post("/update/:id",authMiddleware,isAdmin,layoutMiddleware, c.update);
+router.get("/delete/:id", authMiddleware,isAdmin,layoutMiddleware,c.remove);
+router.delete("/delete-audio/:id",authMiddleware,isAdmin,layoutMiddleware,deleteAudioOnly);

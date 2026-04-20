@@ -112,6 +112,8 @@ exports.editProfile = async (req, res) => {
     const { title, content } = req.body;
 
     const data = await Profile.findOne({ customId });
+    console.log(data, "ini id dari profile");
+    
     if (!data) {
       return res.status(404).json({ message: "Data tidak ditemukan" });
     }
@@ -124,10 +126,12 @@ exports.editProfile = async (req, res) => {
 
     await data.save();
 
-    res.status(200).json({
-      message: "Terima kasih sudah mengedit",
-      data,
-    });
+    // res.status(200).json({
+    //   message: "Terima kasih sudah mengedit",
+    //   data,
+    // });
+
+    res.redirect("/getPostedProfile")
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

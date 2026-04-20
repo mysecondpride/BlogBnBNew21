@@ -42,7 +42,9 @@
     </style>
   </head>
   <body>
+  
     <h2>Post Blog</h2>
+      <div>
 
     <form action="/postblog" method="POST">
       <input type="text" name="title" required />
@@ -58,11 +60,43 @@
   $(document).ready(function () {
     $("#summernote").summernote({
       height: 250,
-        codemirror: { // Menggunakan fitur bawaan CodeMirror untuk highlight
-        theme: 'monokai'
-    },  
+
+      codemirror: {
+        theme: "monokai",
+      },
+
+      /* ===== TOOLBAR & HEADING SEO ===== */
+      toolbar: [
+        ["style", ["style"]], // munculkan dropdown Style (H2, H3)
+        ["font", ["bold", "underline"]],
+        ["para", ["ul", "ol"]],
+        ["insert", ["link", "picture"]],
+        ["view", ["codeview"]],
+      ],
+
+      styleTags: [
+        "p",
+        { title: "Heading 2", tag: "h2" },
+        { title: "Heading 3", tag: "h3" },
+      ],
 
       callbacks: {
+        /* ===== WAJIB: ENTER JADI <p> ===== */
+        onInit: function () {
+          document.execCommand("defaultParagraphSeparator", false, "p");
+        },
+
+        /* ===== BERSIHKAN HTML OTOMATIS (SEO) ===== */
+        onChange: function (contents) {
+          let clean = contents
+            .replace(/<div>/g, "<p>")
+            .replace(/<\/div>/g, "</p>")
+            .replace(/<br>/g, "");
+
+          $("#cleanContent").val(clean);
+        },
+
+        /* ===== UPLOAD IMAGE (punyamu, tidak diubah) ===== */
         onImageUpload: function (files) {
           const formData = new FormData();
 
@@ -76,7 +110,6 @@
           })
             .then((res) => res.json())
             .then((data) => {
-              // 🔥 WAJIB: buat img manual
               const img = document.createElement("img");
               img.src = data.url;
               img.setAttribute("data-file-id", data.fileId);
@@ -89,17 +122,14 @@
             });
         },
 
-        // 🔥 INI YANG PALING PENTING UNTUK GRIDFS
+        /* ===== DELETE IMAGE GRIDFS (punyamu, aman) ===== */
         onMediaDelete: function (target) {
           const fileId = target[0].getAttribute("data-file-id");
-
           if (!fileId) return;
 
           fetch("/delete-image", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ fileId }),
           })
             .then((res) => res.json())
@@ -114,5 +144,6 @@
     });
   });
 </script>
+
   </body>
 </html>
