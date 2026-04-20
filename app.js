@@ -31,7 +31,7 @@ const path = require("path");
 // console.log("PATH IS:", path);
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // bagaimana kita bisa mendapatkan data search tapi dengan aturan middleware?? berikut ini caranya
 app.use(express.urlencoded({ extended: true }));
