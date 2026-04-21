@@ -19,6 +19,21 @@
     .actions a{margin-right:8px;text-decoration:none;color:#2d89ef}
     .search{display:flex;gap:10px;align-items:center}
     .muted{color:#888;font-size:13px}
+
+    td{
+  max-width:180px;
+  word-wrap:break-word;
+}
+
+
+    .table-wrap{
+  width:100%;
+  overflow-x:auto;
+}
+
+table{
+  min-width:900px; /* paksa lebar table tetap */
+}
   </style>
 </head>
 <body>
@@ -44,7 +59,7 @@
     <a href="/admin/jurnalMusholla" class="muted">Reset</a>
   </form>
 </div>
-
+<div class="table-wrap">
 <table>
   <thead>
     <tr>
@@ -70,7 +85,7 @@
 
          <td>
           <% if(r.audio){ %>
-            <audio controls style="width:180px">
+           <audio controls style="width:120px">
               <source src="/uploads/audio/<%= r.audio %>">
             </audio>
           <% } else { %>
@@ -91,6 +106,7 @@
     <% }) %>
   </tbody>
 </table>
+</div>
 
 </body>
 </html>
