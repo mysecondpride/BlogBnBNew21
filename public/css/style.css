@@ -244,3 +244,17 @@ button:hover {
   margin-bottom: 18px;   /* jarak antar paragraf */
   text-align: justify;   /* seperti artikel profesional */
 }
+
+/* styleng */
+.wa-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.wa-float img {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
