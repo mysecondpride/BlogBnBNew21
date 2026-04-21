@@ -26,7 +26,7 @@ body {
 .header {
   background: var(--paper-white);
   border-bottom: 3px solid var(--gold-accent);
-  padding: 25px 60px;
+  padding: 0px 16px;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -40,7 +40,7 @@ body {
 }
 
 .hero {
-  padding: var(--spacing-lg) 60px;
+  padding: var(--spacing-lg) 0px;
   background: var(--paper-white);
   text-align: left;
   border-left: 6px solid var(--gold-accent);
@@ -107,7 +107,7 @@ button:hover {
 
 .footer {
   margin-top: var(--spacing-lg);
-  padding: 40px;
+  padding: 20px 16px;
   background: var(--paper-white);
   border-top: 3px solid var(--gold-accent);
   text-align: center;
@@ -183,7 +183,7 @@ button:hover {
 position:relative;
   background: #ffffff;
   border-bottom: 4px solid #b89b5e;
-  padding: 20px 60px;
+  padding: 0px 16px;
   position: relative;
   z-index: 1000;
 
@@ -201,7 +201,7 @@ position:relative;
   border-bottom: 3px solid #b89b5e;
   display: flex;
   justify-content: center;
-  gap: 40px;              /* jarak antar menu */
+  gap: 16x;              /* jarak antar menu */
   list-style: none;       /* hilangkan bullet */
   margin: 0;
   padding: 0;
@@ -215,7 +215,7 @@ position:relative;
 /* NAV tetap horizontal */
 .header__nav ul {
   display: flex;
-  gap: 60px;
+  gap: 16px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -224,7 +224,7 @@ position:relative;
 /* LINK klasik dan highlighted */
 .header__nav ul li a {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 16px;
   color: #6b4f3b;
   text-decoration: none;
   position: relative;
