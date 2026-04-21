@@ -178,81 +178,45 @@ button:hover {
 }
 
 
-/* HEADER sebagai panggung utama */
-.header {
-position:relative;
-  background: #ffffff;
-  border-bottom: 4px solid #b89b5e;
-  padding: 0px 16px;
-  position: relative;
-  z-index: 1000;
-
-}
-
-/* area nav disembunyikan dulu */
-.header__main ul {
-  position: absolute;
-  top: 100%;
+.mainMenuBlogVisitor {
+  position: fixed;
+  top: 60px;              /* tepat di bawah tombol */
   left: 0;
   width: 100%;
-  background: #fff;
+  background: var(--paper-white);
+  border-top: 3px solid var(--gold-accent);
+
+  display: flex;
+  flex-direction: column;   /* ⬅️ INI KUNCINYA */
+  align-items: center;
+  gap: 18px;
+
+  padding: 20px 0;
+
   transform: translateY(-120%);
   transition: transform 0.4s ease;
-  border-bottom: 3px solid #b89b5e;
-  display: flex;
-  justify-content: center;
-  gap: 16x;              /* jarak antar menu */
-  list-style: none;       /* hilangkan bullet */
-  margin: 0;
-  padding: 0;
+  z-index: 999;
 }
 
-/* saat aktif, turun */
-.header__main.open {
+.mainMenuBlogVisitor.open {
   transform: translateY(0);
 }
 
-/* NAV tetap horizontal */
-.header__nav ul {
-  display: flex;
-  gap: 16px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* LINK klasik dan highlighted */
-.header__nav ul li a {
-  font-family: 'Playfair Display', serif;
-  font-size: 16px;
-  color: #6b4f3b;
-  text-decoration: none;
-  position: relative;
-  padding-bottom: 6px;
-}
-
-/* underline animasi */
-.header__nav ul li a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0%;
-  height: 2px;
-  background: #b89b5e;
-  transition: width 0.3s ease;
-}
-
-.header__nav ul li a:hover::after {
+/* style link jadi block, bukan inline */
+.mainMenuBlogVisitor a {
+  display: block;
   width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  font-family: var(--font-title);
+  font-size: 18px;
+  color: var(--wood-brown);
+  border-bottom: 1px solid #eee;
 }
 
-/* tombol logout tetap di kanan */
-.header__button {
-  position: absolute;
-  right: 60px;
+.mainMenuBlogVisitor a:hover {
+  background: #f5f1e6;
 }
-
 
 @media (max-width: 768px) {
 
