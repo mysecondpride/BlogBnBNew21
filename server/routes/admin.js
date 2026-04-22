@@ -190,7 +190,7 @@ router.post("/edit-post-display", authMiddleware, isAdmin,layoutMiddleware,editP
 
 router.get('/files/:fileId', authMiddleware,isAdmin,layoutMiddleware,downloadImage)
 
-router.post("/logout", authMiddleware,isAdmin,layoutMiddleware,logout)
+router.get("/logout", authMiddleware,isAdmin,layoutMiddleware,logout)
 module.exports = router;
 
 //router untuk delete-item
