@@ -72,8 +72,8 @@ body {
 
 .hero h1 {
   font-family: var(--font-title);
-  font-size: 42px;
-  margin-bottom: 20px;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 a {
@@ -136,6 +136,7 @@ button:hover {
   border-top: 3px solid var(--gold-accent);
   text-align: center;
   color: var(--ink-soft);
+  border-radius: 4px 4px;
 }
 
 /*perubahan menu
