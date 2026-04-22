@@ -1,33 +1,46 @@
  <!-- header.ejs -->
 <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
 
- <button id="menuToggleVisitor" class="menuToggleVisitor">☰ Menu</button>
-
   <!-- </div> -->
 
   <!-- MENU -->
-  <nav id="mainMenuBlogVisitor" class="mainMenuBlogVisitor">
+  <!-- <nav id="mainMenuBlogVisitor" class="mainMenuBlogVisitor">
     <a href="/getTomStore">Tom's Store</a>
     <a href="/">Profil</a>
     <a href="/jurnalVisitor">JurnalMengaji</a>
     <a href="/dashboard">Dashboard</a>
     <a href="/blogvisitor">Blog</a>
+  </nav> -->
+
+
+
+  <div class="header">
+  <a href="#">Admin_panel</a>
+</div>
+<div class="header__main">
+  <nav class="header__nav">
+    <ul>
+      <li>
+        <a href="/blogVisitor">Blog</a>
+      </li>
+      <li>
+        <a href="/">Profil</a>
+      </li>
+      <li>
+        <a href="/getTomStore">Products</a>
+      </li>
+
+      <li>
+        <a href="/jurnalVisitor">JurnalMengaji</a>
+      </li>
+    </ul>
   </nav>
+  <div class="header__button">
+    <a href="/logout">logout</a>
+  </div>
+</div>
 
     <script>
-
-      console.log("Script Jalan")
-    // Toggle menu
-console.log("SCRIPT JALAN");
-
-document.addEventListener("click", function (e) {
-  if (e.target.id === "menuToggleVisitor") {
-    console.log("TOMBOL DIKLIK");
-    document
-      .getElementById("mainMenuBlogVisitor")
-      .classList.toggle("open");
-  }
-});
 
     // Delete blog (tetap sama)
     document.querySelectorAll(".delete-btn").forEach(btn => {
