@@ -21,7 +21,7 @@ body {
   color: var(--ink-dark);
   font-family: var(--font-body);
   line-height: 1.8;
-  margin-left:60px;
+  margin-left:3px;
 }
 .header {
   background: var(--paper-white);
@@ -73,7 +73,7 @@ body {
 h1 {
   font-family: var(--font-title);
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
 }
 
 a {
