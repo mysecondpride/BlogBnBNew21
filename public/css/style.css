@@ -62,15 +62,15 @@ body {
 }
 
 
-
+/* 
 .hero {
   padding: var(--spacing-lg) 0px;
   background: var(--paper-white);
   text-align: left;
   border-left: 6px solid var(--gold-accent);
-}
+} */
 
-.hero h1 {
+h1 {
   font-family: var(--font-title);
   font-size: 20px;
   margin-bottom: 10px;
