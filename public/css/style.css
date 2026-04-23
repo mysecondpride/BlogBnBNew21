@@ -148,6 +148,19 @@ button:hover {
 .main{
     padding: 5px 5px;
         margin-left: 10px;
+        flex:1;
+}
+
+/* katanya bisa */
+
+html, body{
+  height: 100%;
+  margin: 0;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
 }
 
 
