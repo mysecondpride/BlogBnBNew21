@@ -131,7 +131,7 @@ button:hover {
 }
 
 .footer {
-  margin-top: var(--spacing-lg);
+  /* margin-top: var(--spacing-lg); */
   padding: 20px 16px;
   background: var(--paper-white);
   border-top: 3px solid var(--gold-accent);
@@ -144,10 +144,9 @@ button:hover {
 
   bottom: 20px;
   /* right: 20px; */
-  z-index: 1000;
 
 
-  /* dua tambahan */
+
 }
 .container{
     max-width:982px;
