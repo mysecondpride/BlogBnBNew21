@@ -137,7 +137,7 @@ button:hover {
   text-align: center;
   color: var(--ink-soft);
   border-radius: 4px 4px;
-  /* z-index:1000 px */
+  z-index:1000 px
 }
 .container{
     max-width:982 px;
