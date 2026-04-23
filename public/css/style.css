@@ -131,24 +131,23 @@ button:hover {
   font-style: italic;
 }
 
-.footer {
+/* .footer { */
   /* margin-top: var(--spacing-lg); */
-  padding: 20px 16px;
+  /* padding: 20px 16px;
   background: var(--paper-white);
   border-top: 3px solid var(--gold-accent);
   text-align: center;
   color: var(--ink-soft);
   border-radius: 4px 4px;
-  z-index:1000px;
+  z-index:1000px; */
 
   /* ini tambahan */
 
-  bottom: 20px;
   /* right: 20px; */
 
 
-
-}
+/* 
+} */
 .container{
     max-width:982px;
     margin:0 auto;
