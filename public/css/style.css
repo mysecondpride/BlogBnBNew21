@@ -140,6 +140,12 @@ button:hover {
   border-radius: 4px 4px;
   z-index:1000px;
 
+  /* ini tambahan */
+
+  bottom: 20px;
+  /* right: 20px; */
+  z-index: 1000;
+
 
   /* dua tambahan */
 }
