@@ -138,6 +138,12 @@ button:hover {
   color: var(--ink-soft);
   border-radius: 4px 4px;
 }
+container{
+    max-width:982 px;
+    margin:0 auto;
+    padding: 0 px;
+}
+
 
 /*perubahan menu
 /* tombol pembuka menu */
