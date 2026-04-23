@@ -21,7 +21,7 @@ body {
   color: var(--ink-dark);
   font-family: var(--font-body);
   line-height: 1.8;
-  margin-left:3px;
+  /* margin-left:3px; */
 }
 .header {
   background: var(--paper-white);
@@ -137,11 +137,17 @@ button:hover {
   text-align: center;
   color: var(--ink-soft);
   border-radius: 4px 4px;
+  /* z-index:1000 px */
 }
-container{
+.container{
     max-width:982 px;
     margin:0 auto;
     padding: 0 px;
+}
+
+.main{
+    padding: 5px 5px;
+        margin-left: 10px;
 }
 
 
