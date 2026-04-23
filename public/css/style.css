@@ -6,8 +6,8 @@
   --gold-accent: #b89b5e;
   --paper-white: #ffffff;
 
-  --font-title: 'calibri',
-  --font-body: 'calibri',
+  --font-title:'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif
 
   --spacing-lg: 80px;
   --spacing-md: 40px;
@@ -20,9 +20,9 @@ body {
   background: var(--bg-cream);
   color: var(--ink-dark);
   font-family: var(--font-body);
-  line-height: 1.5;
+  line-height: 1.8;
   height:auto;
-  /* margin-left:3px; */
+
 }
 .header {
   background: var(--paper-white);
@@ -36,7 +36,7 @@ body {
 
 .header__logo {
   font-family: var(--font-title);
-  font-size: 32px;
+  font-size: 12px;
   color: var(--wood-brown);
   letter-spacing: 1px;
 }
@@ -144,9 +144,9 @@ button:hover {
   /* dua tambahan */
 }
 .container{
-    max-width:982 px;
+    max-width:982px;
     margin:0 auto;
-    padding: 0 px;
+    padding: 0px;
 }
 
 .main{
