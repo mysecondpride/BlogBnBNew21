@@ -21,6 +21,7 @@ body {
   color: var(--ink-dark);
   font-family: var(--font-body);
   line-height: 1.8;
+  height:100%
   /* margin-left:3px; */
 }
 .header {
