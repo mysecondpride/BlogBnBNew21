@@ -20,7 +20,7 @@ body {
   background: var(--bg-cream);
   color: var(--ink-dark);
   font-family: var(--font-body);
-  line-height: 1.8;
+  line-height: 1.5;
   height:auto;
   /* margin-left:3px; */
 }
@@ -139,7 +139,7 @@ button:hover {
   color: var(--ink-soft);
   border-radius: 4px 4px;
   z-index:1000px;
-  position:fixed;
+
 
   /* dua tambahan */
 }
@@ -190,6 +190,7 @@ body{
   }
 
   .header__button {
+    
     position: static;         /* KELUARKAN dari absolute */
     margin-top: 15px;
   }
