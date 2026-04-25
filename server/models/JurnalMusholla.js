@@ -6,8 +6,9 @@ const jurnalSchema = new mongoose.Schema(
     materi: { type: String, required: true },
     homework: { type: String },
     catatanOrtu: { type: String },
-    audio: {
-  type: String,
+  audio: {
+  filename: String,
+  path: String,
 }
   },
   { timestamps: true, collection: "jurnalMusholla" }

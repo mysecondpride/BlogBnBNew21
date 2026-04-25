@@ -9,13 +9,11 @@ exports.deleteAudioOnly = async (req, res) => {
     const jurnal = await Jurnal.findById(id);
     if (!jurnal) return res.send("Data tidak ditemukan");
 
-    if (jurnal.audio) {
+    if (jurnal.audio && jurnal.audio.path) {
       const filePath = path.join(
-        process.cwd(), // 🔥 ROOT PROJECT
+        process.cwd(),
         "public",
-        "uploads",
-        "audio",
-        jurnal.audio
+        jurnal.audio.path // 🔥 langsung pakai path dari DB
       );
 
       console.log("PATH YANG DIHAPUS:", filePath);
@@ -28,6 +26,7 @@ exports.deleteAudioOnly = async (req, res) => {
       }
     }
 
+    // kosongkan audio di DB
     jurnal.audio = null;
     await jurnal.save();
 

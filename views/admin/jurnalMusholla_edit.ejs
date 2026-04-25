@@ -13,14 +13,33 @@
 <body>
   <div class="card">
     <h2>Edit Jurnal</h2>
-    <form action="/update/<%= row._id %>" method="POST">
-      <input type="date" name="tanggal"
-        value="<%= new Date(row.tanggal).toISOString().slice(0,10) %>" required />
-      <input type="text" name="materi" value="<%= row.materi %>" required />
-      <input type="text" name="homework" value="<%= row.homework %>" />
-      <textarea name="catatanOrtu"><%= row.catatanOrtu %></textarea>
-      <button type="submit">Update</button>
-    </form>
+
+<form action="/update/<%= row._id %>" method="POST" enctype="multipart/form-data">
+  <input
+    type="date"
+    name="tanggal"
+    value="<%= new Date(row.tanggal).toISOString().slice(0,10) %>"
+    required
+  />
+
+  <input type="text" name="materi" value="<%= row.materi %>" required />
+
+  <input type="text" name="homework" value="<%= row.homework || '' %>" />
+
+  <textarea name="catatanOrtu"><%= row.catatanOrtu || '' %></textarea>
+
+  <% if (row.audio && row.audio.path) { %>
+    <p>Audio saat ini:</p>
+    <audio controls>
+      <source src="<%= row.audio.path %>">
+    </audio>
+  <% } %>
+
+  <p>Ganti audio:</p>
+  <input type="file" name="audio" accept="audio/*" />
+
+  <button type="submit">Update</button>
+</form>
   </div>
 </body>
 </html>

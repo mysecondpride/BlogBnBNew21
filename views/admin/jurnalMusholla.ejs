@@ -86,7 +86,7 @@ table{
          <td>
           <% if(r.audio){ %>
            <audio controls style="width:120px">
-              <source src="/uploads/audio/<%= r.audio %>">
+              <source src=<%= r.audio.path %>">
             </audio>
           <% } else { %>
             <span class="muted">Tidak ada</span>

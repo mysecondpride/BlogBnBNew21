@@ -7,7 +7,7 @@
   --paper-white: #ffffff;
 
   --font-title:'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif
+  --font-body: 'Inter', -apple-system, sans-serif;
 
   --spacing-lg: 80px;
   --spacing-md: 40px;

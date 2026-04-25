@@ -34,7 +34,11 @@ exports.create = async (req, res) => {
   try {
     const { tanggal, materi, homework, catatanOrtu } = req.body;
 
-    const audio = req.file ? req.file.filename : null;
+    const audio = req.file ?  {
+      filename: req.file.filename,
+      path: `/uploads/audio/${req.file.filename}`,
+    }
+  : null;
 
     await Jurnal.create({
       tanggal,
