@@ -234,3 +234,7 @@ body{
   height: 44px;
   display: block;
 }
+
+.actions form {
+  display: inline;
+}

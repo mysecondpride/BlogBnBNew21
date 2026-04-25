@@ -73,7 +73,7 @@ table{
   </thead>
   <tbody>
     <% if(rows.length === 0){ %>
-      <tr><td colspan="5" class="muted">Belum ada data</td></tr>
+      <tr><td colspan="6" class="muted">Belum ada data</td></tr>
     <% } %>
 
     <% rows.forEach(r => { %>
@@ -86,7 +86,7 @@ table{
          <td>
           <% if(r.audio){ %>
            <audio controls style="width:120px">
-              <source src=<%= r.audio.path %>">
+            <source src="<%= r.audio.path %>">
             </audio>
           <% } else { %>
             <span class="muted">Tidak ada</span>
