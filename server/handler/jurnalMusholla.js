@@ -1,5 +1,6 @@
 const Jurnal = require("../models/JurnalMusholla");
-
+const fs = require("fs");
+const path = require("path");
 
 // helper: awal & akhir hari (untuk filter tanggal)
 function dayRange(dateStr) {
@@ -66,22 +67,46 @@ exports.editForm = async (req, res) => {
 // UPDATE
 exports.update = async (req, res) => {
   try {
-      const data = {
-    tanggal: req.body.tanggal,
-    materi: req.body.materi,
-    homework: req.body.homework,
-    catatanOrtu: req.body.catatanOrtu,
-  };
+    const jurnal = await Jurnal.findById(req.params.id);
+    if (!jurnal) return res.send("Data tidak ditemukan");
 
-  if (req.file) data.audio = req.file.filename;
-    await Jurnal.findByIdAndUpdate(req.params.id,data);
+    let audio = jurnal.audio; // default pakai yang lama
+
+    // kalau upload file baru
+    if (req.file) {
+      // hapus file lama
+      if (jurnal.audio && jurnal.audio.filename) {
+        const oldPath = path.join(
+          process.cwd(),
+          "public/uploads/audio",
+          jurnal.audio.filename
+        );
+
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+
+      // simpan file baru
+      audio = {
+        filename: req.file.filename,
+        path: `/uploads/audio/${req.file.filename}`,
+      };
+    }
+
+    await Jurnal.findByIdAndUpdate(req.params.id, {
+      tanggal: req.body.tanggal,
+      materi: req.body.materi,
+      homework: req.body.homework,
+      catatanOrtu: req.body.catatanOrtu,
+      audio: audio,
+    });
 
     res.redirect("/getToTheJurnal");
   } catch (e) {
     res.status(500).send(e.message);
   }
 };
-
 // DELETE
 exports.remove = async (req, res) => {
   try {

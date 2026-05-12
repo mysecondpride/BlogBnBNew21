@@ -139,8 +139,10 @@
     <li class="admin-title">
       <h2>Your Dashboard</h2>
 
+      <% if (!locals.isReadOnlyAdmin) { %>
       <a href="/getsummernote" class="button">Post Blog</a>
       <a href="/getPostProfile" class="button">Post Profile</a>
+      <% } %>
        <a href="/display-products" class="button">Tom's Store</a>
     </li>
 
@@ -154,12 +156,14 @@
             <div class="article-item">
               <a href="/eachArticle/<%= item._id %>"><%= first.title %></a>
 
+          <% if (!locals.isReadOnlyAdmin) { %>
            <form action="/edit-postBlog/<%= item._id %>" method="GET">
   <button type="submit" class="btn">Edit</button>
 </form>
               <button class="delete-btn" data-id="<%= item._id %>">
                 delete-blog
               </button>
+          <% } %>
             </div>
 
           <% } %>

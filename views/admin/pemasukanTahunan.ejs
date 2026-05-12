@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:18px;color:#333}
+    h1{margin:0 0 12px;font-size:24px}
+    .card{background:#fff;padding:16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:16px}
+    form{display:grid;gap:10px}
+    .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    label{font-size:12px;color:#555}
+    input,textarea,select,button{width:100%;box-sizing:border-box;padding:9px;border-radius:6px;border:1px solid #ccc;font-size:13px}
+    textarea{resize:vertical;min-height:58px}
+    select[multiple]{min-height:92px}
+    button,.btn{background:#2d89ef;color:#fff;border:none;cursor:pointer;text-decoration:none;text-align:center;border-radius:6px;padding:9px 12px;font-size:13px}
+    .btn-danger{background:#d9534f}
+    .btn-muted{background:#777}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .muted{color:#777;font-size:13px}
+    .table-wrap{width:100%;overflow-x:auto;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    table{width:100%;min-width:980px;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eaeaea;text-align:left;vertical-align:top;font-size:13px}
+    th{background:#fafafa;white-space:nowrap}
+    td{word-break:break-word}
+    .pagination{display:flex;gap:10px;align-items:center;margin-top:14px}
+    @media (max-width:700px){
+      body{padding:12px}
+      h1{font-size:20px}
+      .form-grid{grid-template-columns:1fr}
+      .card{padding:12px}
+      table{min-width:900px}
+    }
+  </style>
+</head>
+<body>
+  <h1><%= title %></h1>
+
+  <% if (!locals.isReadOnlyAdmin) { %>
+    <div class="card">
+      <form action="/pemasukan-tahun/title" method="POST">
+        <label for="title">Judul tabel</label>
+        <input id="title" type="text" name="title" value="<%= title %>" required />
+        <button type="submit">Simpan Judul</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2><%= editData ? "Edit Data" : "Tambah Data" %></h2>
+      <form class="form-grid" action="<%= editData ? '/pemasukan-tahun/' + editData._id : '/pemasukan-tahun' %>" method="POST">
+        <div>
+          <label for="no">No</label>
+          <input id="no" type="text" name="no" value="<%= editData ? editData.no : '' %>" required />
+        </div>
+        <div>
+          <label for="bulan">Bulan</label>
+          <input id="bulan" type="month" name="bulan" value="<%= editData ? editData.bulan : '' %>" required />
+        </div>
+        <div>
+          <label for="pemasukan">Pemasukan</label>
+          <input class="rupiah-input" id="pemasukan" type="text" name="pemasukan" value="<%= editData ? editData.pemasukan : '' %>" placeholder="Rp 0" required />
+        </div>
+        <div>
+          <label for="realisasiAnggaran">Realisasi Anggaran</label>
+          <input class="rupiah-input" id="realisasiAnggaran" type="text" name="realisasiAnggaran" value="<%= editData ? editData.realisasiAnggaran : '' %>" placeholder="Rp 0" required />
+        </div>
+        <div>
+          <label for="saving">Saving</label>
+          <input class="rupiah-input" id="saving" type="text" name="saving" value="<%= editData ? editData.saving : '' %>" placeholder="Rp 0" required />
+        </div>
+        <div>
+          <label for="pengeluaran">Pengeluaran</label>
+          <select id="pengeluaran" name="pengeluaran" multiple>
+            <% pengeluaranOptions.forEach(option => { %>
+              <option value="<%= option %>" <%= editData && editData.pengeluaran.includes(option) ? 'selected' : '' %>><%= option %></option>
+            <% }) %>
+          </select>
+          <span class="muted">Tahan Ctrl atau Cmd untuk memilih lebih dari satu.</span>
+        </div>
+        <div>
+          <label for="rencanaProgramJangkaPanjang">Rencana Program Jangka Panjang</label>
+          <textarea id="rencanaProgramJangkaPanjang" name="rencanaProgramJangkaPanjang" required><%= editData ? editData.rencanaProgramJangkaPanjang : '' %></textarea>
+        </div>
+        <div>
+          <label for="uraianRealisasi">Uraian Realisasi</label>
+          <textarea id="uraianRealisasi" name="uraianRealisasi" required><%= editData ? editData.uraianRealisasi : '' %></textarea>
+        </div>
+        <div class="actions">
+          <button type="submit"><%= editData ? "Update" : "Tambah" %></button>
+          <% if (editData) { %>
+            <a class="btn btn-muted" href="/pemasukan-tahun">Batal</a>
+          <% } %>
+        </div>
+      </form>
+    </div>
+  <% } %>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Bulan</th>
+          <th>Pemasukan</th>
+          <th>Pengeluaran</th>
+          <th>Realisasi Anggaran</th>
+          <th>Uraian Realisasi</th>
+          <th>Saving</th>
+          <th>Rencana Program Jangka Panjang</th>
+          <% if (!locals.isReadOnlyAdmin) { %>
+            <th>Aksi</th>
+          <% } %>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (rows.length === 0) { %>
+          <tr>
+            <td colspan="<%= locals.isReadOnlyAdmin ? 8 : 9 %>" class="muted">Belum ada data</td>
+          </tr>
+        <% } %>
+
+        <% rows.forEach(row => { %>
+          <tr>
+            <td><%= row.no %></td>
+            <td><%= row.bulan %></td>
+            <td><%= formatRupiah(row.pemasukan) %></td>
+            <td><%= row.pengeluaran.join(", ") || "-" %></td>
+            <td><%= formatRupiah(row.realisasiAnggaran) %></td>
+            <td><%= row.uraianRealisasi %></td>
+            <td><%= formatRupiah(row.saving) %></td>
+            <td><%= row.rencanaProgramJangkaPanjang %></td>
+            <% if (!locals.isReadOnlyAdmin) { %>
+              <td>
+                <div class="actions">
+                  <a class="btn" href="/pemasukan-tahun/<%= row._id %>/edit">Edit</a>
+                  <a class="btn btn-danger" href="/pemasukan-tahun/<%= row._id %>/delete" onclick="return confirm('Hapus data ini?')">Hapus</a>
+                </div>
+              </td>
+            <% } %>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <% if (page > 1) { %>
+      <a class="btn btn-muted" href="/pemasukan-tahun?page=<%= page - 1 %>">Sebelumnya</a>
+    <% } %>
+    <span class="muted">Halaman <%= page %> dari <%= totalPages %></span>
+    <% if (page < totalPages) { %>
+      <a class="btn btn-muted" href="/pemasukan-tahun?page=<%= page + 1 %>">Berikutnya</a>
+    <% } %>
+  </div>
+
+  <script>
+    const formatRupiahInput = (value) => {
+      const number = Number(String(value).replace(/[^\d]/g, ""));
+      if (!number) return "";
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(number);
+    };
+
+    document.querySelectorAll(".rupiah-input").forEach((input) => {
+      input.value = formatRupiahInput(input.value);
+      input.addEventListener("blur", () => {
+        input.value = formatRupiahInput(input.value);
+      });
+    });
+  </script>
+</body>
+</html>

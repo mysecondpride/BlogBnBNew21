@@ -18,7 +18,10 @@ const authMiddleware = require("../controller/authMiddleware");
 const { authLogin } = require("../controller/login");
 const { layoutMiddleware } = require("../controller/layOutMiddleware");
 const Post = require("../models/Post");
-const { isAdmin } = require("../controller/isAdmin");
+const {
+  isAdmin,
+  canAccessAdminDashboard,
+} = require("../controller/isAdmin");
 const { getPostBlog, uploadImage } = require("../handler/blog_admin");
 const { postBlog } = require("../handler/blog_admin");
 const {sedap} = require("../../utils/gridFs"); // Import GridFS upload
@@ -57,6 +60,7 @@ const{deleteItem3}=require("../handler/str_deleteitem3")
 
 const{deleteImageProduct}= require("../handler/str_delete_image_product")
 const { downloadImageProducts } = require("../handler/str_downloadImage");
+const pemasukanTahunan = require("../handler/pemasukanTahunan");
 
 //jurnal mushola
 
@@ -66,14 +70,14 @@ router.post("/login", authLogin, authMiddleware);
 router.get(
   "/dashboard",
   authMiddleware,
-  isAdmin,
+  canAccessAdminDashboard,
   layoutMiddleware,
   getTheBlogDashboard,
 );
 router.get(
   "/blog",
   authMiddleware,
-  isAdmin,
+  canAccessAdminDashboard,
   layoutMiddleware,
   getTheBlogDashboard,
 );
@@ -171,7 +175,7 @@ router.get(
 router.get(
   "/getPostedProfile",
   authMiddleware,
-  isAdmin,
+  canAccessAdminDashboard,
   layoutMiddleware,
   getPostedProfile,
 );
@@ -185,12 +189,12 @@ router.delete(
 // router untuk tom's store
 router.get("/show-post-display", authMiddleware,isAdmin,layoutMiddleware,getPostDisplayProducts)
 // router.post("/post-display-products",authMiddleware,isAdmin,layoutMiddleware,postDisplayProducts)
-router.get("/display-products", authMiddleware, isAdmin, layoutMiddleware,displayProductsAdm)
+router.get("/display-products", authMiddleware, canAccessAdminDashboard, layoutMiddleware,displayProductsAdm)
 router.post("/edit-post-display", authMiddleware, isAdmin,layoutMiddleware,editPostDisplay)
 
-router.get('/files/:fileId', authMiddleware,isAdmin,layoutMiddleware,downloadImage)
+router.get('/files/:fileId', authMiddleware,canAccessAdminDashboard,layoutMiddleware,downloadImage)
 
-router.get("/logout", authMiddleware,isAdmin,layoutMiddleware,logout)
+router.get("/logout", authMiddleware,canAccessAdminDashboard,layoutMiddleware,logout)
 module.exports = router;
 
 //router untuk delete-item
@@ -216,9 +220,53 @@ router.delete(
 const c = require("../handler/jurnalMusholla");
 const uploadAudio = require("../handler/jurnalMusholla_uploadAudio");
 const {deleteAudioOnly}= require("../handler/jurnalMusholla_deleteAudio")
-router.get("/getToTheJurnal", authMiddleware,isAdmin,layoutMiddleware, c.index);
+router.get("/getToTheJurnal", authMiddleware,canAccessAdminDashboard,layoutMiddleware, c.index);
 router.post("/add",authMiddleware,isAdmin,layoutMiddleware,uploadAudio.single("audio"), c.create);
 router.get("/edit/:id", authMiddleware,isAdmin,layoutMiddleware,c.editForm);
 router.post("/update/:id",authMiddleware,isAdmin,layoutMiddleware, c.update);
 router.get("/delete/:id", authMiddleware,isAdmin,layoutMiddleware,c.remove);
 router.delete("/delete-audio/:id",authMiddleware,isAdmin,layoutMiddleware,deleteAudioOnly);
+
+// tabel pemasukan tahunan
+router.get(
+  "/pemasukan-tahun",
+  authMiddleware,
+  canAccessAdminDashboard,
+  layoutMiddleware,
+  pemasukanTahunan.index
+);
+router.post(
+  "/pemasukan-tahun/title",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  pemasukanTahunan.updateTitle
+);
+router.post(
+  "/pemasukan-tahun",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  pemasukanTahunan.create
+);
+router.get(
+  "/pemasukan-tahun/:id/edit",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  pemasukanTahunan.editForm
+);
+router.post(
+  "/pemasukan-tahun/:id",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  pemasukanTahunan.update
+);
+router.get(
+  "/pemasukan-tahun/:id/delete",
+  authMiddleware,
+  isAdmin,
+  layoutMiddleware,
+  pemasukanTahunan.remove
+);

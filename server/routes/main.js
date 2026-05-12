@@ -5,6 +5,7 @@ const { getPostedBlog } = require("../handler_bukan_admin/blog");
 const {displayProducts}= require("../handler_bukan_admin/tom's_store");
 const {filterPerDate}= require("../handler_bukan_admin/jurnal")
 const c = require("../handler_bukan_admin/jurnal");
+const pemasukanTahunanVisitor = require("../handler_bukan_admin/pemasukanTahunan");
 
 
 router.get("/", getProfileVistior);
@@ -12,6 +13,7 @@ router.get("/blogvisitor", getPostedBlog);
 router.get("/getTomStore",displayProducts)
 router.get("/jurnalVisitor", c.index);
 router.get("/filter-per-date",filterPerDate)
+router.get("/pemasukan-tahun-visitor", pemasukanTahunanVisitor.index);
 
 
 

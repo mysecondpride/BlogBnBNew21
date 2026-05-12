@@ -28,12 +28,15 @@
   %>
     <% images.forEach(img => { %>
      <img src="/imagesofproducts/<%= item._id %>/<%= img.fileId %>" />
+<% if (!locals.isReadOnlyAdmin) { %>
 <form action="/delete-item-image/Produk1/<%= item._id %>/<%= img.fileId %>?_method=DELETE" method="POST">
   <input type="submit" value="delete-gambar" />
 </form>
+<% } %>
     </form>
     <% }) %>
 
+    <% if (!locals.isReadOnlyAdmin) { %>
     <form action="/delete-item1/<%= item._id %>/<%= element1._id %>?_method=DELETE" method="POST">
       <input type="submit" value="delete" />
     </form>
@@ -41,6 +44,7 @@
     <form action="/edit-item-input/<%= item._id %>/<%= element1._id %>" method="get">
       <input type="submit" value="edit" />
     </form>
+    <% } %>
 
     
 
@@ -73,12 +77,15 @@
     <% images.forEach(img => { %>
       <img src="/imagesofproducts/<%= item._id %>/<=element2._id%>/<%= img.fileId %>" />
 
+<% if (!locals.isReadOnlyAdmin) { %>
 <form action="/delete-item-image/Produk2/<%= item._id %>/<%= img.fileId %>?_method=DELETE" method="POST">
   <input type="submit" value="delete-gambar" />
 </form>
+<% } %>
 </form>
     <% }) %>
 
+    <% if (!locals.isReadOnlyAdmin) { %>
     <form action="/delete-item2/<%= item._id %>/<%= element2._id %>?_method=DELETE" method="POST">
       <input type="submit" value="delete" />
     </form>
@@ -86,6 +93,7 @@
     <form action="/edit-item-input/<%= item._id %>/<%= element2._id %>" method="get">
       <input type="submit" value="edit" />
     </form>
+    <% } %>
 
 
 
@@ -114,12 +122,15 @@
 
     <% images.forEach(img => { %>
       <img src="/imagesofproducts/<%=item._id %>/<%= img.fileId %>" height="200" width="150">
+     <% if (!locals.isReadOnlyAdmin) { %>
      <form action="/delete-item-image/Produk3/<%= item._id %>/<%= img.fileId %>?_method=DELETE" method="POST">
   <input type="submit" value="delete-gambar" />
 </form>
+    <% } %>
     </form>
     <% }) %>
 
+    <% if (!locals.isReadOnlyAdmin) { %>
     <form action="/delete-item3/<%= item._id %>/<%= element3._id %>?_method=DELETE" method="POST">
       <input type="submit" value="delete" />
     </form>
@@ -127,6 +138,7 @@
     <form action="/edit-item-input/<%= item._id %>/<%= element3._id %><%= element3._id %>" method="get">
       <input type="submit" value="edit" />
     </form>
+    <% } %>
 
   
 
